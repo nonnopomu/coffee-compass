@@ -699,3 +699,7 @@ Issueを機能単位で細かく分割し、それぞれに「最低限必要な
 ## 画面遷移図
 
 [Figmaで画面遷移図を表示](https://www.figma.com/design/0c73T1lp6iRDa5BtkH2E2J/Coffee-Compass-%E7%94%BB%E9%9D%A2%E8%A8%AD%E8%A8%88%E5%9B%B3?node-id=0-1&p=f&t=Q5Ljq0ma1fKvH1sX-0)
+
+## ER図
+
+[ER図を表示](https://dbdiagram.io/d/6a04917954a51d93d31b826e)
