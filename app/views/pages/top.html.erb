@@ -1,0 +1,72 @@
+<div class="min-h-screen bg-amber-50 flex flex-col">
+
+  <%# ヘッダー %>
+  <header class="bg-white border-b border-gray-200 px-4 py-3 flex items-center justify-center sticky top-0 z-10">
+    <div class="flex items-center gap-2">
+      <div class="w-8 h-8 bg-black rounded-lg flex items-center justify-center flex-shrink-0">
+        <span class="text-white text-xs font-bold tracking-tight">CC</span>
+      </div>
+      <span class="text-lg font-semibold text-gray-900">Coffee Compass</span>
+    </div>
+  </header>
+
+  <%# メインコンテンツ %>
+  <main class="flex-1 w-full max-w-screen-sm mx-auto px-6 flex flex-col pb-24">
+
+    <div class="pt-10 pb-8">
+      <h1 class="text-2xl font-bold text-gray-900 mb-6">最高の1杯を見つけよう</h1>
+
+      <%# 検索バー %>
+      <div class="relative">
+        <div class="absolute left-3 top-1/2 -translate-y-1/2 pointer-events-none">
+          <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#9ca3af" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/>
+          </svg>
+        </div>
+        <input type="text" placeholder="カフェ名やキーワードで検索" class="w-full bg-white rounded-xl pl-10 pr-4 py-3 text-sm text-gray-600 shadow-sm border border-gray-100 focus:outline-none focus:border-amber-300">
+      </div>
+    </div>
+
+    <%# カード：3/10・7/10 の位置に配置 %>
+    <div class="flex-1 flex flex-col">
+      <div style="flex: 3"></div>
+
+      <%= link_to "#", class: "bg-white rounded-2xl w-4/5 mx-auto flex flex-col items-center justify-center gap-3 shadow-sm border border-gray-100 hover:shadow-md transition-shadow py-10" do %>
+        <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#d97706" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/>
+        </svg>
+        <span class="text-base font-medium text-gray-700">エリアから探す</span>
+      <% end %>
+
+      <div style="flex: 4"></div>
+
+      <%= link_to "#", class: "bg-white rounded-2xl w-4/5 mx-auto flex flex-col items-center justify-center gap-3 shadow-sm border border-gray-100 hover:shadow-md transition-shadow py-10" do %>
+        <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#d97706" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"/><line x1="7" y1="7" x2="7.01" y2="7"/>
+        </svg>
+        <span class="text-base font-medium text-gray-700">タグから探す</span>
+      <% end %>
+
+      <div style="flex: 3"></div>
+    </div>
+
+  </main>
+
+  <%# 下部固定バー（未ログイン時のみ） %>
+  <% unless user_signed_in? %>
+    <div class="fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 px-4 py-3">
+      <div class="w-full max-w-screen-sm mx-auto flex items-center gap-3">
+        <div class="w-9 h-9 bg-gray-200 rounded-full flex-shrink-0"></div>
+        <div class="flex-1 min-w-0">
+          <p class="text-sm font-medium text-gray-900 leading-tight">ログを記録しませんか？</p>
+          <p class="text-xs text-gray-500 leading-tight">体験をシェアして仲間を見つける</p>
+        </div>
+        <div class="flex items-center gap-2 flex-shrink-0">
+          <%= link_to "ログイン", new_user_session_path, class: "text-gray-700 text-sm font-medium px-2 py-1" %>
+          <%= link_to "新規登録", new_user_registration_path, class: "bg-amber-600 text-white text-sm font-medium px-4 py-2 rounded-lg whitespace-nowrap" %>
+        </div>
+      </div>
+    </div>
+  <% end %>
+
+</div>
