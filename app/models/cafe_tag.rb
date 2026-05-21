@@ -1,0 +1,2 @@
+class CafeTag < ApplicationRecord
+end
