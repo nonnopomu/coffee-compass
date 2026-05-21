@@ -6,6 +6,18 @@ RUN apt-get update -qq && \
     apt-get install -y nodejs && \
     npm install -g yarn
 
-RUN gem install rails -v "~> 7.2"
-
 WORKDIR /app
+
+COPY Gemfile Gemfile.lock ./
+RUN bundle install
+
+COPY package.json yarn.lock ./
+RUN yarn install --production=false
+
+COPY . .
+
+RUN RAILS_ENV=production SECRET_KEY_BASE_DUMMY=1 bundle exec rails assets:precompile
+
+EXPOSE 3000
+
+CMD ["sh", "-c", "bundle exec rails db:migrate && bundle exec puma -C config/puma.rb"]
