@@ -1,0 +1,2 @@
+class DrinkLogTasteTag < ApplicationRecord
+end
