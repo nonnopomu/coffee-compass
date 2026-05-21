@@ -9,9 +9,9 @@ class CreateTags < ActiveRecord::Migration[7.2]
       t.timestamps
     end
 
-    add_index :tags, [:category, :name], unique: true
+    add_index :tags, [ :category, :name ], unique: true
     add_index :tags, :category
     add_index :tags, :is_active
-    add_index :tags, [:category, :display_order]
+    add_index :tags, [ :category, :display_order ]
   end
 end

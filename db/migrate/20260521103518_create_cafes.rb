@@ -15,9 +15,9 @@ class CreateCafes < ActiveRecord::Migration[7.2]
       t.timestamps
     end
 
-    add_index :cafes, [:name, :address], unique: true
+    add_index :cafes, [ :name, :address ], unique: true
     add_index :cafes, :status
-    add_index :cafes, [:area_id, :status]
+    add_index :cafes, [ :area_id, :status ]
     add_index :cafes, :name
   end
 end

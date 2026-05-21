@@ -21,7 +21,7 @@ class CreateDrinkLogs < ActiveRecord::Migration[7.2]
     add_index :drink_logs, :status
     add_index :drink_logs, :drank_on
     add_index :drink_logs, :created_at
-    add_index :drink_logs, [:user_id, :status, :drank_on]
-    add_index :drink_logs, [:cafe_id, :status, :created_at]
+    add_index :drink_logs, [ :user_id, :status, :drank_on ]
+    add_index :drink_logs, [ :cafe_id, :status, :created_at ]
   end
 end

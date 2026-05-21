@@ -7,6 +7,6 @@ class CreateCafeTags < ActiveRecord::Migration[7.2]
       t.timestamps
     end
 
-    add_index :cafe_tags, [:cafe_id, :tag_id], unique: true
+    add_index :cafe_tags, [ :cafe_id, :tag_id ], unique: true
   end
 end

@@ -7,6 +7,6 @@ class CreateDrinkLogTasteTags < ActiveRecord::Migration[7.2]
       t.timestamps
     end
 
-    add_index :drink_log_taste_tags, [:drink_log_id, :tag_id], unique: true
+    add_index :drink_log_taste_tags, [ :drink_log_id, :tag_id ], unique: true
   end
 end
