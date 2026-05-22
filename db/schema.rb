@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.2].define(version: 2026_05_21_103550) do
+ActiveRecord::Schema[7.2].define(version: 2026_05_22_110420) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -41,10 +41,10 @@ ActiveRecord::Schema[7.2].define(version: 2026_05_21_103550) do
     t.string "name", null: false
     t.string "address", null: false
     t.text "opening_hours"
-    t.string "closed_days"
-    t.string "website_url"
-    t.string "instagram_url"
-    t.string "google_maps_url", null: false
+    t.text "closed_days"
+    t.text "website_url"
+    t.text "instagram_url"
+    t.text "google_maps_url", null: false
     t.text "description"
     t.integer "status", default: 0, null: false
     t.datetime "created_at", null: false
@@ -96,6 +96,7 @@ ActiveRecord::Schema[7.2].define(version: 2026_05_21_103550) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["category", "display_order"], name: "index_tags_on_category_and_display_order"
+    t.index ["category", "is_active"], name: "index_tags_on_category_and_is_active"
     t.index ["category", "name"], name: "index_tags_on_category_and_name", unique: true
     t.index ["category"], name: "index_tags_on_category"
     t.index ["is_active"], name: "index_tags_on_is_active"
