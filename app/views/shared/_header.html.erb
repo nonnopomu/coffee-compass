@@ -1,0 +1,31 @@
+<header class="bg-white border-b border-gray-200 px-4 py-3 relative flex items-center justify-center sticky top-0 z-10">
+  <div class="absolute left-4 flex items-center">
+    <% if content_for?(:back_path) %>
+      <%= link_to yield(:back_path), class: "text-gray-600" do %>
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+        </svg>
+      <% end %>
+    <% end %>
+  </div>
+
+  <div class="flex items-center justify-center">
+    <% if content_for?(:header_center) %>
+      <%= yield :header_center %>
+    <% else %>
+      <span class="text-base font-medium text-gray-900"><%= yield :page_title %></span>
+    <% end %>
+  </div>
+
+  <div class="absolute right-4 flex items-center gap-2">
+    <% if content_for?(:hide_user_icon) %>
+    <% elsif user_signed_in? %>
+      <div class="w-8 h-8 bg-amber-600 rounded-full flex items-center justify-center">
+        <span class="text-white text-sm font-medium"><%= current_user.name[0] %></span>
+      </div>
+    <% else %>
+      <%= link_to "ログイン", new_user_session_path, class: "text-sm text-gray-600 font-medium" %>
+      <%= link_to "新規登録", new_user_registration_path, class: "text-sm text-white font-medium bg-amber-600 px-3 py-1 rounded-lg" %>
+    <% end %>
+  </div>
+</header>
