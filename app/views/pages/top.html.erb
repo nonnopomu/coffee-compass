@@ -1,14 +1,13 @@
-<div class="min-h-screen bg-amber-50 flex flex-col">
-
-  <%# ヘッダー %>
-  <header class="bg-white border-b border-gray-200 px-4 py-3 flex items-center justify-center sticky top-0 z-10">
-    <div class="flex items-center gap-2">
-      <div class="w-8 h-8 bg-black rounded-lg flex items-center justify-center flex-shrink-0">
-        <span class="text-white text-xs font-bold tracking-tight">CC</span>
-      </div>
-      <span class="text-lg font-semibold text-gray-900">Coffee Compass</span>
+<% content_for :header_center do %>
+  <div class="flex items-center gap-2">
+    <div class="w-8 h-8 bg-black rounded-lg flex items-center justify-center flex-shrink-0">
+      <span class="text-white text-xs font-bold tracking-tight">CC</span>
     </div>
-  </header>
+    <span class="text-lg font-semibold text-gray-900">Coffee Compass</span>
+  </div>
+<% end %>
+
+<div class="min-h-screen bg-amber-50 flex flex-col">
 
   <%# メインコンテンツ %>
   <main class="flex-1 w-full max-w-screen-sm mx-auto px-6 flex flex-col pb-24">
@@ -52,21 +51,5 @@
 
   </main>
 
-  <%# 下部固定バー（未ログイン時のみ） %>
-  <% unless user_signed_in? %>
-    <div class="fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 px-4 py-3">
-      <div class="w-full max-w-screen-sm mx-auto flex items-center gap-3">
-        <div class="w-9 h-9 bg-gray-200 rounded-full flex-shrink-0"></div>
-        <div class="flex-1 min-w-0">
-          <p class="text-sm font-medium text-gray-900 leading-tight">ログを記録しませんか？</p>
-          <p class="text-xs text-gray-500 leading-tight">体験をシェアして仲間を見つける</p>
-        </div>
-        <div class="flex items-center gap-2 flex-shrink-0">
-          <%= link_to "ログイン", new_user_session_path, class: "text-gray-700 text-sm font-medium px-2 py-1" %>
-          <%= link_to "新規登録", new_user_registration_path, class: "bg-amber-600 text-white text-sm font-medium px-4 py-2 rounded-lg whitespace-nowrap" %>
-        </div>
-      </div>
-    </div>
-  <% end %>
 
 </div>
