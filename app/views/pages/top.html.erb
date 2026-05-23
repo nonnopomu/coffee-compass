@@ -7,10 +7,9 @@
   </div>
 <% end %>
 
-<div class="min-h-screen bg-amber-50 flex flex-col">
+<% content_for :page_bg, "bg-amber-50" %>
 
-  <%# メインコンテンツ %>
-  <main class="flex-1 w-full max-w-screen-sm mx-auto px-6 flex flex-col pb-24">
+<main class="flex-1 w-full px-6 flex flex-col pb-24">
 
     <div class="pt-10 pb-8">
       <h1 class="text-2xl font-bold text-gray-900 mb-6">最高の1杯を見つけよう</h1>
@@ -49,7 +48,4 @@
       <div style="flex: 3"></div>
     </div>
 
-  </main>
-
-
-</div>
+</main>
