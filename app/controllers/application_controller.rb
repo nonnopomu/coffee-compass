@@ -1,4 +1,8 @@
 class ApplicationController < ActionController::Base
+  include Pundit::Authorization
+
+  rescue_from Pundit::NotAuthorizedError, with: :user_not_authorized
+
   allow_browser versions: :modern
 
   before_action :authenticate_user!
@@ -16,5 +20,11 @@ class ApplicationController < ActionController::Base
 
   def configure_permitted_parameters
     devise_parameter_sanitizer.permit(:sign_up, keys: [ :name ])
+  end
+
+  private
+
+  def user_not_authorized
+    redirect_back fallback_location: root_path, alert: "権限がありません。"
   end
 end
