@@ -1,0 +1,101 @@
+<div class="px-4 py-5 space-y-6">
+  <%# 住所・営業時間・定休日 %>
+  <div class="space-y-3">
+    <div class="flex gap-3">
+      <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-gray-400 mt-0.5 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+      </svg>
+      <p class="text-sm text-gray-700"><%= cafe.address %></p>
+    </div>
+
+    <% if cafe.opening_hours.present? %>
+      <div class="flex gap-3">
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-gray-400 mt-0.5 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+        </svg>
+        <p class="text-sm text-gray-700"><%= cafe.opening_hours %></p>
+      </div>
+    <% end %>
+
+    <% if cafe.closed_days.present? %>
+      <div class="flex gap-3">
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-gray-400 mt-0.5 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+        </svg>
+        <p class="text-sm text-gray-700">定休日: <%= cafe.closed_days %></p>
+      </div>
+    <% end %>
+  </div>
+
+  <%# Google Maps ボタン %>
+  <%= link_to cafe.google_maps_url, target: "_blank", rel: "noopener noreferrer",
+              class: "flex items-center justify-center gap-2 w-full py-2.5 rounded-lg border border-amber-600 text-amber-600 text-sm font-medium" do %>
+    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
+      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+    </svg>
+    Google Maps で開く
+  <% end %>
+
+  <%# 提供スタイルタグ：brew_method カテゴリのタグのみ絞り込んで表示 %>
+  <% brew_method_tags = cafe.tags.select(&:brew_method?) %>
+  <% if brew_method_tags.any? %>
+    <div>
+      <h3 class="text-sm font-semibold text-amber-600 mb-2">提供スタイル</h3>
+      <div class="flex flex-wrap gap-2">
+        <% brew_method_tags.each do |tag| %>
+          <span class="text-xs text-gray-600 bg-gray-100 rounded-full px-3 py-1"><%= tag.name %></span>
+        <% end %>
+      </div>
+    </div>
+  <% end %>
+
+  <%# 店舗特徴タグ：cafe_feature カテゴリのタグのみ絞り込んで表示 %>
+  <% feature_tags = cafe.tags.select(&:cafe_feature?) %>
+  <% if feature_tags.any? %>
+    <div>
+      <h3 class="text-sm font-semibold text-amber-600 mb-2">店舗の特徴</h3>
+      <div class="flex flex-wrap gap-2">
+        <% feature_tags.each do |tag| %>
+          <span class="text-xs text-gray-600 bg-gray-100 rounded-full px-3 py-1"><%= tag.name %></span>
+        <% end %>
+      </div>
+    </div>
+  <% end %>
+
+  <%# 店舗説明 %>
+  <% if cafe.description.present? %>
+    <div>
+      <h3 class="text-sm font-semibold text-amber-600 mb-2">Coffee Compass 編集者より</h3>
+      <p class="text-sm text-gray-700 leading-relaxed"><%= cafe.description %></p>
+    </div>
+  <% end %>
+
+  <%# 公式リンク：値がある項目のみ表示 %>
+  <% if cafe.instagram_url.present? || cafe.website_url.present? %>
+    <div>
+      <h3 class="text-sm font-semibold text-amber-600 mb-3">公式リンク</h3>
+      <div class="flex gap-4">
+        <% if cafe.instagram_url.present? %>
+          <%= link_to cafe.instagram_url, target: "_blank", rel: "noopener noreferrer",
+                      class: "flex items-center gap-1.5 text-sm text-gray-600" do %>
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="currentColor" viewBox="0 0 24 24">
+              <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/>
+            </svg>
+            Instagram
+          <% end %>
+        <% end %>
+        <% if cafe.website_url.present? %>
+          <%= link_to cafe.website_url, target: "_blank", rel: "noopener noreferrer",
+                      class: "flex items-center gap-1.5 text-sm text-gray-600" do %>
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12a9 9 0 01-9 9m9-9a9 9 0 00-9-9m9 9H3m9 9a9 9 0 01-9-9m9 9c1.657 0 3-4.03 3-9s-1.343-9-3-9m0 18c-1.657 0-3-4.03-3-9s1.343-9 3-9" />
+            </svg>
+            公式サイト
+          <% end %>
+        <% end %>
+      </div>
+    </div>
+  <% end %>
+</div>
