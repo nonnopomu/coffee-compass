@@ -1,0 +1,15 @@
+<div class="px-4 py-8 flex flex-col items-center gap-6">
+  <%# ログイン済みユーザー：ログ作成への導線 %>
+  <%# 未ログインユーザー：ログイン導線 %>
+  <% if user_signed_in? %>
+    <%= link_to "#", class: "w-full flex items-center justify-center gap-2 py-3 bg-amber-600 text-white text-sm font-medium rounded-xl" do %>
+      <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
+      </svg>
+      飲んだログを記録する
+    <% end %>
+  <% else %>
+    <p class="text-sm text-gray-500">ログを記録するにはログインが必要です</p>
+    <%= link_to "ログインする", new_user_session_path, class: "text-sm text-amber-600 font-medium border border-amber-600 rounded-xl px-6 py-2.5" %>
+  <% end %>
+</div>

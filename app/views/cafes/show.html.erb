@@ -1,0 +1,45 @@
+<% content_for :page_title, "カフェ詳細" %>
+<% content_for :back_path, cafes_path %>
+
+<%# 店舗写真エリア：MVPでは画像投稿機能がないためプレースホルダーで表示 %>
+<div class="relative bg-gray-200 aspect-video flex items-center justify-center">
+  <svg xmlns="http://www.w3.org/2000/svg" class="h-16 w-16 text-gray-300" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M3 9a2 2 0 012-2h14a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2V9z" />
+    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M19 11h2a2 2 0 010 4h-2" />
+  </svg>
+
+  <%# 店舗名・エリア：写真の上にオーバーレイで表示 %>
+  <div class="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/60 to-transparent px-4 py-4">
+    <p class="text-white/70 text-xs mb-0.5"><%= @cafe.area.prefecture %> <%= @cafe.area.city %></p>
+    <h1 class="text-white text-xl font-bold"><%= @cafe.name %></h1>
+  </div>
+</div>
+
+<%# タブナビゲーション：Stimulusでタブ切り替えを管理する %>
+<div data-controller="tabs">
+  <%# タブボタン %>
+  <div class="flex border-b border-gray-200 bg-white sticky top-16 z-10">
+    <button data-tabs-target="tab"
+            data-action="click->tabs#switch"
+            data-index="0"
+            class="flex-1 py-3 text-sm font-medium text-amber-600 border-b-2 border-amber-600 cursor-pointer">
+      基本情報
+    </button>
+    <button data-tabs-target="tab"
+            data-action="click->tabs#switch"
+            data-index="1"
+            class="flex-1 py-3 text-sm font-medium text-gray-400 border-b-2 border-transparent cursor-pointer">
+      みんなのログ
+    </button>
+  </div>
+
+  <%# 基本情報パネル %>
+  <div data-tabs-target="panel">
+    <%= render "basic_info", cafe: @cafe %>
+  </div>
+
+  <%# みんなのログパネル：現時点では空。ログ機能実装時に中身を追加する %>
+  <div data-tabs-target="panel" class="hidden">
+    <%= render "drink_logs_tab", cafe: @cafe %>
+  </div>
+</div>
