@@ -17,8 +17,18 @@
     <%= javascript_include_tag "application", "data-turbo-track": "reload", type: "module" %>
   </head>
 
-  <body>
+  <body class="min-h-screen flex flex-col <%= content_for?(:page_bg) ? yield(:page_bg) : 'bg-white' %>">
     <%= render "shared/header" %>
-    <%= yield %>
+    <div class="fixed top-16 left-0 right-0 z-50 flex flex-col items-center gap-2 px-4 pointer-events-none">
+      <% flash.each do |type, message| %>
+        <div data-controller="flash" class="w-full max-w-screen-sm px-4 py-3 rounded-lg text-sm font-medium shadow-md pointer-events-auto <%= type.to_s == 'alert' ? 'bg-red-50 text-red-700 border border-red-200' : 'bg-green-50 text-green-700 border border-green-200' %>">
+          <%= message %>
+        </div>
+      <% end %>
+    </div>
+    <div class="w-full max-w-screen-sm mx-auto flex-1 flex flex-col">
+      <%= yield %>
+    </div>
+    <%= render "shared/footer" %>
   </body>
 </html>
