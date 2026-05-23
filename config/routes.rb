@@ -1,4 +1,6 @@
 Rails.application.routes.draw do
+  resources :cafes, only: [ :index ]
+
   if Rails.env.development?
     mount LetterOpenerWeb::Engine, at: "/letter_opener"
   end
