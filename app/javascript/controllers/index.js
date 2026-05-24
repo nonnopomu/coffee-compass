@@ -4,6 +4,9 @@
 
 import { application } from "./application"
 
+import AreaSelectionController from "./area_selection_controller"
+application.register("area-selection", AreaSelectionController)
+
 import FlashController from "./flash_controller"
 application.register("flash", FlashController)
 
@@ -12,3 +15,6 @@ application.register("hello", HelloController)
 
 import TabsController from "./tabs_controller"
 application.register("tabs", TabsController)
+
+import TagSelectionController from "./tag_selection_controller"
+application.register("tag-selection", TagSelectionController)
