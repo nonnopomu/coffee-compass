@@ -10,9 +10,6 @@ application.register("area-selection", AreaSelectionController)
 import FlashController from "./flash_controller"
 application.register("flash", FlashController)
 
-import HelloController from "./hello_controller"
-application.register("hello", HelloController)
-
 import TabsController from "./tabs_controller"
 application.register("tabs", TabsController)
 
