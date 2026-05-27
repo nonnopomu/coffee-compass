@@ -1,0 +1,143 @@
+<% tag_category_labels = {
+  "roast_level" => "焙煎度",
+  "taste" => "味わい",
+  "brew_method" => "抽出スタイル",
+  "cafe_feature" => "店舗の特徴"
+} %>
+
+<% status_options = [
+  ["下書き", "draft", "公開前の状態で保存します"],
+  ["公開", "published", "利用者のカフェ一覧・詳細に表示します"],
+  ["閉店", "closed", "管理上は残しつつ公開一覧には出しません"]
+] %>
+
+<div class="bg-gray-50 min-h-full">
+  <%= form_with model: [:admin, cafe], class: "flex flex-col" do |f| %>
+    <div class="px-4 py-5 space-y-5">
+      <% if cafe.errors.any? %>
+        <div class="rounded-lg border border-red-200 bg-red-50 px-4 py-3">
+          <p class="text-sm font-semibold text-red-700">入力内容を確認してください</p>
+          <ul class="mt-2 list-disc space-y-1 pl-5 text-xs text-red-700">
+            <% cafe.errors.full_messages.each do |message| %>
+              <li><%= message %></li>
+            <% end %>
+          </ul>
+        </div>
+      <% end %>
+
+      <section class="space-y-4">
+        <div class="flex items-center gap-2 border-l-4 border-amber-600 pl-3">
+          <h2 class="text-sm font-semibold text-gray-900">基本情報</h2>
+        </div>
+
+        <div>
+          <%= f.label :name, "カフェ名", class: "mb-1 block text-sm font-medium text-gray-700" %>
+          <%= f.text_field :name, class: "w-full rounded-lg border border-gray-200 bg-white px-3 py-3 text-sm text-gray-900 focus:border-amber-600 focus:outline-none focus:ring-2 focus:ring-amber-100", placeholder: "例: Blue Pine Coffee" %>
+        </div>
+
+        <div>
+          <%= f.label :prefecture, "都道府県", class: "mb-1 block text-sm font-medium text-gray-700" %>
+          <%= f.select :prefecture, options_for_select(prefectures, cafe.prefecture), { prompt: "都道府県を選択" }, { class: "w-full rounded-lg border border-gray-200 bg-white px-3 py-3 text-sm text-gray-900 focus:border-amber-600 focus:outline-none focus:ring-2 focus:ring-amber-100" } %>
+        </div>
+
+        <div>
+          <%= f.label :address, "住所", class: "mb-1 block text-sm font-medium text-gray-700" %>
+          <%= f.text_field :address, class: "w-full rounded-lg border border-gray-200 bg-white px-3 py-3 text-sm text-gray-900 focus:border-amber-600 focus:outline-none focus:ring-2 focus:ring-amber-100", placeholder: "例: 東京都渋谷区..." %>
+        </div>
+
+        <div class="grid grid-cols-1 gap-4 sm:grid-cols-2">
+          <div>
+            <%= f.label :opening_hours, "営業時間", class: "mb-1 block text-sm font-medium text-gray-700" %>
+            <%= f.text_field :opening_hours, class: "w-full rounded-lg border border-gray-200 bg-white px-3 py-3 text-sm text-gray-900 focus:border-amber-600 focus:outline-none focus:ring-2 focus:ring-amber-100", placeholder: "例: 10:00 - 19:00" %>
+          </div>
+
+          <div>
+            <%= f.label :closed_days, "定休日", class: "mb-1 block text-sm font-medium text-gray-700" %>
+            <%= f.text_field :closed_days, class: "w-full rounded-lg border border-gray-200 bg-white px-3 py-3 text-sm text-gray-900 focus:border-amber-600 focus:outline-none focus:ring-2 focus:ring-amber-100", placeholder: "例: 月曜日" %>
+          </div>
+        </div>
+      </section>
+
+      <section class="space-y-4">
+        <div class="flex items-center gap-2 border-l-4 border-amber-600 pl-3">
+          <h2 class="text-sm font-semibold text-gray-900">リンク</h2>
+        </div>
+
+        <div>
+          <%= f.label :google_maps_url, "Google Maps URL", class: "mb-1 block text-sm font-medium text-gray-700" %>
+          <%= f.url_field :google_maps_url, class: "w-full rounded-lg border border-gray-200 bg-white px-3 py-3 text-sm text-gray-900 focus:border-amber-600 focus:outline-none focus:ring-2 focus:ring-amber-100", placeholder: "https://maps.google.com/..." %>
+        </div>
+
+        <div>
+          <%= f.label :website_url, "公式サイトURL", class: "mb-1 block text-sm font-medium text-gray-700" %>
+          <%= f.url_field :website_url, class: "w-full rounded-lg border border-gray-200 bg-white px-3 py-3 text-sm text-gray-900 focus:border-amber-600 focus:outline-none focus:ring-2 focus:ring-amber-100", placeholder: "https://example.com" %>
+        </div>
+
+        <div>
+          <%= f.label :instagram_url, "Instagram URL", class: "mb-1 block text-sm font-medium text-gray-700" %>
+          <%= f.url_field :instagram_url, class: "w-full rounded-lg border border-gray-200 bg-white px-3 py-3 text-sm text-gray-900 focus:border-amber-600 focus:outline-none focus:ring-2 focus:ring-amber-100", placeholder: "https://www.instagram.com/..." %>
+        </div>
+      </section>
+
+      <section class="space-y-4">
+        <div class="flex items-center gap-2 border-l-4 border-amber-600 pl-3">
+          <h2 class="text-sm font-semibold text-gray-900">紹介文</h2>
+        </div>
+
+        <div>
+          <%= f.label :description, "説明文", class: "mb-1 block text-sm font-medium text-gray-700" %>
+          <%= f.text_area :description, rows: 5, class: "w-full resize-y rounded-lg border border-gray-200 bg-white px-3 py-3 text-sm leading-6 text-gray-900 focus:border-amber-600 focus:outline-none focus:ring-2 focus:ring-amber-100", placeholder: "カフェの雰囲気や特徴を入力" %>
+        </div>
+      </section>
+
+      <section class="space-y-4">
+        <div class="flex items-center gap-2 border-l-4 border-amber-600 pl-3">
+          <h2 class="text-sm font-semibold text-gray-900">タグ</h2>
+        </div>
+
+        <div class="space-y-4">
+          <%= f.hidden_field :tag_ids, multiple: true, value: "" %>
+
+          <% tags.group_by(&:category).each do |category, grouped_tags| %>
+            <div>
+              <p class="mb-2 text-xs font-semibold text-amber-700"><%= tag_category_labels.fetch(category, category) %></p>
+              <div class="flex flex-wrap gap-2">
+                <%= f.collection_check_boxes :tag_ids, grouped_tags, :id, :name, include_hidden: false do |tag_builder| %>
+                  <%= tag_builder.label class: "inline-flex cursor-pointer items-center gap-2 rounded-full border border-gray-200 bg-white px-3 py-2 text-sm text-gray-700 has-[:checked]:border-amber-600 has-[:checked]:bg-amber-50 has-[:checked]:text-amber-700" do %>
+                    <%= tag_builder.check_box class: "h-4 w-4 rounded border-gray-300 text-amber-600 focus:ring-amber-500" %>
+                    <span><%= tag_builder.text %></span>
+                  <% end %>
+                <% end %>
+              </div>
+            </div>
+          <% end %>
+        </div>
+      </section>
+
+      <section class="space-y-4">
+        <div class="flex items-center gap-2 border-l-4 border-amber-600 pl-3">
+          <h2 class="text-sm font-semibold text-gray-900">公開状態</h2>
+        </div>
+
+        <div class="space-y-2">
+          <% status_options.each do |label, value, help_text| %>
+            <%= f.label :status, value, class: "flex cursor-pointer items-start gap-3 rounded-lg border border-gray-200 bg-white px-4 py-3 has-[:checked]:border-amber-600 has-[:checked]:bg-amber-50" do %>
+              <%= f.radio_button :status, value, class: "mt-0.5 h-4 w-4 border-gray-300 text-amber-600 focus:ring-amber-500" %>
+              <span>
+                <span class="block text-sm font-medium text-gray-900"><%= label %></span>
+                <span class="mt-0.5 block text-xs text-gray-500"><%= help_text %></span>
+              </span>
+            <% end %>
+          <% end %>
+        </div>
+      </section>
+    </div>
+
+    <div class="sticky bottom-0 border-t border-gray-200 bg-white px-4 py-3">
+      <div class="mx-auto flex max-w-screen-sm gap-3">
+        <%= link_to "キャンセル", cancel_path, class: "flex-1 rounded-lg border border-gray-200 bg-white px-4 py-3 text-center text-sm font-medium text-gray-700" %>
+        <%= f.submit submit_label, class: "flex-1 cursor-pointer rounded-lg bg-amber-600 px-4 py-3 text-sm font-semibold text-white hover:bg-amber-700" %>
+      </div>
+    </div>
+  <% end %>
+</div>

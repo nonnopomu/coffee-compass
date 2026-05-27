@@ -1,0 +1,32 @@
+ja:
+  activerecord:
+    models:
+      cafe: カフェ
+      cafe_tag: カフェタグ
+      drink_log: ログ
+      drink_log_taste_tag: ログ味わいタグ
+      tag: タグ
+      user: ユーザー
+    attributes:
+      cafe:
+        prefecture: 都道府県
+        name: カフェ名
+        address: 住所
+        opening_hours: 営業時間
+        closed_days: 定休日
+        google_maps_url: Google Maps URL
+        website_url: 公式サイトURL
+        instagram_url: Instagram URL
+        description: 説明文
+        status: 公開状態
+        tag_ids: タグ
+      tag:
+        name: タグ名
+        category: カテゴリ
+        display_order: 表示順
+        is_active: 有効
+      user:
+        name: ユーザー名
+        email: メールアドレス
+        password: パスワード
+        password_confirmation: パスワード（確認）
