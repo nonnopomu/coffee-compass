@@ -54,5 +54,9 @@
         </div>
       </div>
     <% end %>
+
+    <div class="pt-3">
+      <%= link_to "ログアウト", destroy_user_session_path, data: { turbo_method: :delete }, class: "block w-full rounded-lg bg-amber-600 px-4 py-3 text-center text-sm font-semibold text-white shadow-sm" %>
+    </div>
   </div>
 </div>
