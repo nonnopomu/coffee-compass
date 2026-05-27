@@ -1,0 +1,4 @@
+<% content_for :page_title, "カフェ編集" %>
+<% content_for :back_path, cafe_path(@cafe) %>
+
+<%= render "form", cafe: @cafe, prefectures: @prefectures, tags: @tags, submit_label: "更新する", cancel_path: cafe_path(@cafe) %>

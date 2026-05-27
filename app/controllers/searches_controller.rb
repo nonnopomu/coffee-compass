@@ -2,9 +2,9 @@ class SearchesController < ApplicationController
   skip_before_action :authenticate_user!, only: [ :area, :tag ]
 
   def area
-    @available_prefectures = Area.joins(:cafes)
-                                 .where(cafes: { status: :published })
+    @available_prefectures = Cafe.published
                                  .distinct
+                                 .order(:prefecture)
                                  .pluck(:prefecture)
   end
 

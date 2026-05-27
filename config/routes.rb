@@ -8,6 +8,10 @@ Rails.application.routes.draw do
     end
   end
 
+  namespace :admin do
+    resources :cafes, only: [ :new, :create, :edit, :update ]
+  end
+
   if Rails.env.development?
     mount LetterOpenerWeb::Engine, at: "/letter_opener"
   end

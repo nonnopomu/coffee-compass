@@ -10,22 +10,9 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.2].define(version: 2026_05_24_152518) do
+ActiveRecord::Schema[7.2].define(version: 2026_05_27_142000) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
-
-  create_table "areas", force: :cascade do |t|
-    t.string "name", null: false
-    t.string "prefecture", null: false
-    t.string "city", null: false
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.string "region"
-    t.index ["city"], name: "index_areas_on_city"
-    t.index ["name"], name: "index_areas_on_name"
-    t.index ["prefecture", "city", "name"], name: "index_areas_on_prefecture_and_city_and_name", unique: true
-    t.index ["prefecture"], name: "index_areas_on_prefecture"
-  end
 
   create_table "cafe_tags", force: :cascade do |t|
     t.bigint "cafe_id", null: false
@@ -38,7 +25,6 @@ ActiveRecord::Schema[7.2].define(version: 2026_05_24_152518) do
   end
 
   create_table "cafes", force: :cascade do |t|
-    t.bigint "area_id", null: false
     t.string "name", null: false
     t.string "address", null: false
     t.text "opening_hours"
@@ -50,10 +36,10 @@ ActiveRecord::Schema[7.2].define(version: 2026_05_24_152518) do
     t.integer "status", default: 0, null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.index ["area_id", "status"], name: "index_cafes_on_area_id_and_status"
-    t.index ["area_id"], name: "index_cafes_on_area_id"
+    t.string "prefecture", null: false
     t.index ["name", "address"], name: "index_cafes_on_name_and_address", unique: true
     t.index ["name"], name: "index_cafes_on_name"
+    t.index ["prefecture"], name: "index_cafes_on_prefecture"
     t.index ["status"], name: "index_cafes_on_status"
   end
 
@@ -120,7 +106,6 @@ ActiveRecord::Schema[7.2].define(version: 2026_05_24_152518) do
 
   add_foreign_key "cafe_tags", "cafes"
   add_foreign_key "cafe_tags", "tags"
-  add_foreign_key "cafes", "areas"
   add_foreign_key "drink_log_taste_tags", "drink_logs"
   add_foreign_key "drink_log_taste_tags", "tags"
   add_foreign_key "drink_logs", "cafes"
