@@ -1,6 +1,10 @@
 class Admin::CafesController < Admin::BaseController
   before_action :set_cafe, only: [ :edit, :update ]
 
+  def index
+    @cafes = Cafe.includes(:tags).order(created_at: :desc)
+  end
+
   def new
     @cafe = Cafe.new(status: :draft)
     set_form_options
@@ -14,7 +18,7 @@ class Admin::CafesController < Admin::BaseController
     @cafe = Cafe.new(cafe_params)
 
     if @cafe.save
-      redirect_to cafe_path(@cafe), notice: "カフェを登録しました"
+      redirect_to admin_cafes_path, notice: "カフェを登録しました"
     else
       set_form_options
       render :new, status: :unprocessable_entity
@@ -23,7 +27,7 @@ class Admin::CafesController < Admin::BaseController
 
   def update
     if @cafe.update(cafe_params)
-      redirect_to cafe_path(@cafe), notice: "カフェ情報を更新しました"
+      redirect_to admin_cafes_path, notice: "カフェ情報を更新しました"
     else
       set_form_options
       render :edit, status: :unprocessable_entity

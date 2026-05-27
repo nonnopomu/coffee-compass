@@ -1,5 +1,7 @@
 <% content_for :page_title, "カフェ詳細" %>
-<% content_for :back_path, cafes_path %>
+<% return_to = params[:return_to].to_s %>
+<% safe_back_path = return_to.start_with?("/") && !return_to.start_with?("//") ? return_to : cafes_path %>
+<% content_for :back_path, safe_back_path %>
 
 <%# 店舗写真エリア：MVPでは画像投稿機能がないためプレースホルダーで表示 %>
 <div class="relative bg-gray-200 aspect-video flex items-center justify-center">

@@ -9,7 +9,9 @@ Rails.application.routes.draw do
   end
 
   namespace :admin do
-    resources :cafes, only: [ :new, :create, :edit, :update ]
+    root "dashboards#show"
+    
+    resources :cafes, only: [ :index, :new, :create, :edit, :update ]
   end
 
   if Rails.env.development?
