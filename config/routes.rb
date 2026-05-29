@@ -1,5 +1,9 @@
 Rails.application.routes.draw do
-  resources :cafes, only: [ :index, :show ]
+  resources :cafes, only: [ :index, :show ] do
+    resources :drink_logs, only: [ :new ]
+  end
+
+  resources :drink_logs, only: [ :new ]
 
   resources :searches, only: [] do
     collection do
@@ -10,7 +14,7 @@ Rails.application.routes.draw do
 
   namespace :admin do
     root "dashboards#show"
-    
+
     resources :cafes, only: [ :index, :new, :create, :edit, :update ]
     resources :tags, only: [ :index, :new, :create, :edit, :update ]
   end
