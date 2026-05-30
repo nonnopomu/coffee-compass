@@ -3,7 +3,7 @@ Rails.application.routes.draw do
     resources :drink_logs, only: [ :new ]
   end
 
-  resources :drink_logs, only: [ :new ]
+  resources :drink_logs, only: [ :new, :create ]
 
   resources :searches, only: [] do
     collection do

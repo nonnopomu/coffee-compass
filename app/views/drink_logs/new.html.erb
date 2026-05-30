@@ -14,15 +14,26 @@
     <% end %>
   </div>
 
-  <%= form_with model: @drink_log, url: "#", method: :post, class: "flex flex-col" do |f| %>
+  <%= form_with model: @drink_log, url: drink_logs_path, method: :post, class: "flex flex-col" do |f| %>
     <div class="px-4 py-5 space-y-6">
+      <% if @drink_log.errors.any? %>
+        <div class="rounded-lg border border-red-200 bg-red-50 px-4 py-3">
+          <p class="text-sm font-semibold text-red-700">入力内容を確認してください</p>
+          <ul class="mt-2 space-y-1">
+            <% @drink_log.errors.full_messages.each do |message| %>
+              <li class="text-sm text-red-700"><%= message %></li>
+            <% end %>
+          </ul>
+        </div>
+      <% end %>
+
       <section class="space-y-4">
         <div class="flex items-center gap-2 border-l-4 border-amber-600 pl-3">
           <h2 class="text-sm font-semibold text-gray-900">基本情報</h2>
         </div>
 
         <% if @cafe.present? %>
-          <%= f.hidden_field :cafe_id, value: @cafe.id %>
+          <%= f.hidden_field :cafe_id, value: @drink_log.cafe_id || @cafe.id %>
         <% else %>
           <div data-controller="cafe-selection">
             <%= f.hidden_field :cafe_id, data: { cafe_selection_target: "value" } %>
@@ -68,7 +79,7 @@
 
         <div>
           <%= f.label :drank_on, "飲んだ日", class: "mb-1 block text-sm font-medium text-gray-700" %>
-          <%= f.date_field :drank_on, value: Date.current, class: "w-full rounded-lg border border-gray-200 bg-white px-3 py-3 text-sm text-gray-900 focus:border-amber-600 focus:outline-none focus:ring-2 focus:ring-amber-100" %>
+          <%= f.date_field :drank_on, value: @drink_log.drank_on || Date.current, class: "w-full rounded-lg border border-gray-200 bg-white px-3 py-3 text-sm text-gray-900 focus:border-amber-600 focus:outline-none focus:ring-2 focus:ring-amber-100" %>
         </div>
       </section>
 
@@ -142,7 +153,7 @@
     <div class="sticky bottom-0 border-t border-gray-200 bg-white px-4 py-3">
       <div class="mx-auto flex max-w-screen-sm gap-3">
         <%= link_to "キャンセル", @cafe.present? ? cafe_path(@cafe) : root_path, class: "flex-1 rounded-lg border border-gray-200 bg-white px-4 py-3 text-center text-sm font-medium text-gray-700" %>
-        <%= button_tag "投稿する", type: "button", class: "flex-1 rounded-lg bg-amber-600 px-4 py-3 text-sm font-semibold text-white" %>
+        <%= button_tag "投稿する", type: "submit", class: "flex-1 rounded-lg bg-amber-600 px-4 py-3 text-sm font-semibold text-white" %>
       </div>
     </div>
   <% end %>
