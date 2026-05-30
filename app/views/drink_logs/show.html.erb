@@ -1,0 +1,85 @@
+<% content_for :page_title, "ログ詳細" %>
+<% content_for :back_path, cafe_path(@drink_log.cafe) %>
+
+<div class="min-h-full bg-gray-50">
+  <div class="border-b border-gray-200 bg-white px-4 py-5">
+    <p class="text-xs font-medium text-amber-600"><%= @drink_log.cafe.name %></p>
+    <h1 class="mt-2 text-xl font-bold text-gray-900"><%= @drink_log.menu_name %></h1>
+    <div class="mt-3 flex flex-wrap items-center gap-x-3 gap-y-1 text-xs text-gray-500">
+      <span><%= @drink_log.drank_on.strftime("%Y年%-m月%-d日") %></span>
+      <span>投稿者: <%= @drink_log.user.name %></span>
+    </div>
+  </div>
+
+  <div class="px-4 py-5 space-y-6">
+    <section class="space-y-4">
+      <div class="flex items-center gap-2 border-l-4 border-amber-600 pl-3">
+        <h2 class="text-sm font-semibold text-gray-900">コーヒーの記録</h2>
+      </div>
+
+      <div class="divide-y divide-gray-100 rounded-lg border border-gray-200 bg-white">
+        <div class="flex items-start justify-between gap-4 px-4 py-3">
+          <p class="text-sm text-gray-500">カフェ</p>
+          <%= link_to @drink_log.cafe.name, cafe_path(@drink_log.cafe), class: "text-right text-sm font-semibold text-amber-700" %>
+        </div>
+
+        <div class="flex items-start justify-between gap-4 px-4 py-3">
+          <p class="text-sm text-gray-500">メニュー名</p>
+          <p class="text-right text-sm font-semibold text-gray-900"><%= @drink_log.menu_name %></p>
+        </div>
+
+        <div class="flex items-start justify-between gap-4 px-4 py-3">
+          <p class="text-sm text-gray-500">飲んだ日</p>
+          <p class="text-right text-sm font-semibold text-gray-900"><%= @drink_log.drank_on.strftime("%Y年%-m月%-d日") %></p>
+        </div>
+
+        <div class="flex items-start justify-between gap-4 px-4 py-3">
+          <p class="text-sm text-gray-500">焙煎度</p>
+          <p class="text-right text-sm font-semibold text-gray-900"><%= @drink_log.roast_level_tag.name %></p>
+        </div>
+
+        <div class="flex items-start justify-between gap-4 px-4 py-3">
+          <p class="text-sm text-gray-500">提供スタイル</p>
+          <p class="text-right text-sm font-semibold text-gray-900"><%= @drink_log.brew_method_tag.name %></p>
+        </div>
+      </div>
+    </section>
+
+    <section class="space-y-4">
+      <div class="flex items-center gap-2 border-l-4 border-amber-600 pl-3">
+        <h2 class="text-sm font-semibold text-gray-900">味わい</h2>
+      </div>
+
+      <div class="flex flex-wrap gap-2">
+        <% @drink_log.taste_tags.each do |tag| %>
+          <span class="rounded-full border border-amber-200 bg-amber-50 px-3 py-1.5 text-sm font-medium text-amber-700"><%= tag.name %></span>
+        <% end %>
+      </div>
+    </section>
+
+    <section class="space-y-4">
+      <div class="flex items-center gap-2 border-l-4 border-amber-600 pl-3">
+        <h2 class="text-sm font-semibold text-gray-900">感想メモ</h2>
+      </div>
+
+      <div class="rounded-lg border border-gray-200 bg-white px-4 py-4">
+        <% if @drink_log.memo.present? %>
+          <p class="whitespace-pre-wrap text-sm leading-6 text-gray-700"><%= @drink_log.memo %></p>
+        <% else %>
+          <p class="text-sm text-gray-500">メモはありません。</p>
+        <% end %>
+      </div>
+    </section>
+
+    <% if user_signed_in? && @drink_log.user == current_user %>
+      <section class="space-y-3">
+        <%= link_to "編集する", "#", class: "block w-full rounded-lg border border-amber-600 bg-white px-4 py-3 text-center text-sm font-semibold text-amber-700" %>
+        <%= link_to "削除する", "#", class: "block w-full rounded-lg border border-red-200 bg-white px-4 py-3 text-center text-sm font-semibold text-red-600" %>
+      </section>
+    <% end %>
+
+    <div class="pb-6">
+      <%= link_to "カフェ詳細へ戻る", cafe_path(@drink_log.cafe), class: "block w-full rounded-lg bg-amber-600 px-4 py-3 text-center text-sm font-semibold text-white" %>
+    </div>
+  </div>
+</div>
