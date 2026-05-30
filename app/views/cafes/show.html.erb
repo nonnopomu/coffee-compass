@@ -24,12 +24,14 @@
     <button data-tabs-target="tab"
             data-action="click->tabs#switch"
             data-index="0"
+            data-tab-key=""
             class="flex-1 py-3 text-sm font-medium text-amber-600 border-b-2 border-amber-600 cursor-pointer">
       基本情報
     </button>
     <button data-tabs-target="tab"
             data-action="click->tabs#switch"
             data-index="1"
+            data-tab-key="logs"
             class="flex-1 py-3 text-sm font-medium text-gray-400 border-b-2 border-transparent cursor-pointer">
       みんなのログ
     </button>
@@ -42,6 +44,6 @@
 
   <%# みんなのログパネル：現時点では空。ログ機能実装時に中身を追加する %>
   <div data-tabs-target="panel" class="hidden">
-    <%= render "drink_logs_tab", cafe: @cafe %>
+    <%= render "drink_logs_tab", cafe: @cafe, drink_logs: @drink_logs %>
   </div>
 </div>
