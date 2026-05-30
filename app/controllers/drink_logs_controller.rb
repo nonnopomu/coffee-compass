@@ -1,5 +1,5 @@
 class DrinkLogsController < ApplicationController
-  before_action :authenticate_user!
+  before_action :authenticate_user!, only: [ :new, :create ]
 
   def new
     @cafe = Cafe.find(params[:cafe_id]) if params[:cafe_id].present?
@@ -19,6 +19,10 @@ class DrinkLogsController < ApplicationController
       set_form_options
       render :new, status: :unprocessable_entity
     end
+  end
+
+  def show
+    @drink_log = DrinkLog.find(params[:id])
   end
 
   private
