@@ -1,5 +1,8 @@
 <% content_for :page_title, "ログ詳細" %>
-<% content_for :back_path, cafe_path(@drink_log.cafe) %>
+<% return_to = params[:return_to].to_s %>
+<% default_back_path = cafe_path(@drink_log.cafe, tab: "logs") %>
+<% safe_back_path = return_to.start_with?("/") && !return_to.start_with?("//") ? return_to : default_back_path %>
+<% content_for :back_path, safe_back_path %>
 
 <div class="min-h-full bg-gray-50">
   <div class="border-b border-gray-200 bg-white px-4 py-5">
@@ -20,7 +23,7 @@
       <div class="divide-y divide-gray-100 rounded-lg border border-gray-200 bg-white">
         <div class="flex items-start justify-between gap-4 px-4 py-3">
           <p class="text-sm text-gray-500">カフェ</p>
-          <%= link_to @drink_log.cafe.name, cafe_path(@drink_log.cafe), class: "text-right text-sm font-semibold text-amber-700" %>
+          <%= link_to @drink_log.cafe.name, safe_back_path, class: "text-right text-sm font-semibold text-amber-700" %>
         </div>
 
         <div class="flex items-start justify-between gap-4 px-4 py-3">
@@ -79,7 +82,7 @@
     <% end %>
 
     <div class="pb-6">
-      <%= link_to "カフェ詳細へ戻る", cafe_path(@drink_log.cafe), class: "block w-full rounded-lg bg-amber-600 px-4 py-3 text-center text-sm font-semibold text-white" %>
+      <%= link_to "カフェ詳細へ戻る", safe_back_path, class: "block w-full rounded-lg bg-amber-600 px-4 py-3 text-center text-sm font-semibold text-white" %>
     </div>
   </div>
 </div>

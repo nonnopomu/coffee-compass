@@ -9,6 +9,10 @@ class CafesController < ApplicationController
   end
 
   def show
-    @cafe = Cafe.includes(:tags, :drink_logs).find(params[:id])
+    @cafe = Cafe.includes(:tags).find(params[:id])
+    @drink_logs = @cafe.drink_logs
+                       .published
+                       .includes(:user, :roast_level_tag, :brew_method_tag, :taste_tags)
+                       .order(created_at: :desc)
   end
 end
