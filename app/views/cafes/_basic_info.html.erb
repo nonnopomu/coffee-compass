@@ -38,6 +38,11 @@
     Google Maps で開く
   <% end %>
 
+  <%= render "log_trends",
+             roast_level_trends: roast_level_trends,
+             taste_tag_trends: taste_tag_trends,
+             brew_method_trends: brew_method_trends %>
+
   <%# 提供スタイルタグ：brew_method カテゴリのタグのみ絞り込んで表示 %>
   <% brew_method_tags = cafe.tags.select(&:brew_method?) %>
   <% if brew_method_tags.any? %>
