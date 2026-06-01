@@ -1,27 +1,39 @@
-require 'spec_helper'
+require "rails_helper"
 
 RSpec.describe TagPolicy, type: :policy do
-  let(:user) { User.new }
+  let(:tag) { Tag.new(name: "フルーティー", category: :taste, display_order: 1) }
 
-  subject { described_class }
+  describe "管理者権限" do
+    let(:admin) { build_user(role: :admin) }
+    let(:policy) { described_class.new(admin, tag) }
 
-  permissions ".scope" do
-    pending "add some examples to (or delete) #{__FILE__}"
+    it "タグを作成できること" do
+      expect(policy.create?).to be true
+    end
+
+    it "タグを更新できること" do
+      expect(policy.update?).to be true
+    end
+
+    it "タグを削除できること" do
+      expect(policy.destroy?).to be true
+    end
   end
 
-  permissions :show? do
-    pending "add some examples to (or delete) #{__FILE__}"
-  end
+  describe "一般ユーザー権限" do
+    let(:general_user) { build_user }
+    let(:policy) { described_class.new(general_user, tag) }
 
-  permissions :create? do
-    pending "add some examples to (or delete) #{__FILE__}"
-  end
+    it "タグを作成できないこと" do
+      expect(policy.create?).to be false
+    end
 
-  permissions :update? do
-    pending "add some examples to (or delete) #{__FILE__}"
-  end
+    it "タグを更新できないこと" do
+      expect(policy.update?).to be false
+    end
 
-  permissions :destroy? do
-    pending "add some examples to (or delete) #{__FILE__}"
+    it "タグを削除できないこと" do
+      expect(policy.destroy?).to be false
+    end
   end
 end
