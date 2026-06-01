@@ -12,6 +12,8 @@ Rails.application.routes.draw do
     end
   end
 
+  resource :mypage, only: [ :show ]
+
   namespace :admin do
     root "dashboards#show"
 

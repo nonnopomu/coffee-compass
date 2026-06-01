@@ -16,7 +16,7 @@ class DrinkLogsController < ApplicationController
     @drink_log = current_user.drink_logs.build(drink_log_create_params)
 
     if @drink_log.save
-      redirect_to cafe_path(@drink_log.cafe), notice: "ログを投稿しました"
+      redirect_to cafe_path(@drink_log.cafe, tab: "logs"), notice: "ログを投稿しました"
     else
       set_form_options
       render :new, status: :unprocessable_entity
@@ -24,9 +24,11 @@ class DrinkLogsController < ApplicationController
   end
 
   def show
+    @safe_back_path = safe_return_path(cafe_path(@drink_log.cafe, tab: "logs"))
   end
 
   def edit
+    @safe_back_path = safe_return_path(drink_log_path(@drink_log))
     set_form_options
   end
 
@@ -40,7 +42,7 @@ class DrinkLogsController < ApplicationController
   end
 
   def destroy
-    redirect_path = safe_return_path || cafe_path(@drink_log.cafe, tab: "logs")
+    redirect_path = safe_return_path(cafe_path(@drink_log.cafe, tab: "logs"))
     @drink_log.destroy!
     redirect_to redirect_path, notice: "ログを削除しました"
   end
@@ -86,10 +88,7 @@ class DrinkLogsController < ApplicationController
     redirect_to drink_log_path(@drink_log), alert: "自分のログのみ編集できます" unless @drink_log.user == current_user
   end
 
-  def safe_return_path
-    return_to = params[:return_to].to_s
-    return return_to if return_to.start_with?("/") && !return_to.start_with?("//")
-
-    nil
+  def safe_return_path(fallback_path)
+    url_from(params[:return_to]) || fallback_path
   end
 end
