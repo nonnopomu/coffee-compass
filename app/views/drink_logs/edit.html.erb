@@ -1,7 +1,5 @@
 <% content_for :page_title, "ログ編集" %>
-<% return_to = params[:return_to].to_s %>
-<% safe_back_path = return_to.start_with?("/") && !return_to.start_with?("//") ? return_to : drink_log_path(@drink_log) %>
-<% content_for :back_path, safe_back_path %>
+<% content_for :back_path, @safe_back_path %>
 
 <div class="min-h-full bg-gray-50">
   <div class="border-b border-gray-200 bg-white px-4 py-4">
@@ -108,7 +106,7 @@
 
     <div class="sticky bottom-0 border-t border-gray-200 bg-white px-4 py-3">
       <div class="mx-auto flex max-w-screen-sm gap-3">
-        <%= link_to "キャンセル", safe_back_path, class: "flex-1 rounded-lg border border-gray-200 bg-white px-4 py-3 text-center text-sm font-medium text-gray-700" %>
+        <%= link_to "キャンセル", @safe_back_path, class: "flex-1 rounded-lg border border-gray-200 bg-white px-4 py-3 text-center text-sm font-medium text-gray-700" %>
         <%= button_tag "更新する", type: "submit", class: "flex-1 rounded-lg bg-amber-600 px-4 py-3 text-sm font-semibold text-white" %>
       </div>
     </div>
