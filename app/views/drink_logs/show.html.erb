@@ -76,7 +76,7 @@
 
     <% if user_signed_in? && @drink_log.user == current_user %>
       <section class="space-y-3">
-        <%= link_to "編集する", "#", class: "block w-full rounded-lg border border-amber-600 bg-white px-4 py-3 text-center text-sm font-semibold text-amber-700" %>
+        <%= link_to "編集する", edit_drink_log_path(@drink_log), class: "block w-full rounded-lg border border-amber-600 bg-white px-4 py-3 text-center text-sm font-semibold text-amber-700" %>
         <%= link_to "削除する", "#", class: "block w-full rounded-lg border border-red-200 bg-white px-4 py-3 text-center text-sm font-semibold text-red-600" %>
       </section>
     <% end %>

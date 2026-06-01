@@ -1,0 +1,114 @@
+<% content_for :page_title, "ログ編集" %>
+<% content_for :back_path, drink_log_path(@drink_log) %>
+
+<div class="min-h-full bg-gray-50">
+  <div class="border-b border-gray-200 bg-white px-4 py-4">
+    <p class="text-xs text-gray-500">記録したカフェ</p>
+    <h1 class="mt-1 text-lg font-bold text-gray-900"><%= @drink_log.cafe.name %></h1>
+    <p class="mt-1 text-sm text-gray-600"><%= @drink_log.cafe.address %></p>
+  </div>
+
+  <%= form_with model: @drink_log, url: drink_log_path(@drink_log), method: :patch, class: "flex flex-col" do |f| %>
+    <div class="px-4 py-5 space-y-6">
+      <% if @drink_log.errors.any? %>
+        <div class="rounded-lg border border-red-200 bg-red-50 px-4 py-3">
+          <p class="text-sm font-semibold text-red-700">入力内容を確認してください</p>
+          <ul class="mt-2 space-y-1">
+            <% @drink_log.errors.full_messages.each do |message| %>
+              <li class="text-sm text-red-700"><%= message %></li>
+            <% end %>
+          </ul>
+        </div>
+      <% end %>
+
+      <section class="space-y-4">
+        <div class="flex items-center gap-2 border-l-4 border-amber-600 pl-3">
+          <h2 class="text-sm font-semibold text-gray-900">基本情報</h2>
+        </div>
+
+        <div>
+          <%= f.label :menu_name, "メニュー名", class: "mb-1 block text-sm font-medium text-gray-700" %>
+          <%= f.text_field :menu_name, class: "w-full rounded-lg border border-gray-200 bg-white px-3 py-3 text-sm text-gray-900 focus:border-amber-600 focus:outline-none focus:ring-2 focus:ring-amber-100", placeholder: "例: ハンドドリップ" %>
+        </div>
+
+        <div>
+          <%= f.label :drank_on, "飲んだ日", class: "mb-1 block text-sm font-medium text-gray-700" %>
+          <%= f.date_field :drank_on, class: "w-full rounded-lg border border-gray-200 bg-white px-3 py-3 text-sm text-gray-900 focus:border-amber-600 focus:outline-none focus:ring-2 focus:ring-amber-100" %>
+        </div>
+      </section>
+
+      <section class="space-y-4">
+        <div class="flex items-center gap-2 border-l-4 border-amber-600 pl-3">
+          <h2 class="text-sm font-semibold text-gray-900">焙煎度</h2>
+        </div>
+
+        <div class="grid grid-cols-1 gap-2">
+          <% if @roast_level_tags.any? %>
+            <%= f.collection_radio_buttons :roast_level_tag_id, @roast_level_tags, :id, :name do |tag_builder| %>
+              <%= tag_builder.label class: "flex cursor-pointer items-center gap-3 rounded-lg border border-gray-200 bg-white px-4 py-3 has-[:checked]:border-amber-600 has-[:checked]:bg-amber-50" do %>
+                <%= tag_builder.radio_button class: "h-4 w-4 border-gray-300 text-amber-600 focus:ring-amber-500" %>
+                <span class="text-sm font-medium text-gray-900"><%= tag_builder.text %></span>
+              <% end %>
+            <% end %>
+          <% else %>
+            <p class="rounded-lg border border-gray-200 bg-white px-4 py-3 text-sm text-gray-500">選択できる焙煎度タグがありません</p>
+          <% end %>
+        </div>
+      </section>
+
+      <section class="space-y-4">
+        <div class="flex items-center gap-2 border-l-4 border-amber-600 pl-3">
+          <h2 class="text-sm font-semibold text-gray-900">味わい</h2>
+        </div>
+
+        <div class="flex flex-wrap gap-2">
+          <%= f.hidden_field :taste_tag_ids, multiple: true, value: "" %>
+          <% if @taste_tags.any? %>
+            <%= f.collection_check_boxes :taste_tag_ids, @taste_tags, :id, :name, include_hidden: false do |tag_builder| %>
+              <%= tag_builder.label class: "inline-flex cursor-pointer items-center gap-2 rounded-full border border-gray-200 bg-white px-3 py-2 text-sm text-gray-700 has-[:checked]:border-amber-600 has-[:checked]:bg-amber-50 has-[:checked]:text-amber-700" do %>
+                <%= tag_builder.check_box class: "h-4 w-4 rounded border-gray-300 text-amber-600 focus:ring-amber-500" %>
+                <span><%= tag_builder.text %></span>
+              <% end %>
+            <% end %>
+          <% else %>
+            <p class="w-full rounded-lg border border-gray-200 bg-white px-4 py-3 text-sm text-gray-500">選択できる味わいタグがありません</p>
+          <% end %>
+        </div>
+      </section>
+
+      <section class="space-y-4">
+        <div class="flex items-center gap-2 border-l-4 border-amber-600 pl-3">
+          <h2 class="text-sm font-semibold text-gray-900">提供スタイル</h2>
+        </div>
+
+        <div class="grid grid-cols-1 gap-2">
+          <% if @brew_method_tags.any? %>
+            <%= f.collection_radio_buttons :brew_method_tag_id, @brew_method_tags, :id, :name do |tag_builder| %>
+              <%= tag_builder.label class: "flex cursor-pointer items-center gap-3 rounded-lg border border-gray-200 bg-white px-4 py-3 has-[:checked]:border-amber-600 has-[:checked]:bg-amber-50" do %>
+                <%= tag_builder.radio_button class: "h-4 w-4 border-gray-300 text-amber-600 focus:ring-amber-500" %>
+                <span class="text-sm font-medium text-gray-900"><%= tag_builder.text %></span>
+              <% end %>
+            <% end %>
+          <% else %>
+            <p class="rounded-lg border border-gray-200 bg-white px-4 py-3 text-sm text-gray-500">選択できる提供スタイルタグがありません</p>
+          <% end %>
+        </div>
+      </section>
+
+      <section class="space-y-4">
+        <div class="flex items-center gap-2 border-l-4 border-amber-600 pl-3">
+          <h2 class="text-sm font-semibold text-gray-900">感想メモ</h2>
+        </div>
+
+        <%= f.text_area :memo, rows: 5, maxlength: 200, class: "w-full resize-y rounded-lg border border-gray-200 bg-white px-3 py-3 text-sm leading-6 text-gray-900 focus:border-amber-600 focus:outline-none focus:ring-2 focus:ring-amber-100", placeholder: "味の印象やまた飲みたい理由など" %>
+      </section>
+    </div>
+
+    <div class="sticky bottom-0 border-t border-gray-200 bg-white px-4 py-3">
+      <div class="mx-auto flex max-w-screen-sm gap-3">
+        <%= link_to "キャンセル", drink_log_path(@drink_log), class: "flex-1 rounded-lg border border-gray-200 bg-white px-4 py-3 text-center text-sm font-medium text-gray-700" %>
+        <%= button_tag "更新する", type: "submit", class: "flex-1 rounded-lg bg-amber-600 px-4 py-3 text-sm font-semibold text-white" %>
+      </div>
+    </div>
+  <% end %>
+</div>
