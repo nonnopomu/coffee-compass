@@ -16,7 +16,7 @@ class DrinkLogsController < ApplicationController
     @drink_log = current_user.drink_logs.build(drink_log_create_params)
 
     if @drink_log.save
-      redirect_to cafe_path(@drink_log.cafe), notice: "ログを投稿しました"
+      redirect_to cafe_path(@drink_log.cafe, tab: "logs"), notice: "ログを投稿しました"
     else
       set_form_options
       render :new, status: :unprocessable_entity
