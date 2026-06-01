@@ -39,7 +39,11 @@
 
   <%# 基本情報パネル %>
   <div data-tabs-target="panel">
-    <%= render "basic_info", cafe: @cafe %>
+    <%= render "basic_info",
+               cafe: @cafe,
+               roast_level_trends: @roast_level_trends,
+               taste_tag_trends: @taste_tag_trends,
+               brew_method_trends: @brew_method_trends %>
   </div>
 
   <%# みんなのログパネル：現時点では空。ログ機能実装時に中身を追加する %>

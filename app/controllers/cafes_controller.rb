@@ -14,5 +14,23 @@ class CafesController < ApplicationController
                        .published
                        .includes(:user, :roast_level_tag, :brew_method_tag, :taste_tags)
                        .order(created_at: :desc)
+
+    set_log_trends
+  end
+
+  private
+
+  def set_log_trends
+    @roast_level_trends = @drink_logs.group_by(&:roast_level_tag)
+                                     .transform_values(&:count)
+                                     .sort_by { |tag, count| [ -count, tag.display_order, tag.name ] }
+
+    @brew_method_trends = @drink_logs.group_by(&:brew_method_tag)
+                                     .transform_values(&:count)
+                                     .sort_by { |tag, count| [ -count, tag.display_order, tag.name ] }
+
+    @taste_tag_trends = @drink_logs.flat_map(&:taste_tags)
+                                     .tally
+                                     .sort_by { |tag, count| [ -count, tag.display_order, tag.name ] }
   end
 end
