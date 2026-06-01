@@ -1,7 +1,7 @@
 class DrinkLogsController < ApplicationController
-  before_action :authenticate_user!, only: [ :new, :create, :edit, :update ]
-  before_action :set_drink_log, only: [ :show, :edit, :update ]
-  before_action :authorize_owner!, only: [ :edit, :update ]
+  before_action :authenticate_user!, only: [ :new, :create, :edit, :update, :destroy ]
+  before_action :set_drink_log, only: [ :show, :edit, :update, :destroy ]
+  before_action :authorize_owner!, only: [ :edit, :update, :destroy ]
 
   def new
     @cafe = Cafe.find(params[:cafe_id]) if params[:cafe_id].present?
@@ -37,6 +37,12 @@ class DrinkLogsController < ApplicationController
       set_form_options
       render :edit, status: :unprocessable_entity
     end
+  end
+
+  def destroy
+    redirect_path = safe_return_path || cafe_path(@drink_log.cafe, tab: "logs")
+    @drink_log.destroy!
+    redirect_to redirect_path, notice: "ログを削除しました"
   end
 
   private
@@ -78,5 +84,12 @@ class DrinkLogsController < ApplicationController
 
   def authorize_owner!
     redirect_to drink_log_path(@drink_log), alert: "自分のログのみ編集できます" unless @drink_log.user == current_user
+  end
+
+  def safe_return_path
+    return_to = params[:return_to].to_s
+    return return_to if return_to.start_with?("/") && !return_to.start_with?("//")
+
+    nil
   end
 end
