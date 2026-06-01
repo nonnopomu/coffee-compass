@@ -183,3 +183,15 @@ if admin_email.present? && admin_password.present?
 elsif Rails.env.production?
   raise "ADMIN_EMAILとADMIN_PASSWORDを設定してください"
 end
+
+review_admin_email = ENV["REVIEW_ADMIN_EMAIL"]
+review_admin_password = ENV["REVIEW_ADMIN_PASSWORD"]
+
+if review_admin_email.present? && review_admin_password.present?
+  review_admin = User.find_or_initialize_by(email: review_admin_email)
+  review_admin.name = ENV.fetch("REVIEW_ADMIN_NAME", "レビュー用管理者")
+  review_admin.password = review_admin_password
+  review_admin.password_confirmation = review_admin_password
+  review_admin.role = :admin
+  review_admin.save!
+end
