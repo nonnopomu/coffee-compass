@@ -1,38 +1,42 @@
-<header class="bg-white border-b border-gray-200 px-4 py-3 relative flex items-center justify-center sticky top-0 z-10">
-  <div class="absolute left-4 flex items-center">
+<header class="sticky top-0 z-10 border-b border-gray-200 bg-white px-4 py-3">
+  <div class="flex min-h-8 items-center gap-3">
     <% if content_for?(:back_path) %>
+      <div class="flex shrink-0 items-center">
       <%= link_to yield(:back_path), class: "text-gray-600" do %>
         <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
         </svg>
       <% end %>
-    <% end %>
-  </div>
-
-  <div class="flex items-center justify-center">
-    <% if content_for?(:header_center) %>
-      <%= yield :header_center %>
-    <% else %>
-      <span class="text-base font-medium text-gray-900"><%= yield :page_title %></span>
-    <% end %>
-  </div>
-
-  <div class="absolute right-4 flex items-center gap-2">
-    <% if content_for?(:hide_user_icon) %>
-    <% elsif user_signed_in? %>
-      <% if current_user.admin? %>
-        <% if controller_path.start_with?("admin/") %>
-          <%= link_to "通常", root_path, class: "text-xs text-amber-600 font-medium" %>
-        <% else %>
-          <%= link_to "管理", admin_root_path, class: "text-xs text-amber-600 font-medium" %>
-        <% end %>
-      <% end %>
-      <div class="w-8 h-8 bg-amber-600 rounded-full flex items-center justify-center">
-        <span class="text-white text-sm font-medium"><%= current_user.name[0] %></span>
       </div>
-    <% else %>
-      <%= link_to "ログイン", new_user_session_path, class: "text-sm text-gray-600 font-medium" %>
-      <%= link_to "新規登録", new_user_registration_path, class: "text-sm text-white font-medium bg-amber-600 px-3 py-1 rounded-lg" %>
     <% end %>
+
+    <div class="min-w-0 flex-1 <%= content_for?(:header_center) ? 'text-left sm:text-center' : 'text-center' %>">
+      <div class="inline-flex max-w-full items-center <%= content_for?(:header_center) ? 'justify-start sm:justify-center' : 'justify-center' %>">
+        <% if content_for?(:header_center) %>
+          <%= yield :header_center %>
+        <% else %>
+          <span class="truncate text-base font-medium text-gray-900"><%= yield :page_title %></span>
+        <% end %>
+      </div>
+    </div>
+
+    <div class="flex shrink-0 items-center gap-1.5 sm:gap-2">
+      <% if content_for?(:hide_user_icon) %>
+      <% elsif user_signed_in? %>
+        <% if current_user.admin? %>
+          <% if controller_path.start_with?("admin/") %>
+            <%= link_to "通常", root_path, class: "whitespace-nowrap text-xs font-medium text-amber-600" %>
+          <% else %>
+            <%= link_to "管理", admin_root_path, class: "whitespace-nowrap text-xs font-medium text-amber-600" %>
+          <% end %>
+        <% end %>
+        <div class="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-amber-600">
+          <span class="text-sm font-medium text-white"><%= current_user.name[0] %></span>
+        </div>
+      <% else %>
+        <%= link_to "ログイン", new_user_session_path, class: "whitespace-nowrap text-sm font-medium text-gray-600" %>
+        <%= link_to "新規登録", new_user_registration_path, class: "whitespace-nowrap rounded-lg bg-amber-600 px-2 py-1 text-sm font-medium text-white sm:px-3" %>
+      <% end %>
+    </div>
   </div>
 </header>
