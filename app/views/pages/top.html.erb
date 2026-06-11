@@ -12,13 +12,13 @@
 <main class="flex-1 w-full px-6 flex flex-col pb-24">
 
     <div class="pt-10 pb-8">
-      <h1 class="text-2xl font-bold text-gray-900 mb-6">最高の1杯を見つけよう</h1>
+      <h1 class="text-2xl font-bold text-gray-900 mb-6"><%= t("views.pages.top.title") %></h1>
 
       <%# 検索バー：カフェ一覧ページにキーワードをGETパラメーターとして送信する %>
       <%= form_with url: cafes_path, method: :get, data: { turbo: false } do |f| %>
         <div class="flex rounded-xl overflow-hidden shadow-sm border border-gray-100">
-          <%= f.text_field :keyword, placeholder: "カフェ名やキーワードで検索", class: "flex-1 bg-white pl-4 pr-2 py-3 text-sm text-gray-600 focus:outline-none" %>
-          <%= f.submit "検索", class: "bg-amber-600 text-white text-sm font-medium px-5 cursor-pointer shrink-0" %>
+          <%= f.text_field :keyword, placeholder: t("views.pages.top.keyword_placeholder"), class: "flex-1 bg-white pl-4 pr-2 py-3 text-sm text-gray-600 focus:outline-none" %>
+          <%= f.submit t("views.common.search"), class: "bg-amber-600 text-white text-sm font-medium px-5 cursor-pointer shrink-0" %>
         </div>
       <% end %>
     </div>
@@ -31,7 +31,7 @@
         <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#d97706" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
           <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/>
         </svg>
-        <span class="text-base font-medium text-gray-700">エリアから探す</span>
+        <span class="text-base font-medium text-gray-700"><%= t("views.pages.top.area_search") %></span>
       <% end %>
 
       <div style="flex: 4"></div>
@@ -40,7 +40,7 @@
         <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#d97706" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
           <path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"/><line x1="7" y1="7" x2="7.01" y2="7"/>
         </svg>
-        <span class="text-base font-medium text-gray-700">タグから探す</span>
+        <span class="text-base font-medium text-gray-700"><%= t("views.pages.top.tag_search") %></span>
       <% end %>
 
       <div style="flex: 3"></div>

@@ -9,7 +9,7 @@
               <h3 class="mt-1 text-base font-bold text-gray-900"><%= drink_log.menu_name %></h3>
             </div>
             <time class="shrink-0 text-xs text-gray-500" datetime="<%= drink_log.created_at.to_date.iso8601 %>">
-              <%= drink_log.created_at.strftime("%Y年%-m月%-d日") %>
+              <%= l(drink_log.created_at.to_date, format: :long) %>
             </time>
           </div>
 
@@ -26,14 +26,14 @@
           <% end %>
 
           <div class="mt-4 flex justify-end">
-            <%= link_to "詳細を見る", drink_log_path(drink_log, return_to: cafe_path(cafe, tab: "logs")), class: "text-sm font-semibold text-amber-700" %>
+            <%= link_to t("views.common.show_detail"), drink_log_path(drink_log, return_to: cafe_path(cafe, tab: "logs")), class: "text-sm font-semibold text-amber-700" %>
           </div>
         </article>
       <% end %>
     </div>
   <% else %>
     <div class="py-12 text-center">
-      <p class="text-sm text-gray-500">まだログ投稿はありません。</p>
+      <p class="text-sm text-gray-500"><%= t("views.cafes.drink_logs_tab.empty") %></p>
     </div>
   <% end %>
 </div>

@@ -23,7 +23,7 @@
         <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-gray-400 mt-0.5 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
         </svg>
-        <p class="text-sm text-gray-700">定休日: <%= cafe.closed_days %></p>
+        <p class="text-sm text-gray-700"><%= t("views.cafes.basic_info.closed_days", closed_days: cafe.closed_days) %></p>
       </div>
     <% end %>
   </div>
@@ -35,7 +35,7 @@
       <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
       <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
     </svg>
-    Google Maps で開く
+    <%= t("views.common.open_google_maps") %>
   <% end %>
 
   <%= render "log_trends",
@@ -47,7 +47,7 @@
   <% brew_method_tags = cafe.tags.select(&:brew_method?) %>
   <% if brew_method_tags.any? %>
     <div>
-      <h3 class="text-sm font-semibold text-amber-600 mb-2">提供スタイル</h3>
+      <h3 class="text-sm font-semibold text-amber-600 mb-2"><%= t("views.cafes.basic_info.brew_method") %></h3>
       <div class="flex flex-wrap gap-2">
         <% brew_method_tags.each do |tag| %>
           <span class="text-xs text-gray-600 bg-gray-100 rounded-full px-3 py-1"><%= tag.name %></span>
@@ -60,7 +60,7 @@
   <% feature_tags = cafe.tags.select(&:cafe_feature?) %>
   <% if feature_tags.any? %>
     <div>
-      <h3 class="text-sm font-semibold text-amber-600 mb-2">店舗の特徴</h3>
+      <h3 class="text-sm font-semibold text-amber-600 mb-2"><%= t("views.cafes.basic_info.cafe_feature") %></h3>
       <div class="flex flex-wrap gap-2">
         <% feature_tags.each do |tag| %>
           <span class="text-xs text-gray-600 bg-gray-100 rounded-full px-3 py-1"><%= tag.name %></span>
@@ -72,7 +72,7 @@
   <%# 店舗説明 %>
   <% if cafe.description.present? %>
     <div>
-      <h3 class="text-sm font-semibold text-amber-600 mb-2">Coffee Compass 編集者より</h3>
+      <h3 class="text-sm font-semibold text-amber-600 mb-2"><%= t("views.cafes.basic_info.editor_note") %></h3>
       <p class="text-sm text-gray-700 leading-relaxed"><%= cafe.description %></p>
     </div>
   <% end %>
@@ -80,7 +80,7 @@
   <%# 公式リンク：値がある項目のみ表示 %>
   <% if cafe.instagram_url.present? || cafe.website_url.present? %>
     <div>
-      <h3 class="text-sm font-semibold text-amber-600 mb-3">公式リンク</h3>
+      <h3 class="text-sm font-semibold text-amber-600 mb-3"><%= t("views.cafes.basic_info.official_links") %></h3>
       <div class="flex gap-4">
         <% if cafe.instagram_url.present? %>
           <%= link_to cafe.instagram_url, target: "_blank", rel: "noopener noreferrer",
@@ -97,7 +97,7 @@
             <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12a9 9 0 01-9 9m9-9a9 9 0 00-9-9m9 9H3m9 9a9 9 0 01-9-9m9 9c1.657 0 3-4.03 3-9s-1.343-9-3-9m0 18c-1.657 0-3-4.03-3-9s1.343-9 3-9" />
             </svg>
-            公式サイト
+            <%= t("views.cafes.basic_info.website") %>
           <% end %>
         <% end %>
       </div>

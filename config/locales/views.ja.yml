@@ -1,0 +1,258 @@
+ja:
+  pwa:
+    description: Coffee Compassは、コーヒーにこだわりのあるカフェを探して飲んだログを記録できるサービスです。
+  views:
+    common:
+      cancel: キャンセル
+      create: 登録する
+      update: 更新する
+      post: 投稿する
+      edit: 編集
+      edit_action: 編集する
+      delete_action: 削除する
+      detail: 詳細
+      show_detail: 詳細を見る
+      logout: ログアウト
+      search: 検索
+      selected: 選択中
+      count: "%{count}件"
+      count_suffix: 件
+      reset: × リセット
+      error_heading: 入力内容を確認してください
+      google_maps: Google Maps
+      open_google_maps: Google Maps で開く
+      no_matching_cafes: 一致するカフェがありません
+      delete_log_confirm: このログを削除しますか？
+    shared:
+      header:
+        normal: 通常
+        admin: 管理
+        login: ログイン
+        sign_up: 新規登録
+      footer:
+        search_cafes: カフェを探す
+        record_log: ログを記録
+        mypage: マイページ
+    pages:
+      top:
+        title: 最高の1杯を見つけよう
+        keyword_placeholder: カフェ名やキーワードで検索
+        area_search: エリアから探す
+        tag_search: タグから探す
+    searches:
+      area:
+        page_title: エリア選択
+        heading: 都道府県から探す
+        submit: このエリアで検索
+      tag:
+        page_title: タグ選択
+        brew_method_heading: 提供スタイル
+        brew_method_description: 抽出方法や提供の仕方にこだわりたいとき
+        feature_heading: 店舗に関する特徴
+        feature_description: 豆の質やお店の設備、雰囲気に合わせたいとき
+        hint_heading: 検索のヒント
+        hint_body: 複数のタグを組み合わせることで、よりあなた好みのコーヒー体験ができるカフェを見つけやすくなります。
+        submit: この条件で検索する
+    cafes:
+      index:
+        page_title: カフェ一覧
+        no_search_results: 条件に合うカフェが見つかりませんでした
+        change_conditions: 条件を変えて検索
+        no_cafes: 現在表示できるカフェがありません
+      show:
+        page_title: カフェ詳細
+        basic_info: 基本情報
+        logs: みんなのログ
+      cafe_card:
+        log_count: "%{count}ログ"
+      basic_info:
+        closed_days: "定休日: %{closed_days}"
+        brew_method: 提供スタイル
+        cafe_feature: 店舗の特徴
+        editor_note: Coffee Compass 編集者より
+        official_links: 公式リンク
+        website: 公式サイト
+      log_trends:
+        title: ログ傾向
+        summary: "公開ログ %{count}件から集計"
+        taste_tags: みんなが感じた味わい
+        roast_level_distribution: 焙煎度の分布
+        brew_method: 提供スタイル
+      drink_logs_tab:
+        empty: まだログ投稿はありません。
+    drink_logs:
+      new:
+        page_title: ログ作成
+        selected_cafe_label: 記録するカフェ
+        record_label: ログを記録
+        title: カフェを選択して記録する
+        description: 登録済みのカフェから、ログを残す店舗を選んでください。
+        cafe_label: カフェ
+        cafe_search_placeholder: カフェ名で検索
+        selected_cafe: 選択中のカフェ
+      edit:
+        page_title: ログ編集
+        selected_cafe_label: 記録したカフェ
+      show:
+        page_title: ログ詳細
+        author: "投稿者: %{name}"
+        record_heading: コーヒーの記録
+        cafe: カフェ
+        no_memo: メモはありません。
+        back_to_cafe: カフェ詳細へ戻る
+      form:
+        basic_info: 基本情報
+        menu_name_placeholder: "例: ハンドドリップ"
+        roast_level: 焙煎度
+        no_roast_level_tags: 選択できる焙煎度タグがありません
+        taste: 味わい
+        no_taste_tags: 選択できる味わいタグがありません
+        brew_method: 提供スタイル
+        no_brew_method_tags: 選択できる提供スタイルタグがありません
+        memo: 感想メモ
+        memo_placeholder: 味の印象やまた飲みたい理由など
+    mypages:
+      show:
+        page_title: マイページ
+        label: マイページ
+        recorded_logs: 記録したログ
+        visited_cafes: 訪れたカフェ
+        my_logs: 自分のログ
+        no_logs_title: まだ飲んだログはありません。
+        no_logs_body: 気になったカフェや飲んだコーヒーを記録していきましょう。
+    admin:
+      dashboards:
+        show:
+          page_title: 管理者トップ
+          menu_label: 管理メニュー
+          title: Coffee Compass 管理
+          description: カフェ情報の登録や編集など、管理者向けの操作を行います。
+          cafes_title: カフェ管理
+          cafes_description: 登録済みカフェの確認、新規登録、編集を行います。
+          tags_title: タグ管理
+          tags_description: 検索や投稿で使うタグを管理します。
+          logs_title: ログ管理
+          logs_description: 投稿された飲んだログを管理します。
+      cafes:
+        index:
+          page_title: カフェ管理
+          registered_cafes: 登録済みカフェ
+          new: 新規登録
+          empty: 登録済みのカフェはありません
+          create_link: カフェを登録する
+        new:
+          page_title: カフェ新規登録
+        edit:
+          page_title: カフェ編集
+        form:
+          basic_info: 基本情報
+          name_placeholder: "例: Blue Pine Coffee"
+          prefecture_prompt: 都道府県を選択
+          address_placeholder: "例: 東京都渋谷区..."
+          opening_hours_placeholder: "例: 10:00 - 19:00"
+          closed_days_placeholder: "例: 月曜日"
+          links: リンク
+          google_maps_placeholder: "https://maps.google.com/..."
+          website_placeholder: "https://example.com"
+          instagram_placeholder: "https://www.instagram.com/..."
+          description_heading: 紹介文
+          description_placeholder: カフェの雰囲気や特徴を入力
+          tags: タグ
+          status: 公開状態
+      tags:
+        index:
+          page_title: タグ管理
+          registered_tags: 登録済みタグ
+          new: 新規作成
+          empty: 登録済みのタグはありません
+          create_link: タグを作成する
+          display_order: "表示順: %{order}"
+        new:
+          page_title: タグ新規作成
+        edit:
+          page_title: タグ編集
+        form:
+          basic_info: 基本情報
+          name_placeholder: "例: 浅煎り"
+          category_prompt: カテゴリを選択
+          display_order_placeholder: "例: 10"
+          display_order_help: 数字が小さいタグから先に表示されます。
+          status: 公開状態
+          active_label: 有効にする
+          active_help: 有効なタグだけが検索画面や登録フォームに表示されます。
+    devise:
+      sessions:
+        new:
+          page_title: ログイン
+          tagline: お気に入りの一杯とカフェを、もっと簡単に見つけよう。
+          forgot_password: パスワードをお忘れの方
+          first_time: 初めてご利用の方
+          sign_up: 新規会員登録
+      registrations:
+        new:
+          page_title: 新規登録
+          title: Coffee Compassへようこそ
+          tagline: あなたのお気に入りの一杯を記録し、最高のカフェ体験を共有しましょう。
+          name_placeholder: "例: コーヒー太郎"
+          password_placeholder: 8文字以上の半角英数字
+          password_confirmation_placeholder: パスワードを再入力
+          submit: アカウントを作成する
+          already_have_account: すでにアカウントをお持ちですか？
+          login_link: ログインはこちら ›
+        edit:
+          title: "%{resource}編集"
+          waiting_confirmation: "%{email} の確認待ち"
+          password_help: 変更しない場合は空欄のままにしてください
+          minimum_password_length: "%{count}文字以上"
+          current_password_help: 変更を反映するには現在のパスワードを入力してください
+          cancel_account: アカウント削除
+          unhappy: ご利用を停止しますか？
+          confirm: 本当によろしいですか？
+          back: 戻る
+      passwords:
+        new:
+          page_title: パスワードの再設定
+          title: メールアドレスを確認
+          description: パスワードを再設定するためのメールをお送りします。登録済みのメールアドレスを入力してください。
+          submit: 送信する
+          cancel: キャンセルしてログインへ戻る
+        edit:
+          page_title: パスワードの再設定
+          title: 新しいパスワードを設定
+          new_password: 新しいパスワード
+          new_password_placeholder: 新しいパスワードを入力
+          security_heading: セキュリティ要件
+          minimum_length: 最低8文字以上の長さ
+          confirm_password: 新しいパスワード（確認）
+          confirm_password_placeholder: もう一度入力してください
+      confirmations:
+        new:
+          title: アカウント確認メール再送
+          submit: アカウント確認メールを再送する
+      unlocks:
+        new:
+          title: アカウントのロック解除方法を再送する
+          submit: アカウントのロック解除方法を再送する
+      mailer:
+        confirmation_instructions:
+          greeting: "%{email} 様"
+          instruction: 以下のリンクからアカウントを確認できます。
+          action: アカウントを確認する
+        email_changed:
+          greeting: "%{email} 様"
+          message_unconfirmed: "メールアドレスが %{email} に変更されようとしています。"
+          message_confirmed: "メールアドレスが %{email} に変更されました。"
+        password_change:
+          greeting: "%{email} 様"
+          message: パスワードが変更されました。
+        reset_password_instructions:
+          greeting: "%{email} 様"
+          instruction: パスワード変更用のリンクがリクエストされました。以下のリンクから変更できます。
+          action: パスワードを変更する
+          ignore: 心当たりがない場合は、このメールを無視してください。
+          note: 上記リンクから新しいパスワードを作成するまで、パスワードは変更されません。
+        unlock_instructions:
+          greeting: "%{email} 様"
+          message: ログイン失敗が続いたため、アカウントがロックされました。
+          instruction: 以下のリンクからアカウントのロックを解除できます。
+          action: アカウントのロックを解除する

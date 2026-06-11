@@ -16,7 +16,7 @@ class DrinkLogsController < ApplicationController
     @drink_log = current_user.drink_logs.build(drink_log_create_params)
 
     if @drink_log.save
-      redirect_to cafe_path(@drink_log.cafe, tab: "logs"), notice: "ログを投稿しました"
+      redirect_to cafe_path(@drink_log.cafe, tab: "logs"), notice: t("flash.drink_logs.create")
     else
       set_form_options
       render :new, status: :unprocessable_entity
@@ -34,7 +34,7 @@ class DrinkLogsController < ApplicationController
 
   def update
     if @drink_log.update(drink_log_update_params)
-      redirect_to drink_log_path(@drink_log), notice: "ログを編集しました"
+      redirect_to drink_log_path(@drink_log), notice: t("flash.drink_logs.update")
     else
       set_form_options
       render :edit, status: :unprocessable_entity
@@ -44,7 +44,7 @@ class DrinkLogsController < ApplicationController
   def destroy
     redirect_path = safe_return_path(cafe_path(@drink_log.cafe, tab: "logs"))
     @drink_log.destroy!
-    redirect_to redirect_path, notice: "ログを削除しました"
+    redirect_to redirect_path, notice: t("flash.drink_logs.destroy")
   end
 
   private
@@ -85,7 +85,7 @@ class DrinkLogsController < ApplicationController
   end
 
   def authorize_owner!
-    redirect_to drink_log_path(@drink_log), alert: "自分のログのみ編集できます" unless @drink_log.user == current_user
+    redirect_to drink_log_path(@drink_log), alert: t("flash.drink_logs.owner_required") unless @drink_log.user == current_user
   end
 
   def safe_return_path(fallback_path)

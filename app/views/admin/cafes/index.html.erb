@@ -1,20 +1,19 @@
-<% content_for :page_title, "カフェ管理" %>
+<% content_for :page_title, t("views.admin.cafes.index.page_title") %>
 <% content_for :back_path, admin_root_path %>
-<% status_labels = { "draft" => "下書き", "published" => "公開", "closed" => "閉店" } %>
 
 <div class="bg-gray-50 min-h-full">
   <div class="px-4 py-4 border-b border-gray-200 bg-white">
     <div class="flex items-center justify-between gap-3">
       <div>
-        <p class="text-xs text-gray-500">登録済みカフェ</p>
-        <p class="mt-0.5 text-lg font-bold text-gray-900"><%= @cafes.size %>件</p>
+        <p class="text-xs text-gray-500"><%= t("views.admin.cafes.index.registered_cafes") %></p>
+        <p class="mt-0.5 text-lg font-bold text-gray-900"><%= t("views.common.count", count: @cafes.size) %></p>
       </div>
 
       <%= link_to new_admin_cafe_path, class: "inline-flex items-center gap-1.5 rounded-lg bg-amber-600 px-3 py-2 text-sm font-semibold text-white" do %>
         <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
         </svg>
-        新規登録
+        <%= t("views.admin.cafes.index.new") %>
       <% end %>
     </div>
   </div>
@@ -27,8 +26,8 @@
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M19 11h2a2 2 0 010 4h-2" />
         </svg>
       </div>
-      <p class="text-sm font-medium text-gray-700">登録済みのカフェはありません</p>
-      <%= link_to "カフェを登録する", new_admin_cafe_path, class: "mt-4 inline-flex rounded-lg bg-amber-600 px-4 py-2 text-sm font-semibold text-white" %>
+      <p class="text-sm font-medium text-gray-700"><%= t("views.admin.cafes.index.empty") %></p>
+      <%= link_to t("views.admin.cafes.index.create_link"), new_admin_cafe_path, class: "mt-4 inline-flex rounded-lg bg-amber-600 px-4 py-2 text-sm font-semibold text-white" %>
     </div>
   <% else %>
     <div class="divide-y divide-gray-100">
@@ -39,7 +38,7 @@
               <div class="mb-1 flex flex-wrap items-center gap-2">
                 <h2 class="text-base font-bold text-gray-900"><%= cafe.name %></h2>
                 <span class="rounded-full px-2 py-0.5 text-xs font-semibold <%= cafe.published? ? 'bg-green-50 text-green-700' : cafe.closed? ? 'bg-gray-100 text-gray-500' : 'bg-amber-50 text-amber-700' %>">
-                  <%= status_labels.fetch(cafe.status, cafe.status) %>
+                  <%= t("enums.cafe.status.#{cafe.status}") %>
                 </span>
               </div>
 
@@ -57,8 +56,8 @@
           <% end %>
 
           <div class="mt-4 grid grid-cols-2 gap-2">
-            <%= link_to "詳細を見る", cafe_path(cafe, return_to: admin_cafes_path), class: "rounded-lg border border-gray-200 px-3 py-2 text-center text-sm font-medium text-gray-700" %>
-            <%= link_to "編集", edit_admin_cafe_path(cafe, return_to: admin_cafes_path), class: "rounded-lg border border-amber-600 px-3 py-2 text-center text-sm font-semibold text-amber-700" %>
+            <%= link_to t("views.common.show_detail"), cafe_path(cafe, return_to: admin_cafes_path), class: "rounded-lg border border-gray-200 px-3 py-2 text-center text-sm font-medium text-gray-700" %>
+            <%= link_to t("views.common.edit"), edit_admin_cafe_path(cafe, return_to: admin_cafes_path), class: "rounded-lg border border-amber-600 px-3 py-2 text-center text-sm font-semibold text-amber-700" %>
           </div>
         </article>
       <% end %>

@@ -10,6 +10,7 @@ class DrinkLogTasteTag < ApplicationRecord
 
   def tag_must_be_taste
     return unless tag.present?
-    errors.add(:tag, "は味わいタグを選択してください") unless tag.taste?
+
+    errors.add(:tag, :invalid_taste_tag) unless tag.taste?
   end
 end

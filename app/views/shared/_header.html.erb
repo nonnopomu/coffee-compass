@@ -25,17 +25,17 @@
       <% elsif user_signed_in? %>
         <% if current_user.admin? %>
           <% if controller_path.start_with?("admin/") %>
-            <%= link_to "通常", root_path, class: "whitespace-nowrap text-xs font-medium text-amber-600" %>
+            <%= link_to t("views.shared.header.normal"), root_path, class: "whitespace-nowrap text-xs font-medium text-amber-600" %>
           <% else %>
-            <%= link_to "管理", admin_root_path, class: "whitespace-nowrap text-xs font-medium text-amber-600" %>
+            <%= link_to t("views.shared.header.admin"), admin_root_path, class: "whitespace-nowrap text-xs font-medium text-amber-600" %>
           <% end %>
         <% end %>
         <div class="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-amber-600">
           <span class="text-sm font-medium text-white"><%= current_user.name[0] %></span>
         </div>
       <% else %>
-        <%= link_to "ログイン", new_user_session_path, class: "whitespace-nowrap text-sm font-medium text-gray-600" %>
-        <%= link_to "新規登録", new_user_registration_path, class: "whitespace-nowrap rounded-lg bg-amber-600 px-2 py-1 text-sm font-medium text-white sm:px-3" %>
+        <%= link_to t("views.shared.header.login"), new_user_session_path, class: "whitespace-nowrap text-sm font-medium text-gray-600" %>
+        <%= link_to t("views.shared.header.sign_up"), new_user_registration_path, class: "whitespace-nowrap rounded-lg bg-amber-600 px-2 py-1 text-sm font-medium text-white sm:px-3" %>
       <% end %>
     </div>
   </div>

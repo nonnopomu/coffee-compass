@@ -13,7 +13,7 @@ class Admin::TagsController < Admin::BaseController
     @tag = Tag.new(tag_params)
 
     if @tag.save
-      redirect_to admin_tags_path, notice: "タグを登録しました"
+      redirect_to admin_tags_path, notice: t("flash.admin.tags.create")
     else
       render :new, status: :unprocessable_entity
     end
@@ -24,7 +24,7 @@ class Admin::TagsController < Admin::BaseController
 
   def update
     if @tag.update(tag_params)
-      redirect_to admin_tags_path, notice: "タグを更新しました"
+      redirect_to admin_tags_path, notice: t("flash.admin.tags.update")
     else
       render :edit, status: :unprocessable_entity
     end

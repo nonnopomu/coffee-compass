@@ -1,4 +1,4 @@
-<% content_for :page_title, "パスワードの再設定" %>
+<% content_for :page_title, t("views.devise.passwords.new.page_title") %>
 <% content_for :back_path, new_user_session_path %>
 <% content_for :hide_user_icon, true %>
 
@@ -10,8 +10,8 @@
       </svg>
     </div>
 
-    <h1 class="text-xl font-bold text-gray-900 mb-3">メールアドレスを確認</h1>
-    <p class="text-sm text-gray-500 text-center mb-8">パスワードを再設定するためのメールをお送り<br>します。登録済みのメールアドレスを入力して<br>ください。</p>
+    <h1 class="text-xl font-bold text-gray-900 mb-3"><%= t("views.devise.passwords.new.title") %></h1>
+    <p class="text-sm text-gray-500 text-center mb-8"><%= t("views.devise.passwords.new.description") %></p>
 
     <%= form_for(resource, as: resource_name, url: password_path(resource_name), html: { method: :post }) do |f| %>
       <%= render "devise/shared/error_messages", resource: resource %>
@@ -29,13 +29,13 @@
       </div>
 
       <div class="w-full mb-4">
-        <%= f.submit "送信する",
+        <%= f.submit t("views.devise.passwords.new.submit"),
             class: "w-full py-3 bg-amber-600 text-white text-sm font-medium rounded-lg hover:bg-amber-700 transition-colors cursor-pointer" %>
       </div>
     <% end %>
 
     <div class="mb-8">
-      <%= link_to "キャンセルしてログインへ戻る", new_user_session_path, class: "text-sm text-amber-600 hover:underline" %>
+      <%= link_to t("views.devise.passwords.new.cancel"), new_user_session_path, class: "text-sm text-amber-600 hover:underline" %>
     </div>
 
 

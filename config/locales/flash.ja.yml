@@ -1,0 +1,16 @@
+ja:
+  flash:
+    admin:
+      cafes:
+        create: カフェを登録しました
+        update: カフェ情報を更新しました
+      tags:
+        create: タグを登録しました
+        update: タグを更新しました
+    drink_logs:
+      create: ログを投稿しました
+      update: ログを編集しました
+      destroy: ログを削除しました
+      owner_required: 自分のログのみ編集できます
+    authorization:
+      forbidden: 権限がありません。

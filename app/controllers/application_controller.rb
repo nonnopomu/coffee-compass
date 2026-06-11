@@ -25,6 +25,6 @@ class ApplicationController < ActionController::Base
   private
 
   def user_not_authorized
-    redirect_back fallback_location: root_path, alert: "権限がありません。"
+    redirect_back fallback_location: root_path, alert: t("flash.authorization.forbidden")
   end
 end

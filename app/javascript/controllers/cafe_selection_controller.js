@@ -2,6 +2,7 @@ import { Controller } from "@hotwired/stimulus"
 
 export default class extends Controller {
   static targets = ["query", "option", "value", "selected", "selectedName", "selectedAddress", "message"]
+  static values = { noResultsMessage: String }
 
   connect() {
     this.filter()
@@ -22,7 +23,7 @@ export default class extends Controller {
     if (query.length === 0) {
       this.messageTarget.classList.add("hidden")
     } else if (visibleCount === 0) {
-      this.messageTarget.textContent = "一致するカフェがありません"
+      this.messageTarget.textContent = this.noResultsMessageValue
       this.messageTarget.classList.remove("hidden")
     } else {
       this.messageTarget.classList.add("hidden")
