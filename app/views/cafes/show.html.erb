@@ -1,4 +1,4 @@
-<% content_for :page_title, "カフェ詳細" %>
+<% content_for :page_title, t("views.cafes.show.page_title") %>
 <% return_to = params[:return_to].to_s %>
 <% safe_back_path = return_to.start_with?("/") && !return_to.start_with?("//") ? return_to : cafes_path %>
 <% content_for :back_path, safe_back_path %>
@@ -26,14 +26,14 @@
             data-index="0"
             data-tab-key=""
             class="flex-1 py-3 text-sm font-medium text-amber-600 border-b-2 border-amber-600 cursor-pointer">
-      基本情報
+      <%= t("views.cafes.show.basic_info") %>
     </button>
     <button data-tabs-target="tab"
             data-action="click->tabs#switch"
             data-index="1"
             data-tab-key="logs"
             class="flex-1 py-3 text-sm font-medium text-gray-400 border-b-2 border-transparent cursor-pointer">
-      みんなのログ
+      <%= t("views.cafes.show.logs") %>
     </button>
   </div>
 

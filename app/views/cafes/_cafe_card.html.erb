@@ -8,7 +8,7 @@
 
     <%# ログ数バッジ %>
     <span class="absolute top-2 right-2 bg-black/60 text-white text-xs px-2.5 py-1 rounded-full font-medium">
-      <%= cafe.drink_logs.size %>ログ
+      <%= t("views.cafes.cafe_card.log_count", count: cafe.drink_logs.size) %>
     </span>
   </div>
 
@@ -34,7 +34,7 @@
   <%# リンク %>
   <div class="flex items-center justify-between pt-1">
     <%= link_to cafe_path(cafe), class: "text-sm text-amber-600 font-medium flex items-center gap-0.5" do %>
-      詳細を見る
+      <%= t("views.common.show_detail") %>
       <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
       </svg>

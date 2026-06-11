@@ -1,0 +1,20 @@
+ja:
+  enums:
+    cafe:
+      status:
+        draft: 下書き
+        published: 公開
+        closed: 閉店
+      status_help:
+        draft: 公開前の状態で保存します
+        published: 利用者のカフェ一覧・詳細に表示します
+        closed: 管理上は残しつつ公開一覧には出しません
+    tag:
+      category:
+        roast_level: 焙煎度
+        taste: 味わい
+        brew_method: 抽出スタイル
+        cafe_feature: 店舗の特徴
+      is_active:
+        "true": 有効
+        "false": 無効

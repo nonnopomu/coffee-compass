@@ -18,7 +18,7 @@ class Admin::CafesController < Admin::BaseController
     @cafe = Cafe.new(cafe_params)
 
     if @cafe.save
-      redirect_to admin_cafes_path, notice: "カフェを登録しました"
+      redirect_to admin_cafes_path, notice: t("flash.admin.cafes.create")
     else
       set_form_options
       render :new, status: :unprocessable_entity
@@ -27,7 +27,7 @@ class Admin::CafesController < Admin::BaseController
 
   def update
     if @cafe.update(cafe_params)
-      redirect_to admin_cafes_path, notice: "カフェ情報を更新しました"
+      redirect_to admin_cafes_path, notice: t("flash.admin.cafes.update")
     else
       set_form_options
       render :edit, status: :unprocessable_entity

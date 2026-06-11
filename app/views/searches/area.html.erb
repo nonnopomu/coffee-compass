@@ -1,4 +1,4 @@
-<% content_for :page_title, "エリア選択" %>
+<% content_for :page_title, t("views.searches.area.page_title") %>
 <% content_for :back_path, root_path %>
 <% content_for :hide_footer, true %>
 
@@ -8,7 +8,7 @@
       <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
       <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
     </svg>
-    都道府県から探す
+    <%= t("views.searches.area.heading") %>
   </div>
 
   <%= form_with url: cafes_path, method: :get, data: { turbo: false } do |f| %>
@@ -37,12 +37,12 @@
     <div class="fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 px-4 py-4">
       <div class="max-w-screen-sm mx-auto space-y-3">
         <div class="flex items-center gap-2">
-          <span class="text-xs text-gray-500">選択中</span>
+          <span class="text-xs text-gray-500"><%= t("views.common.selected") %></span>
           <span class="text-xs text-amber-600 font-semibold" data-area-selection-target="count">0</span>
-          <span class="text-xs text-gray-500">件</span>
+          <span class="text-xs text-gray-500"><%= t("views.common.count_suffix") %></span>
         </div>
         <div class="flex flex-wrap gap-2" data-area-selection-target="chips"></div>
-        <%= f.submit "このエリアで検索", class: "w-full py-3 bg-amber-600 text-white text-sm font-semibold rounded-xl cursor-pointer" %>
+        <%= f.submit t("views.searches.area.submit"), class: "w-full py-3 bg-amber-600 text-white text-sm font-semibold rounded-xl cursor-pointer" %>
       </div>
     </div>
   <% end %>

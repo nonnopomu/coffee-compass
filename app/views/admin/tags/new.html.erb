@@ -1,4 +1,4 @@
-<% content_for :page_title, "タグ新規作成" %>
+<% content_for :page_title, t("views.admin.tags.new.page_title") %>
 <% content_for :back_path, admin_tags_path %>
 
-<%= render "form", tag: @tag, submit_label: "登録する", cancel_path: admin_tags_path %>
+<%= render "form", tag: @tag, submit_label: t("views.common.create"), cancel_path: admin_tags_path %>

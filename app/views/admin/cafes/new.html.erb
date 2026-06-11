@@ -1,4 +1,4 @@
-<% content_for :page_title, "カフェ新規登録" %>
+<% content_for :page_title, t("views.admin.cafes.new.page_title") %>
 <% content_for :back_path, admin_cafes_path %>
 
-<%= render "form", cafe: @cafe, prefectures: @prefectures, tags: @tags, submit_label: "登録する", cancel_path: admin_cafes_path %>
+<%= render "form", cafe: @cafe, prefectures: @prefectures, tags: @tags, submit_label: t("views.common.create"), cancel_path: admin_cafes_path %>

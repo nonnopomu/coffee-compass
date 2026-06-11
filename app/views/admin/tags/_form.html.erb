@@ -1,16 +1,11 @@
-<% category_options = [
-  ["焙煎度", "roast_level"],
-  ["味わい", "taste"],
-  ["抽出スタイル", "brew_method"],
-  ["店舗の特徴", "cafe_feature"]
-] %>
+<% category_options = Tag.categories.keys.map { |category| [t("enums.tag.category.#{category}"), category] } %>
 
 <div class="min-h-full bg-gray-50">
   <%= form_with model: [:admin, tag], class: "flex flex-col" do |f| %>
     <div class="px-4 py-5 space-y-5">
       <% if tag.errors.any? %>
         <div class="rounded-lg border border-red-200 bg-red-50 px-4 py-3">
-          <p class="text-sm font-semibold text-red-700">入力内容を確認してください</p>
+          <p class="text-sm font-semibold text-red-700"><%= t("views.common.error_heading") %></p>
           <ul class="mt-2 list-disc space-y-1 pl-5 text-xs text-red-700">
             <% tag.errors.full_messages.each do |message| %>
               <li><%= message %></li>
@@ -21,36 +16,36 @@
 
       <section class="space-y-4">
         <div class="flex items-center gap-2 border-l-4 border-amber-600 pl-3">
-          <h2 class="text-sm font-semibold text-gray-900">基本情報</h2>
+          <h2 class="text-sm font-semibold text-gray-900"><%= t("views.admin.tags.form.basic_info") %></h2>
         </div>
 
         <div>
-          <%= f.label :name, "タグ名", class: "mb-1 block text-sm font-medium text-gray-700" %>
-          <%= f.text_field :name, class: "w-full rounded-lg border border-gray-200 bg-white px-3 py-3 text-sm text-gray-900 focus:border-amber-600 focus:outline-none focus:ring-2 focus:ring-amber-100", placeholder: "例: 浅煎り" %>
+          <%= f.label :name, class: "mb-1 block text-sm font-medium text-gray-700" %>
+          <%= f.text_field :name, class: "w-full rounded-lg border border-gray-200 bg-white px-3 py-3 text-sm text-gray-900 focus:border-amber-600 focus:outline-none focus:ring-2 focus:ring-amber-100", placeholder: t("views.admin.tags.form.name_placeholder") %>
         </div>
 
         <div>
-          <%= f.label :category, "カテゴリ", class: "mb-1 block text-sm font-medium text-gray-700" %>
-          <%= f.select :category, options_for_select(category_options, tag.category), { prompt: "カテゴリを選択" }, { class: "w-full rounded-lg border border-gray-200 bg-white px-3 py-3 text-sm text-gray-900 focus:border-amber-600 focus:outline-none focus:ring-2 focus:ring-amber-100" } %>
+          <%= f.label :category, class: "mb-1 block text-sm font-medium text-gray-700" %>
+          <%= f.select :category, options_for_select(category_options, tag.category), { prompt: t("views.admin.tags.form.category_prompt") }, { class: "w-full rounded-lg border border-gray-200 bg-white px-3 py-3 text-sm text-gray-900 focus:border-amber-600 focus:outline-none focus:ring-2 focus:ring-amber-100" } %>
         </div>
 
         <div>
-          <%= f.label :display_order, "表示順", class: "mb-1 block text-sm font-medium text-gray-700" %>
-          <%= f.number_field :display_order, min: 0, class: "w-full rounded-lg border border-gray-200 bg-white px-3 py-3 text-sm text-gray-900 focus:border-amber-600 focus:outline-none focus:ring-2 focus:ring-amber-100", placeholder: "例: 10" %>
-          <p class="mt-1 text-xs text-gray-400">数字が小さいタグから先に表示されます。</p>
+          <%= f.label :display_order, class: "mb-1 block text-sm font-medium text-gray-700" %>
+          <%= f.number_field :display_order, min: 0, class: "w-full rounded-lg border border-gray-200 bg-white px-3 py-3 text-sm text-gray-900 focus:border-amber-600 focus:outline-none focus:ring-2 focus:ring-amber-100", placeholder: t("views.admin.tags.form.display_order_placeholder") %>
+          <p class="mt-1 text-xs text-gray-400"><%= t("views.admin.tags.form.display_order_help") %></p>
         </div>
       </section>
 
       <section class="space-y-4">
         <div class="flex items-center gap-2 border-l-4 border-amber-600 pl-3">
-          <h2 class="text-sm font-semibold text-gray-900">公開状態</h2>
+          <h2 class="text-sm font-semibold text-gray-900"><%= t("views.admin.tags.form.status") %></h2>
         </div>
 
         <%= f.label :is_active, class: "flex cursor-pointer items-start gap-3 rounded-lg border border-gray-200 bg-white px-4 py-3 has-[:checked]:border-amber-600 has-[:checked]:bg-amber-50" do %>
           <%= f.check_box :is_active, class: "mt-0.5 h-4 w-4 rounded border-gray-300 text-amber-600 focus:ring-amber-500" %>
           <span>
-            <span class="block text-sm font-medium text-gray-900">有効にする</span>
-            <span class="mt-0.5 block text-xs text-gray-500">有効なタグだけが検索画面や登録フォームに表示されます。</span>
+            <span class="block text-sm font-medium text-gray-900"><%= t("views.admin.tags.form.active_label") %></span>
+            <span class="mt-0.5 block text-xs text-gray-500"><%= t("views.admin.tags.form.active_help") %></span>
           </span>
         <% end %>
       </section>
@@ -58,7 +53,7 @@
 
     <div class="sticky bottom-0 border-t border-gray-200 bg-white px-4 py-3">
       <div class="mx-auto flex max-w-screen-sm gap-3">
-        <%= link_to "キャンセル", cancel_path, class: "flex-1 rounded-lg border border-gray-200 bg-white px-4 py-3 text-center text-sm font-medium text-gray-700" %>
+        <%= link_to t("views.common.cancel"), cancel_path, class: "flex-1 rounded-lg border border-gray-200 bg-white px-4 py-3 text-center text-sm font-medium text-gray-700" %>
         <%= f.submit submit_label, class: "flex-1 cursor-pointer rounded-lg bg-amber-600 px-4 py-3 text-sm font-semibold text-white hover:bg-amber-700" %>
       </div>
     </div>

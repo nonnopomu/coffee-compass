@@ -1,16 +1,16 @@
-<% content_for :page_title, "ログ作成" %>
+<% content_for :page_title, t("views.drink_logs.new.page_title") %>
 <% content_for :back_path, @cafe.present? ? cafe_path(@cafe) : root_path %>
 
 <div class="min-h-full bg-gray-50">
   <div class="border-b border-gray-200 bg-white px-4 py-4">
     <% if @cafe.present? %>
-      <p class="text-xs text-gray-500">記録するカフェ</p>
+      <p class="text-xs text-gray-500"><%= t("views.drink_logs.new.selected_cafe_label") %></p>
       <h1 class="mt-1 text-lg font-bold text-gray-900"><%= @cafe.name %></h1>
       <p class="mt-1 text-sm text-gray-600"><%= @cafe.address %></p>
     <% else %>
-      <p class="text-xs text-gray-500">ログを記録</p>
-      <h1 class="mt-1 text-lg font-bold text-gray-900">カフェを選択して記録する</h1>
-      <p class="mt-1 text-sm text-gray-600">登録済みのカフェから、ログを残す店舗を選んでください。</p>
+      <p class="text-xs text-gray-500"><%= t("views.drink_logs.new.record_label") %></p>
+      <h1 class="mt-1 text-lg font-bold text-gray-900"><%= t("views.drink_logs.new.title") %></h1>
+      <p class="mt-1 text-sm text-gray-600"><%= t("views.drink_logs.new.description") %></p>
     <% end %>
   </div>
 
@@ -18,7 +18,7 @@
     <div class="px-4 py-5 space-y-6">
       <% if @drink_log.errors.any? %>
         <div class="rounded-lg border border-red-200 bg-red-50 px-4 py-3">
-          <p class="text-sm font-semibold text-red-700">入力内容を確認してください</p>
+          <p class="text-sm font-semibold text-red-700"><%= t("views.common.error_heading") %></p>
           <ul class="mt-2 space-y-1">
             <% @drink_log.errors.full_messages.each do |message| %>
               <li class="text-sm text-red-700"><%= message %></li>
@@ -29,26 +29,27 @@
 
       <section class="space-y-4">
         <div class="flex items-center gap-2 border-l-4 border-amber-600 pl-3">
-          <h2 class="text-sm font-semibold text-gray-900">基本情報</h2>
+          <h2 class="text-sm font-semibold text-gray-900"><%= t("views.drink_logs.form.basic_info") %></h2>
         </div>
 
         <% if @cafe.present? %>
           <%= f.hidden_field :cafe_id, value: @drink_log.cafe_id || @cafe.id %>
         <% else %>
-          <div data-controller="cafe-selection">
+          <div data-controller="cafe-selection"
+               data-cafe-selection-no-results-message-value="<%= t("views.common.no_matching_cafes") %>">
             <%= f.hidden_field :cafe_id, data: { cafe_selection_target: "value" } %>
 
-            <label for="drink_log_cafe_search" class="mb-1 block text-sm font-medium text-gray-700">カフェ</label>
+            <label for="drink_log_cafe_search" class="mb-1 block text-sm font-medium text-gray-700"><%= t("views.drink_logs.new.cafe_label") %></label>
             <input id="drink_log_cafe_search"
                    type="search"
                    autocomplete="off"
                    data-cafe-selection-target="query"
                    data-action="input->cafe-selection#filter"
                    class="w-full rounded-lg border border-gray-200 bg-white px-3 py-3 text-sm text-gray-900 focus:border-amber-600 focus:outline-none focus:ring-2 focus:ring-amber-100"
-                   placeholder="カフェ名で検索">
+                   placeholder="<%= t("views.drink_logs.new.cafe_search_placeholder") %>">
 
             <div data-cafe-selection-target="selected" class="mt-3 hidden rounded-lg border border-amber-200 bg-amber-50 px-4 py-3">
-              <p class="text-xs font-semibold text-amber-700">選択中のカフェ</p>
+              <p class="text-xs font-semibold text-amber-700"><%= t("views.drink_logs.new.selected_cafe") %></p>
               <p data-cafe-selection-target="selectedName" class="mt-1 text-sm font-bold text-gray-900"></p>
               <p data-cafe-selection-target="selectedAddress" class="mt-1 text-xs text-gray-600"></p>
             </div>
@@ -73,19 +74,19 @@
         <% end %>
 
         <div>
-          <%= f.label :menu_name, "メニュー名", class: "mb-1 block text-sm font-medium text-gray-700" %>
-          <%= f.text_field :menu_name, class: "w-full rounded-lg border border-gray-200 bg-white px-3 py-3 text-sm text-gray-900 focus:border-amber-600 focus:outline-none focus:ring-2 focus:ring-amber-100", placeholder: "例: ハンドドリップ" %>
+          <%= f.label :menu_name, class: "mb-1 block text-sm font-medium text-gray-700" %>
+          <%= f.text_field :menu_name, class: "w-full rounded-lg border border-gray-200 bg-white px-3 py-3 text-sm text-gray-900 focus:border-amber-600 focus:outline-none focus:ring-2 focus:ring-amber-100", placeholder: t("views.drink_logs.form.menu_name_placeholder") %>
         </div>
 
         <div>
-          <%= f.label :drank_on, "飲んだ日", class: "mb-1 block text-sm font-medium text-gray-700" %>
+          <%= f.label :drank_on, class: "mb-1 block text-sm font-medium text-gray-700" %>
           <%= f.date_field :drank_on, value: @drink_log.drank_on || Date.current, class: "w-full rounded-lg border border-gray-200 bg-white px-3 py-3 text-sm text-gray-900 focus:border-amber-600 focus:outline-none focus:ring-2 focus:ring-amber-100" %>
         </div>
       </section>
 
       <section class="space-y-4">
         <div class="flex items-center gap-2 border-l-4 border-amber-600 pl-3">
-          <h2 class="text-sm font-semibold text-gray-900">焙煎度</h2>
+          <h2 class="text-sm font-semibold text-gray-900"><%= t("views.drink_logs.form.roast_level") %></h2>
         </div>
 
         <div class="grid grid-cols-1 gap-2">
@@ -97,14 +98,14 @@
               <% end %>
             <% end %>
           <% else %>
-            <p class="rounded-lg border border-gray-200 bg-white px-4 py-3 text-sm text-gray-500">選択できる焙煎度タグがありません</p>
+            <p class="rounded-lg border border-gray-200 bg-white px-4 py-3 text-sm text-gray-500"><%= t("views.drink_logs.form.no_roast_level_tags") %></p>
           <% end %>
         </div>
       </section>
 
       <section class="space-y-4">
         <div class="flex items-center gap-2 border-l-4 border-amber-600 pl-3">
-          <h2 class="text-sm font-semibold text-gray-900">味わい</h2>
+          <h2 class="text-sm font-semibold text-gray-900"><%= t("views.drink_logs.form.taste") %></h2>
         </div>
 
         <div class="flex flex-wrap gap-2">
@@ -117,14 +118,14 @@
               <% end %>
             <% end %>
           <% else %>
-            <p class="w-full rounded-lg border border-gray-200 bg-white px-4 py-3 text-sm text-gray-500">選択できる味わいタグがありません</p>
+            <p class="w-full rounded-lg border border-gray-200 bg-white px-4 py-3 text-sm text-gray-500"><%= t("views.drink_logs.form.no_taste_tags") %></p>
           <% end %>
         </div>
       </section>
 
       <section class="space-y-4">
         <div class="flex items-center gap-2 border-l-4 border-amber-600 pl-3">
-          <h2 class="text-sm font-semibold text-gray-900">提供スタイル</h2>
+          <h2 class="text-sm font-semibold text-gray-900"><%= t("views.drink_logs.form.brew_method") %></h2>
         </div>
 
         <div class="grid grid-cols-1 gap-2">
@@ -136,24 +137,24 @@
               <% end %>
             <% end %>
           <% else %>
-            <p class="rounded-lg border border-gray-200 bg-white px-4 py-3 text-sm text-gray-500">選択できる提供スタイルタグがありません</p>
+            <p class="rounded-lg border border-gray-200 bg-white px-4 py-3 text-sm text-gray-500"><%= t("views.drink_logs.form.no_brew_method_tags") %></p>
           <% end %>
         </div>
       </section>
 
       <section class="space-y-4">
         <div class="flex items-center gap-2 border-l-4 border-amber-600 pl-3">
-          <h2 class="text-sm font-semibold text-gray-900">感想メモ</h2>
+          <h2 class="text-sm font-semibold text-gray-900"><%= t("views.drink_logs.form.memo") %></h2>
         </div>
 
-        <%= f.text_area :memo, rows: 5, maxlength: 200, class: "w-full resize-y rounded-lg border border-gray-200 bg-white px-3 py-3 text-sm leading-6 text-gray-900 focus:border-amber-600 focus:outline-none focus:ring-2 focus:ring-amber-100", placeholder: "味の印象やまた飲みたい理由など" %>
+        <%= f.text_area :memo, rows: 5, maxlength: 200, class: "w-full resize-y rounded-lg border border-gray-200 bg-white px-3 py-3 text-sm leading-6 text-gray-900 focus:border-amber-600 focus:outline-none focus:ring-2 focus:ring-amber-100", placeholder: t("views.drink_logs.form.memo_placeholder") %>
       </section>
     </div>
 
     <div class="sticky bottom-0 border-t border-gray-200 bg-white px-4 py-3">
       <div class="mx-auto flex max-w-screen-sm gap-3">
-        <%= link_to "キャンセル", @cafe.present? ? cafe_path(@cafe) : root_path, class: "flex-1 rounded-lg border border-gray-200 bg-white px-4 py-3 text-center text-sm font-medium text-gray-700" %>
-        <%= button_tag "投稿する", type: "submit", class: "flex-1 rounded-lg bg-amber-600 px-4 py-3 text-sm font-semibold text-white" %>
+        <%= link_to t("views.common.cancel"), @cafe.present? ? cafe_path(@cafe) : root_path, class: "flex-1 rounded-lg border border-gray-200 bg-white px-4 py-3 text-center text-sm font-medium text-gray-700" %>
+        <%= button_tag t("views.common.post"), type: "submit", class: "flex-1 rounded-lg bg-amber-600 px-4 py-3 text-sm font-semibold text-white" %>
       </div>
     </div>
   <% end %>

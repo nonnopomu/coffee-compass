@@ -1,4 +1,4 @@
-<% content_for :page_title, "カフェ一覧" %>
+<% content_for :page_title, t("views.cafes.index.page_title") %>
 <% content_for :back_path, root_path %>
 
 <div class="flex flex-col">
@@ -9,10 +9,10 @@
         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M19 11h2a2 2 0 010 4h-2" />
       </svg>
       <% if params[:prefectures].present? || params[:tag_ids].present? || params[:keyword].present? %>
-        <p class="text-gray-400 text-sm">条件に合うカフェが見つかりませんでした</p>
-        <%= link_to "条件を変えて検索", root_path, class: "mt-3 text-sm text-amber-600 font-medium" %>
+        <p class="text-gray-400 text-sm"><%= t("views.cafes.index.no_search_results") %></p>
+        <%= link_to t("views.cafes.index.change_conditions"), root_path, class: "mt-3 text-sm text-amber-600 font-medium" %>
       <% else %>
-        <p class="text-gray-400 text-sm">現在表示できるカフェがありません</p>
+        <p class="text-gray-400 text-sm"><%= t("views.cafes.index.no_cafes") %></p>
       <% end %>
     </div>
   <% else %>
