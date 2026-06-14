@@ -1,6 +1,6 @@
 ## デプロイURL
 
-https://coffee-compass-js3n.onrender.com
+https://coffeecompass.jp
 
 ---
 
