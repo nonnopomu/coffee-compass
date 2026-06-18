@@ -43,6 +43,18 @@ RSpec.describe "Public pages", type: :request do
 
       expect(response).to have_http_status(:ok)
     end
+
+    it "利用規約を閲覧できること" do
+      get terms_path
+
+      expect(response).to have_http_status(:ok)
+    end
+
+    it "プライバシーポリシーを閲覧できること" do
+      get privacy_path
+
+      expect(response).to have_http_status(:ok)
+    end
   end
 
   describe "ログイン必須画面のアクセス制御" do

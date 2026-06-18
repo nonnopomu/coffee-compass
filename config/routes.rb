@@ -28,6 +28,8 @@ Rails.application.routes.draw do
   devise_for :users
 
   get "up" => "rails/health#show", as: :rails_health_check
+  get "terms", to: "pages#terms"
+  get "privacy", to: "pages#privacy"
 
   root "pages#top"
 end
