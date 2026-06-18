@@ -33,12 +33,18 @@ ja:
         search_cafes: カフェを探す
         record_log: ログを記録
         mypage: マイページ
+        terms: 利用規約
+        privacy: プライバシーポリシー
     pages:
       top:
         title: 最高の1杯を見つけよう
         keyword_placeholder: カフェ名やキーワードで検索
         area_search: エリアから探す
         tag_search: タグから探す
+      terms:
+        page_title: 利用規約
+      privacy:
+        page_title: プライバシーポリシー
     searches:
       area:
         page_title: エリア選択
