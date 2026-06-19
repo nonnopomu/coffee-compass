@@ -87,8 +87,4 @@ class DrinkLogsController < ApplicationController
   def authorize_owner!
     redirect_to drink_log_path(@drink_log), alert: t("flash.drink_logs.owner_required") unless @drink_log.user == current_user
   end
-
-  def safe_return_path(fallback_path)
-    url_from(params[:return_to]) || fallback_path
-  end
 end

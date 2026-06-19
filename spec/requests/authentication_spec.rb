@@ -29,6 +29,22 @@ RSpec.describe "Authentication", type: :request do
 
       expect(User.last.name).to eq("名前確認ユーザー")
     end
+
+    it "return_toが指定されている場合は登録後に指定ページへリダイレクトされること" do
+      cafe = create_cafe(status: :published)
+
+      post user_registration_path, params: {
+        return_to: cafe_path(cafe),
+        user: {
+          name: "戻り先確認ユーザー",
+          email: "return-sign-up@example.com",
+          password: "password",
+          password_confirmation: "password"
+        }
+      }
+
+      expect(response).to redirect_to(cafe_path(cafe))
+    end
   end
 
   describe "POST /users/sign_in" do
@@ -36,6 +52,35 @@ RSpec.describe "Authentication", type: :request do
       user = create_user(email: "login-user@example.com", password: "password")
 
       post user_session_path, params: {
+        user: {
+          email: user.email,
+          password: "password"
+        }
+      }
+
+      expect(response).to redirect_to(root_path)
+    end
+
+    it "return_toが指定されている場合はログイン後に指定ページへリダイレクトされること" do
+      user = create_user(email: "return-login@example.com", password: "password")
+      cafe = create_cafe(status: :published)
+
+      post user_session_path, params: {
+        return_to: cafe_path(cafe),
+        user: {
+          email: user.email,
+          password: "password"
+        }
+      }
+
+      expect(response).to redirect_to(cafe_path(cafe))
+    end
+
+    it "return_toに外部URLが指定されている場合はログイン後にトップページへリダイレクトされること" do
+      user = create_user(email: "safe-login@example.com", password: "password")
+
+      post user_session_path, params: {
+        return_to: "//evil.example.com/phishing",
         user: {
           email: user.email,
           password: "password"
