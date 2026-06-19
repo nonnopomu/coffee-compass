@@ -29,7 +29,7 @@ export default class extends Controller {
     chip.textContent = tagName
     this.selectedTarget.appendChild(chip)
 
-    const checkbox = document.querySelector(`input[type="checkbox"][data-tag-id="${tagId}"]`)
+    const checkbox = this.element.querySelector(`input[type="checkbox"][data-tag-id="${tagId}"]`)
     if (checkbox) checkbox.checked = true
   }
 
@@ -41,7 +41,7 @@ export default class extends Controller {
     const chip = this.selectedTarget.querySelector(`[data-tag-id="${button.dataset.tagId}"]`)
     if (chip) chip.remove()
 
-    const checkbox = document.querySelector(`input[type="checkbox"][data-tag-id="${button.dataset.tagId}"]`)
+    const checkbox = this.element.querySelector(`input[type="checkbox"][data-tag-id="${button.dataset.tagId}"]`)
     if (checkbox) checkbox.checked = false
   }
 
@@ -52,6 +52,9 @@ export default class extends Controller {
       button.classList.add("bg-white", "text-gray-700", "border-gray-200")
     })
     this.selectedTarget.innerHTML = ""
+    this.element.querySelectorAll('input[type="checkbox"][name="tag_ids[]"]').forEach(checkbox => {
+      checkbox.checked = false
+    })
     this.updateCount()
   }
 

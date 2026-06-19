@@ -22,18 +22,167 @@
     </section>
 
     <section class="mx-auto mt-1 max-w-[38rem] rounded-2xl border border-amber-100 bg-white/95 p-3 shadow-[0_1px_8px_rgba(90,51,24,0.08)] sm:mt-5">
-      <div class="grid grid-cols-3 overflow-hidden rounded-xl border border-amber-200 bg-amber-50 text-center text-xs font-semibold">
-        <div class="flex min-h-12 items-center justify-center bg-amber-600 px-2 text-white">
+      <div class="grid grid-cols-3 overflow-hidden rounded-xl border border-amber-200 bg-amber-50 text-center text-[11px] font-semibold sm:text-xs">
+        <div class="flex min-h-12 items-center justify-center whitespace-nowrap bg-amber-600 px-1 text-white sm:px-2">
           <%= t("views.pages.top.keyword_search") %>
         </div>
 
-        <%= link_to t("views.pages.top.area_search"),
-                    area_searches_path,
-                    class: "flex min-h-12 items-center justify-center border-l border-amber-200 px-2 text-amber-800 transition-colors hover:bg-amber-600 hover:text-white" %>
+        <div class="contents" data-controller="area-selection modal">
+          <button type="button"
+                  data-action="click->modal#open"
+                  class="flex min-h-12 cursor-pointer items-center justify-center whitespace-nowrap border-l border-amber-200 px-1 text-amber-800 transition-colors hover:bg-amber-600 hover:text-white sm:px-2">
+            <%= t("views.pages.top.area_search") %>
+          </button>
 
-        <%= link_to t("views.pages.top.tag_search"),
-                    tag_searches_path,
-                    class: "flex min-h-12 items-center justify-center border-l border-amber-200 px-2 text-amber-800 transition-colors hover:bg-amber-600 hover:text-white" %>
+          <div data-modal-target="panel"
+               data-modal-display-class="flex"
+               data-action="click->modal#closeOnBackdrop"
+               class="hidden fixed inset-0 z-50 items-center justify-center bg-black/55 px-4 py-6">
+            <%= form_with url: cafes_path, method: :get, data: { turbo: false }, class: "flex max-h-[86vh] w-full max-w-5xl flex-col overflow-hidden rounded-2xl bg-white text-left shadow-2xl" do |f| %>
+              <div class="flex items-center justify-between border-b border-gray-100 px-5 py-4">
+                <div>
+                  <p class="text-base font-bold text-gray-900"><%= t("views.searches.area.modal_title") %></p>
+                  <p class="mt-1 text-xs text-gray-400"><%= t("views.searches.area.modal_description") %></p>
+                </div>
+                <button type="button"
+                        data-action="click->modal#close"
+                        class="flex h-10 w-10 cursor-pointer items-center justify-center rounded-full text-2xl leading-none text-gray-500 hover:bg-gray-100">
+                  &times;
+                </button>
+              </div>
+
+              <div class="overflow-y-auto px-5 py-2">
+                <% SearchesHelper::PREFECTURES_BY_REGION.each do |region, prefectures| %>
+                  <div class="grid gap-3 border-b border-gray-100 py-4 sm:grid-cols-[9rem_1fr]">
+                    <p class="text-sm font-bold text-gray-900"><%= region %></p>
+                    <div class="grid grid-cols-2 gap-x-5 gap-y-4 sm:grid-cols-3 lg:grid-cols-5">
+                      <% prefectures.each do |prefecture| %>
+                        <% available = @available_prefectures.include?(prefecture) %>
+                        <label class="flex items-center gap-2 <%= available ? 'cursor-pointer' : 'cursor-not-allowed opacity-40' %>">
+                          <%= f.check_box :prefectures,
+                              { multiple: true,
+                                checked: Array(params[:prefectures]).include?(prefecture),
+                                disabled: !available,
+                                data: available ? { area_selection_target: "checkbox", action: "change->area-selection#update" } : {},
+                                class: "h-5 w-5 rounded-md border-gray-300 text-amber-600 focus:ring-amber-500" },
+                              prefecture, nil %>
+                          <span class="text-sm font-medium <%= available ? 'text-gray-800' : 'text-gray-400' %>"><%= prefecture %></span>
+                        </label>
+                      <% end %>
+                    </div>
+                  </div>
+                <% end %>
+              </div>
+
+              <div class="border-t border-gray-100 bg-white px-5 py-4">
+                <div class="mb-3 flex flex-wrap items-center gap-2">
+                  <span class="text-xs text-gray-500"><%= t("views.common.selected") %></span>
+                  <span class="text-xs font-semibold text-amber-600" data-area-selection-target="count">0</span>
+                  <span class="text-xs text-gray-500"><%= t("views.common.count_suffix") %></span>
+                  <div class="flex flex-wrap gap-2" data-area-selection-target="chips"></div>
+                </div>
+                <%= f.submit t("views.searches.area.submit"),
+                             class: "w-full cursor-pointer rounded-xl bg-amber-600 py-3 text-sm font-semibold text-white hover:bg-amber-700" %>
+              </div>
+            <% end %>
+          </div>
+        </div>
+
+        <div class="contents" data-controller="tag-selection modal">
+          <button type="button"
+                  data-action="click->modal#open"
+                  class="flex min-h-12 cursor-pointer items-center justify-center whitespace-nowrap border-l border-amber-200 px-1 text-amber-800 transition-colors hover:bg-amber-600 hover:text-white sm:px-2">
+            <%= t("views.pages.top.tag_search") %>
+          </button>
+
+          <div data-modal-target="panel"
+               data-modal-display-class="flex"
+               data-action="click->modal#closeOnBackdrop"
+               class="hidden fixed inset-0 z-50 items-center justify-center bg-black/55 px-4 py-6">
+            <%= form_with url: cafes_path, method: :get, data: { turbo: false }, class: "flex max-h-[86vh] w-full max-w-3xl flex-col overflow-hidden rounded-2xl bg-white text-left shadow-2xl" do |f| %>
+              <div class="flex items-center justify-between border-b border-gray-100 px-5 py-4">
+                <div>
+                  <p class="text-base font-bold text-gray-900"><%= t("views.searches.tag.modal_title") %></p>
+                  <p class="mt-1 text-xs text-gray-400"><%= t("views.searches.tag.modal_description") %></p>
+                </div>
+                <button type="button"
+                        data-action="click->modal#close"
+                        class="flex h-10 w-10 cursor-pointer items-center justify-center rounded-full text-2xl leading-none text-gray-500 hover:bg-gray-100">
+                  &times;
+                </button>
+              </div>
+
+              <div class="space-y-8 overflow-y-auto px-5 py-5">
+                <div>
+                  <div class="mb-1 flex items-center gap-2">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-amber-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 9a2 2 0 012-2h14a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2V9z" />
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11h2a2 2 0 010 4h-2" />
+                    </svg>
+                    <h2 class="text-sm font-semibold text-gray-900"><%= t("views.searches.tag.brew_method_heading") %></h2>
+                  </div>
+                  <p class="mb-3 text-xs text-gray-400"><%= t("views.searches.tag.brew_method_description") %></p>
+                  <div class="flex flex-wrap gap-2">
+                    <% @brew_method_tags.each do |tag| %>
+                      <button type="button"
+                              data-action="click->tag-selection#toggle"
+                              data-tag-selection-target="chip"
+                              data-tag-id="<%= tag.id %>"
+                              data-tag-name="<%= tag.name %>"
+                              data-selected="false"
+                              class="cursor-pointer rounded-full border border-gray-200 bg-white px-4 py-1.5 text-sm text-gray-700">
+                        <%= tag.name %>
+                      </button>
+                      <input type="checkbox" name="tag_ids[]" value="<%= tag.id %>" class="hidden" data-tag-id="<%= tag.id %>">
+                    <% end %>
+                  </div>
+                </div>
+
+                <div>
+                  <div class="mb-1 flex items-center gap-2">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-amber-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z" />
+                    </svg>
+                    <h2 class="text-sm font-semibold text-gray-900"><%= t("views.searches.tag.feature_heading") %></h2>
+                  </div>
+                  <p class="mb-3 text-xs text-gray-400"><%= t("views.searches.tag.feature_description") %></p>
+                  <div class="flex flex-wrap gap-2">
+                    <% @feature_tags.each do |tag| %>
+                      <button type="button"
+                              data-action="click->tag-selection#toggle"
+                              data-tag-selection-target="chip"
+                              data-tag-id="<%= tag.id %>"
+                              data-tag-name="<%= tag.name %>"
+                              data-selected="false"
+                              class="cursor-pointer rounded-full border border-gray-200 bg-white px-4 py-1.5 text-sm text-gray-700">
+                        <%= tag.name %>
+                      </button>
+                      <input type="checkbox" name="tag_ids[]" value="<%= tag.id %>" class="hidden" data-tag-id="<%= tag.id %>">
+                    <% end %>
+                  </div>
+                </div>
+              </div>
+
+              <div class="border-t border-gray-100 bg-white px-5 py-4">
+                <div class="mb-3 flex items-center justify-between gap-3">
+                  <div class="flex min-w-0 flex-wrap items-center gap-2">
+                    <span class="text-xs text-gray-500"><%= t("views.common.selected") %></span>
+                    <span class="text-xs font-semibold text-amber-600" data-tag-selection-target="count">0</span>
+                    <span class="text-xs text-gray-500"><%= t("views.common.count_suffix") %></span>
+                    <div class="flex flex-wrap gap-2" data-tag-selection-target="selected"></div>
+                  </div>
+                  <button type="button"
+                          data-action="click->tag-selection#reset"
+                          class="shrink-0 cursor-pointer text-xs text-gray-400">
+                    <%= t("views.common.reset") %>
+                  </button>
+                </div>
+                <%= f.submit t("views.searches.tag.submit"),
+                             class: "w-full cursor-pointer rounded-xl bg-amber-600 py-3 text-sm font-semibold text-white hover:bg-amber-700" %>
+              </div>
+            <% end %>
+          </div>
+        </div>
       </div>
 
       <%# 検索バー：カフェ一覧ページにキーワードをGETパラメーターとして送信する %>

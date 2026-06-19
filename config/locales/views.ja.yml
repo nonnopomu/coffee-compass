@@ -17,6 +17,7 @@ ja:
       selected: 選択中
       count: "%{count}件"
       count_suffix: 件
+      open: 開く
       reset: × リセット
       error_heading: 入力内容を確認してください
       google_maps: Google Maps
@@ -49,17 +50,16 @@ ja:
         page_title: プライバシーポリシー
     searches:
       area:
-        page_title: エリア選択
-        heading: 都道府県から探す
+        modal_title: エリアを選択
+        modal_description: 複数選択できます
         submit: このエリアで検索
       tag:
-        page_title: タグ選択
+        modal_title: タグを選択
+        modal_description: 複数選択できます
         brew_method_heading: 提供スタイル
         brew_method_description: 抽出方法や提供の仕方にこだわりたいとき
         feature_heading: 店舗に関する特徴
         feature_description: 豆の質やお店の設備、雰囲気に合わせたいとき
-        hint_heading: 検索のヒント
-        hint_body: 複数のタグを組み合わせることで、よりあなた好みのコーヒー体験ができるカフェを見つけやすくなります。
         submit: この条件で検索する
     cafes:
       index:

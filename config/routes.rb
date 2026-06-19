@@ -5,13 +5,6 @@ Rails.application.routes.draw do
 
   resources :drink_logs, only: [ :new, :create, :show, :edit, :update, :destroy ]
 
-  resources :searches, only: [] do
-    collection do
-      get :area
-      get :tag
-    end
-  end
-
   resource :mypage, only: [ :show ]
 
   namespace :admin do
