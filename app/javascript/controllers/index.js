@@ -13,6 +13,9 @@ application.register("cafe-selection", CafeSelectionController)
 import FlashController from "./flash_controller"
 application.register("flash", FlashController)
 
+import ModalController from "./modal_controller"
+application.register("modal", ModalController)
+
 import TabsController from "./tabs_controller"
 application.register("tabs", TabsController)
 
