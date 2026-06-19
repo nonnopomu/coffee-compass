@@ -11,6 +11,7 @@
 
     <%= form_for(resource, as: resource_name, url: session_path(resource_name)) do |f| %>
       <%= render "devise/shared/error_messages", resource: resource %>
+      <%= hidden_field_tag :return_to, params[:return_to] if params[:return_to].present? %>
 
       <div class="w-full mb-4">
         <%= f.label :email, class: "block text-sm font-medium text-gray-700 mb-1" %>
@@ -52,7 +53,7 @@
       <p class="text-sm text-gray-400"><%= t("views.devise.sessions.new.first_time") %></p>
     </div>
 
-    <%= link_to new_user_registration_path, class: "inline-flex items-center justify-center gap-2 px-8 py-3 border border-amber-600 text-amber-600 text-sm font-medium rounded-lg hover:bg-amber-50 transition-colors" do %>
+    <%= link_to new_user_registration_path(return_to: params[:return_to]), class: "inline-flex items-center justify-center gap-2 px-8 py-3 border border-amber-600 text-amber-600 text-sm font-medium rounded-lg hover:bg-amber-50 transition-colors" do %>
       <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
       </svg>

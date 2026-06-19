@@ -9,7 +9,7 @@ class ApplicationController < ActionController::Base
   before_action :configure_permitted_parameters, if: :devise_controller?
 
   def after_sign_in_path_for(resource)
-    root_path
+    stored_location_for(resource) || safe_return_path(root_path)
   end
 
   def after_sign_out_path_for(resource_or_scope)
@@ -26,5 +26,9 @@ class ApplicationController < ActionController::Base
 
   def user_not_authorized
     redirect_back fallback_location: root_path, alert: t("flash.authorization.forbidden")
+  end
+
+  def safe_return_path(fallback_path)
+    url_from(params[:return_to]) || fallback_path
   end
 end

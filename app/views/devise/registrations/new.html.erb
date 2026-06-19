@@ -12,6 +12,7 @@
 
     <%= form_for(resource, as: resource_name, url: registration_path(resource_name)) do |f| %>
       <%= render "devise/shared/error_messages", resource: resource %>
+      <%= hidden_field_tag :return_to, params[:return_to] if params[:return_to].present? %>
 
       <div class="w-full mb-4">
         <%= f.label :name, class: "block text-sm font-medium text-gray-700 mb-1" %>
@@ -73,6 +74,6 @@
 
     <div class="mt-6 text-center">
       <p class="text-sm text-gray-500"><%= t("views.devise.registrations.new.already_have_account") %></p>
-      <%= link_to t("views.devise.registrations.new.login_link"), new_user_session_path, class: "text-sm font-medium text-gray-900 border border-gray-200 rounded-full px-6 py-2 mt-2 inline-block hover:bg-gray-50 transition-colors" %>
+      <%= link_to t("views.devise.registrations.new.login_link"), new_user_session_path(return_to: params[:return_to]), class: "text-sm font-medium text-gray-900 border border-gray-200 rounded-full px-6 py-2 mt-2 inline-block hover:bg-gray-50 transition-colors" %>
     </div>
   </div>
