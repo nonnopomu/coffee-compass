@@ -27,13 +27,13 @@
 
     <link rel="manifest" href="/manifest.json">
     <link rel="icon" href="/icon.png" type="image/png">
-    <link rel="icon" href="/icon.svg" type="image/svg+xml">
     <link rel="apple-touch-icon" href="/icon.png">
     <%= stylesheet_link_tag "application", "data-turbo-track": "reload" %>
     <%= javascript_include_tag "application", "data-turbo-track": "reload", type: "module" %>
   </head>
 
-  <body class="min-h-screen flex flex-col <%= content_for?(:page_bg) ? yield(:page_bg) : 'bg-white' %>">
+  <% body_background_style = content_for?(:image_footer) ? "background-image: linear-gradient(to bottom, rgba(250, 238, 220, 0.70), rgba(248, 232, 211, 0.62), rgba(246, 232, 214, 0.84)), url('#{asset_path("top_icon2.png")}'); background-size: cover; background-position: center; background-attachment: fixed;" : nil %>
+  <body class="min-h-screen flex flex-col <%= content_for?(:page_bg) ? yield(:page_bg) : 'bg-white' %>" style="<%= body_background_style %>">
     <%= render "shared/header" %>
     <div class="fixed top-16 left-0 right-0 z-50 flex flex-col items-center gap-2 px-4 pointer-events-none">
       <% flash.each do |type, message| %>

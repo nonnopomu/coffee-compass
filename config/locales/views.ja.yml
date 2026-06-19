@@ -38,7 +38,9 @@ ja:
     pages:
       top:
         title: 最高の1杯を見つけよう
-        keyword_placeholder: カフェ名やキーワードで検索
+        lead: お気に入りのカフェを見つけよう
+        keyword_search: キーワードから探す
+        keyword_placeholder: カフェ名・エリア・キーワード
         area_search: エリアから探す
         tag_search: タグから探す
       terms:

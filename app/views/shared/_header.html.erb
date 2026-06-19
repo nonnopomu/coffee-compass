@@ -1,4 +1,6 @@
-<header class="sticky top-0 z-10 border-b border-gray-200 bg-white px-4 py-3">
+<% transparent_header = content_for?(:transparent_header) %>
+
+<header class="<%= transparent_header ? 'absolute left-0 right-0 top-0 z-20 bg-transparent px-4 py-3 sm:px-6 lg:px-8' : 'sticky top-0 z-10 border-b border-gray-200 bg-white px-4 py-3 sm:px-6 lg:px-8' %>">
   <div class="flex min-h-8 items-center gap-3">
     <% if content_for?(:back_path) %>
       <div class="flex shrink-0 items-center">
@@ -10,8 +12,8 @@
       </div>
     <% end %>
 
-    <div class="min-w-0 flex-1 <%= content_for?(:header_center) ? 'text-left sm:text-center' : 'text-center' %>">
-      <div class="inline-flex max-w-full items-center <%= content_for?(:header_center) ? 'justify-start sm:justify-center' : 'justify-center' %>">
+    <div class="min-w-0 flex-1 <%= content_for?(:header_center) ? 'text-left' : 'text-center' %>">
+      <div class="inline-flex max-w-full items-center <%= content_for?(:header_center) ? 'justify-start' : 'justify-center' %>">
         <% if content_for?(:header_center) %>
           <%= yield :header_center %>
         <% else %>
@@ -20,7 +22,7 @@
       </div>
     </div>
 
-    <div class="flex shrink-0 items-center gap-1.5 sm:gap-2">
+    <div class="flex shrink-0 items-center gap-4">
       <% if content_for?(:hide_user_icon) %>
       <% elsif user_signed_in? %>
         <% if current_user.admin? %>
@@ -34,8 +36,8 @@
           <span class="text-sm font-medium text-white"><%= current_user.name[0] %></span>
         </div>
       <% else %>
-        <%= link_to t("views.shared.header.login"), new_user_session_path, class: "whitespace-nowrap text-sm font-medium text-gray-600" %>
-        <%= link_to t("views.shared.header.sign_up"), new_user_registration_path, class: "whitespace-nowrap rounded-lg bg-amber-600 px-2 py-1 text-sm font-medium text-white sm:px-3" %>
+        <%= link_to t("views.shared.header.login"), new_user_session_path, class: "whitespace-nowrap rounded-lg bg-amber-50/70 px-3 py-2 text-sm font-bold text-[#5a3318] shadow-sm backdrop-blur-sm hover:bg-amber-50" %>
+        <%= link_to t("views.shared.header.sign_up"), new_user_registration_path, class: "whitespace-nowrap rounded-lg bg-amber-600 px-4 py-2 text-sm font-bold text-white" %>
       <% end %>
     </div>
   </div>
