@@ -3,8 +3,8 @@
 <% content_for :hide_user_icon, true %>
 
 <div class="flex flex-col items-center px-6 pt-8 pb-6">
-    <div class="w-16 h-16 bg-gray-900 rounded-full flex items-center justify-center mb-6">
-      <span class="text-white text-lg font-bold tracking-tight">CC</span>
+    <div class="mb-6 h-16 w-16">
+      <%= image_tag "coffee_compass_orbit_transparent.png", alt: t("app.name"), class: "h-full w-full object-contain" %>
     </div>
 
     <p class="text-sm text-gray-500 text-center mb-8"><%= t("views.devise.sessions.new.tagline") %></p>

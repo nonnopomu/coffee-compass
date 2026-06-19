@@ -1,2 +1,11 @@
 @import "tailwindcss";
 @source "../../views/**/*.erb";
+
+@layer components {
+  .brand-wordmark {
+    color: #4a2c14;
+    font-family: "Hiragino Maru Gothic ProN", "Yu Gothic", "YuGothic", "Noto Sans JP", "Trebuchet MS", system-ui, sans-serif;
+    letter-spacing: 0;
+    text-shadow: 0 1px 0 rgba(255, 251, 235, 0.75);
+  }
+}
