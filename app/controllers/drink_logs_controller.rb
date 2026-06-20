@@ -1,5 +1,5 @@
 class DrinkLogsController < ApplicationController
-  before_action :authenticate_user!, only: [ :new, :create, :edit, :update, :destroy ]
+  skip_before_action :authenticate_user!, only: [ :show ]
   before_action :set_drink_log, only: [ :show, :edit, :update, :destroy ]
   before_action :authorize_owner!, only: [ :edit, :update, :destroy ]
 

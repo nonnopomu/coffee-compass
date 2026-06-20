@@ -1,0 +1,55 @@
+<% content_for :page_title, t("views.profiles.edit.page_title") %>
+<% content_for :back_path, user_path(@user) %>
+
+<div class="min-h-full bg-gray-50">
+  <div class="px-4 py-5">
+    <%= form_with model: @user, url: profile_path, method: :patch, class: "space-y-6" do |f| %>
+      <% if @user.errors.any? %>
+        <div class="rounded-lg border border-red-200 bg-red-50 px-4 py-3">
+          <p class="text-sm font-semibold text-red-700"><%= t("views.common.error_heading") %></p>
+          <ul class="mt-2 list-disc space-y-1 pl-5 text-sm text-red-700">
+            <% @user.errors.full_messages.each do |message| %>
+              <li><%= message %></li>
+            <% end %>
+          </ul>
+        </div>
+      <% end %>
+
+      <section data-controller="avatar-preview" class="rounded-lg border border-gray-200 bg-white px-4 py-5 shadow-sm">
+        <div class="flex items-center gap-4">
+          <% if @user.avatar.attached? %>
+            <%= image_tag @user.avatar,
+                          alt: t("views.users.show.avatar_alt", name: @user.name),
+                          data: { avatar_preview_target: "image" },
+                          class: "h-20 w-20 shrink-0 rounded-full border border-amber-100 object-cover shadow-sm" %>
+            <div data-avatar-preview-target="placeholder" class="hidden h-20 w-20 shrink-0 items-center justify-center rounded-full border border-amber-100 bg-amber-50 shadow-sm" aria-label="<%= t("views.users.show.avatar_placeholder", name: @user.name) %>">
+              <span class="text-2xl font-bold text-amber-700"><%= @user.name.first %></span>
+            </div>
+          <% else %>
+            <img data-avatar-preview-target="image" alt="<%= t("views.users.show.avatar_alt", name: @user.name) %>" class="hidden h-20 w-20 shrink-0 rounded-full border border-amber-100 object-cover shadow-sm">
+            <div data-avatar-preview-target="placeholder" class="flex h-20 w-20 shrink-0 items-center justify-center rounded-full border border-amber-100 bg-amber-50 shadow-sm" aria-label="<%= t("views.users.show.avatar_placeholder", name: @user.name) %>">
+              <span class="text-2xl font-bold text-amber-700"><%= @user.name.first %></span>
+            </div>
+          <% end %>
+
+          <div class="min-w-0 flex-1">
+            <%= f.label :avatar, t("views.profiles.edit.avatar"), class: "mb-2 block text-sm font-medium text-gray-700" %>
+            <%= f.file_field :avatar, accept: "image/*", data: { avatar_preview_target: "input", action: "change->avatar-preview#show" }, class: "block w-full cursor-pointer rounded-lg border border-gray-200 bg-white px-3 py-3 text-sm text-gray-900 file:mr-4 file:cursor-pointer file:rounded-lg file:border-0 file:bg-amber-50 file:px-3 file:py-2 file:text-sm file:font-semibold file:text-amber-700" %>
+          </div>
+        </div>
+      </section>
+
+      <section class="rounded-lg border border-gray-200 bg-white px-4 py-5 shadow-sm">
+        <%= f.label :name, User.human_attribute_name(:name), class: "mb-2 block text-sm font-medium text-gray-700" %>
+        <%= f.text_field :name,
+                         placeholder: t("views.profiles.edit.name_placeholder"),
+                         class: "w-full rounded-lg border border-gray-200 bg-white px-3 py-3 text-sm text-gray-900 focus:border-amber-600 focus:outline-none focus:ring-2 focus:ring-amber-100" %>
+      </section>
+
+      <div class="grid grid-cols-2 gap-3 pb-6">
+        <%= link_to t("views.common.cancel"), user_path(@user), class: "rounded-lg border border-gray-200 bg-white px-4 py-3 text-center text-sm font-semibold text-gray-700" %>
+        <%= f.submit t("views.common.update"), class: "rounded-lg bg-amber-600 px-4 py-3 text-sm font-semibold text-white" %>
+      </div>
+    <% end %>
+  </div>
+</div>

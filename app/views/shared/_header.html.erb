@@ -1,7 +1,7 @@
 <% transparent_header = content_for?(:transparent_header) %>
 
 <header class="<%= transparent_header ? 'absolute left-0 right-0 top-0 z-20 bg-transparent px-4 py-3 sm:px-6 lg:px-8' : 'sticky top-0 z-10 border-b border-gray-200 bg-white px-4 py-3 sm:px-6 lg:px-8' %>">
-  <div class="flex min-h-8 items-center gap-3">
+  <div class="relative flex min-h-8 items-center gap-3">
     <% if content_for?(:back_path) %>
       <div class="flex shrink-0 items-center">
       <%= link_to yield(:back_path), class: "text-gray-600" do %>
@@ -12,7 +12,7 @@
       </div>
     <% end %>
 
-    <div class="min-w-0 flex-1 <%= content_for?(:header_center) ? 'text-left' : 'text-center' %>">
+    <div class="<%= content_for?(:header_center) ? 'min-w-0 flex-1 text-left' : 'pointer-events-none absolute left-1/2 top-1/2 w-[min(14rem,calc(100%-8rem))] -translate-x-1/2 -translate-y-1/2 text-center' %>">
       <div class="inline-flex max-w-full items-center <%= content_for?(:header_center) ? 'justify-start' : 'justify-center' %>">
         <% if content_for?(:header_center) %>
           <%= yield :header_center %>
@@ -22,7 +22,7 @@
       </div>
     </div>
 
-    <div class="flex shrink-0 items-center gap-4">
+    <div class="absolute right-0 top-1/2 flex shrink-0 -translate-y-1/2 items-center gap-4">
       <% if content_for?(:hide_user_icon) %>
       <% elsif user_signed_in? %>
         <% if current_user.admin? %>
@@ -32,9 +32,15 @@
             <%= link_to t("views.shared.header.admin"), admin_root_path, class: "whitespace-nowrap text-xs font-medium text-amber-600" %>
           <% end %>
         <% end %>
-        <div class="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-amber-600">
-          <span class="text-sm font-medium text-white"><%= current_user.name[0] %></span>
-        </div>
+        <% if current_user.avatar.attached? %>
+          <%= image_tag current_user.avatar,
+                        alt: t("views.users.show.avatar_alt", name: current_user.name),
+                        class: "h-8 w-8 shrink-0 rounded-full object-cover" %>
+        <% else %>
+          <div class="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-amber-600">
+            <span class="text-sm font-medium text-white"><%= current_user.name[0] %></span>
+          </div>
+        <% end %>
       <% else %>
         <%= link_to t("views.shared.header.login"), new_user_session_path(return_to: request.fullpath), class: "whitespace-nowrap rounded-lg bg-amber-50/70 px-3 py-2 text-sm font-bold text-[#5a3318] shadow-sm backdrop-blur-sm hover:bg-amber-50" %>
         <%= link_to t("views.shared.header.sign_up"), new_user_registration_path(return_to: request.fullpath), class: "whitespace-nowrap rounded-lg bg-amber-600 px-4 py-2 text-sm font-bold text-white" %>

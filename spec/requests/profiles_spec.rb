@@ -1,0 +1,60 @@
+require "rails_helper"
+
+RSpec.describe "Profiles", type: :request do
+  describe "GET /profile/edit" do
+    it "ログインユーザーはプロフィール編集画面を閲覧できること" do
+      user = create_user
+
+      sign_in user
+      get edit_profile_path
+
+      expect(response).to have_http_status(:ok)
+      expect(response.body).to include(I18n.t("views.profiles.edit.page_title"))
+    end
+
+    it "未ログインユーザーはプロフィール編集画面を閲覧できないこと" do
+      get edit_profile_path
+
+      expect(response).to redirect_to(new_user_session_path)
+    end
+  end
+
+  describe "PATCH /profile" do
+    it "ログインユーザーはユーザー名を更新できること" do
+      user = create_user(name: "変更前")
+
+      sign_in user
+      patch profile_path, params: { user: { name: "変更後" } }
+
+      expect(response).to redirect_to(user_path(user))
+      expect(user.reload.name).to eq("変更後")
+    end
+
+    it "入力値が不正な場合は更新せず編集画面を再表示すること" do
+      user = create_user(name: "変更前")
+
+      sign_in user
+      patch profile_path, params: { user: { name: "" } }
+
+      expect(response).to have_http_status(:unprocessable_entity)
+      expect(user.reload.name).to eq("変更前")
+    end
+
+    it "プロフィール画像を添付できること" do
+      user = create_user
+      avatar = Rack::Test::UploadedFile.new(Rails.root.join("spec/fixtures/files/avatar.png"), "image/png")
+
+      sign_in user
+      patch profile_path, params: { user: { name: user.name, avatar: } }
+
+      expect(response).to redirect_to(user_path(user))
+      expect(user.reload.avatar).to be_attached
+    end
+
+    it "未ログインユーザーはプロフィールを更新できないこと" do
+      patch profile_path, params: { user: { name: "変更後" } }
+
+      expect(response).to redirect_to(new_user_session_path)
+    end
+  end
+end

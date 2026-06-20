@@ -7,7 +7,10 @@
     <h1 class="mt-2 text-xl font-bold text-gray-900"><%= @drink_log.menu_name %></h1>
     <div class="mt-3 flex flex-wrap items-center gap-x-3 gap-y-1 text-xs text-gray-500">
       <span><%= l(@drink_log.drank_on, format: :long) %></span>
-      <span><%= t("views.drink_logs.show.author", name: @drink_log.user.name) %></span>
+      <span>
+        <%= t("views.drink_logs.show.author_label") %>:
+        <%= link_to @drink_log.user.name, user_path(@drink_log.user), class: "font-semibold text-amber-700" %>
+      </span>
     </div>
   </div>
 

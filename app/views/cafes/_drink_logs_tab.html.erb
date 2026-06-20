@@ -5,7 +5,9 @@
         <article class="rounded-lg border border-gray-200 bg-white p-4">
           <div class="flex items-start justify-between gap-3">
             <div>
-              <p class="text-xs text-gray-500"><%= drink_log.user.name %></p>
+              <p class="text-xs text-gray-500">
+                <%= link_to drink_log.user.name, user_path(drink_log.user), class: "font-medium text-amber-700" %>
+              </p>
               <h3 class="mt-1 text-base font-bold text-gray-900"><%= drink_log.menu_name %></h3>
             </div>
             <time class="shrink-0 text-xs text-gray-500" datetime="<%= drink_log.created_at.to_date.iso8601 %>">

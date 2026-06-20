@@ -6,6 +6,8 @@ Rails.application.routes.draw do
   resources :drink_logs, only: [ :new, :create, :show, :edit, :update, :destroy ]
 
   resource :mypage, only: [ :show ]
+  resource :profile, only: [ :edit, :update ]
+  resources :users, only: [ :show ]
 
   namespace :admin do
     root "dashboards#show"
