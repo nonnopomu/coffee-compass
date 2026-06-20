@@ -2,9 +2,22 @@
 
 <div class="min-h-full bg-gray-50">
   <div class="border-b border-gray-200 bg-white px-4 py-5">
-    <p class="text-xs font-medium text-amber-600"><%= t("views.mypages.show.label") %></p>
-    <h1 class="mt-2 text-xl font-bold text-gray-900"><%= current_user.name %></h1>
-    <p class="mt-2 text-sm text-gray-500"><%= current_user.email %></p>
+    <div class="flex items-center gap-4">
+      <% if current_user.avatar.attached? %>
+        <%= image_tag current_user.avatar,
+                      alt: t("views.users.show.avatar_alt", name: current_user.name),
+                      class: "h-16 w-16 rounded-full border border-amber-100 object-cover shadow-sm" %>
+      <% else %>
+        <div class="flex h-16 w-16 shrink-0 items-center justify-center rounded-full border border-amber-100 bg-amber-50 shadow-sm" aria-label="<%= t("views.users.show.avatar_placeholder", name: current_user.name) %>">
+          <span class="text-xl font-bold text-amber-700"><%= current_user.name.first %></span>
+        </div>
+      <% end %>
+
+      <div class="min-w-0">
+        <h1 class="break-words text-xl font-bold text-gray-900"><%= current_user.name %></h1>
+        <p class="mt-2 break-all text-sm text-gray-500"><%= current_user.email %></p>
+      </div>
+    </div>
 
     <div class="mt-4 grid grid-cols-2 gap-3">
       <div class="rounded-lg border border-gray-200 bg-gray-50 px-4 py-3">
@@ -16,6 +29,11 @@
         <p class="text-xs text-gray-500"><%= t("views.mypages.show.visited_cafes") %></p>
         <p class="mt-1 text-xl font-bold text-gray-900"><%= @drink_logs.map(&:cafe_id).uniq.size %></p>
       </div>
+    </div>
+
+    <div class="mt-4 grid grid-cols-2 gap-2">
+      <%= link_to t("views.common.view_profile"), user_path(current_user), class: "rounded-lg border border-amber-600 bg-white px-3 py-2 text-center text-sm font-semibold text-amber-700" %>
+      <%= link_to t("views.common.edit_profile"), edit_profile_path, class: "rounded-lg bg-amber-600 px-3 py-2 text-center text-sm font-semibold text-white" %>
     </div>
   </div>
 

@@ -12,8 +12,8 @@ class CafesController < ApplicationController
     @cafe = Cafe.includes(:tags).find(params[:id])
     @drink_logs = @cafe.drink_logs
                        .published
-                       .includes(:user, :roast_level_tag, :brew_method_tag, :taste_tags)
-                       .order(created_at: :desc)
+                       .with_display_associations
+                       .recent_first
 
     set_log_trends
   end

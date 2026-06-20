@@ -12,5 +12,7 @@ ja:
       update: ログを編集しました
       destroy: ログを削除しました
       owner_required: 自分のログのみ編集できます
+    profiles:
+      update: プロフィールを更新しました
     authorization:
       forbidden: 権限がありません。

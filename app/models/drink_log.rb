@@ -1,6 +1,14 @@
 class DrinkLog < ApplicationRecord
   enum :status, { published: 0, hidden: 1 }
 
+  scope :with_display_associations, -> {
+    includes(:user, :cafe, :roast_level_tag, :brew_method_tag, :taste_tags)
+  }
+
+  scope :recent_first, -> {
+    order(drank_on: :desc, created_at: :desc)
+  }
+
   belongs_to :user
   belongs_to :cafe
   belongs_to :roast_level_tag, class_name: "Tag"

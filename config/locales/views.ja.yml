@@ -24,6 +24,9 @@ ja:
       open_google_maps: Google Maps で開く
       no_matching_cafes: 一致するカフェがありません
       delete_log_confirm: このログを削除しますか？
+      profile: プロフィール
+      view_profile: プロフィールを見る
+      edit_profile: プロフィールを編集
     shared:
       header:
         normal: 通常
@@ -104,6 +107,7 @@ ja:
       show:
         page_title: ログ詳細
         author: "投稿者: %{name}"
+        author_label: 投稿者
         record_heading: コーヒーの記録
         cafe: カフェ
         no_memo: メモはありません。
@@ -126,8 +130,27 @@ ja:
         recorded_logs: 記録したログ
         visited_cafes: 訪れたカフェ
         my_logs: 自分のログ
+        profile_actions: プロフィール
         no_logs_title: まだ飲んだログはありません。
         no_logs_body: 気になったカフェや飲んだコーヒーを記録していきましょう。
+    users:
+      show:
+        label: プロフィール
+        recorded_logs: 公開ログ
+        visited_cafes: 訪れたカフェ
+        logs: 投稿したログ
+        no_logs_title: まだ公開ログはありません。
+        no_logs_body: このユーザーの公開ログはまだありません。
+        avatar_alt: "%{name}さんのプロフィール画像"
+        avatar_placeholder: "%{name}さんのプロフィール画像"
+    profiles:
+      edit:
+        page_title: プロフィール編集
+        label: プロフィール設定
+        avatar: プロフィール画像
+        current_avatar: 現在のプロフィール画像
+        avatar_help: 画像はプロフィール画面に表示されます。
+        name_placeholder: "例: コーヒー太郎"
     admin:
       dashboards:
         show:

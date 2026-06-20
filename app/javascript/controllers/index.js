@@ -7,6 +7,9 @@ import { application } from "./application"
 import AreaSelectionController from "./area_selection_controller"
 application.register("area-selection", AreaSelectionController)
 
+import AvatarPreviewController from "./avatar_preview_controller"
+application.register("avatar-preview", AvatarPreviewController)
+
 import CafeSelectionController from "./cafe_selection_controller"
 application.register("cafe-selection", CafeSelectionController)
 
