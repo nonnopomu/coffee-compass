@@ -1,10 +1,17 @@
+@import url("https://fonts.googleapis.com/css2?family=M+PLUS+Rounded+1c:wght@400;500;700;800&display=swap");
 @import "tailwindcss";
 @source "../../views/**/*.erb";
+
+@layer base {
+  body {
+    font-family: "M PLUS Rounded 1c", "Hiragino Maru Gothic ProN", "Yu Gothic", "YuGothic", "Noto Sans JP", system-ui, sans-serif;
+  }
+}
 
 @layer components {
   .brand-wordmark {
     color: #4a2c14;
-    font-family: "Hiragino Maru Gothic ProN", "Yu Gothic", "YuGothic", "Noto Sans JP", "Trebuchet MS", system-ui, sans-serif;
+    font-family: "M PLUS Rounded 1c", "Hiragino Maru Gothic ProN", "Yu Gothic", "YuGothic", "Noto Sans JP", system-ui, sans-serif;
     letter-spacing: 0;
     text-shadow: 0 1px 0 rgba(255, 251, 235, 0.75);
   }

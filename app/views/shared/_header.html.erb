@@ -42,8 +42,11 @@
           </div>
         <% end %>
       <% else %>
-        <%= link_to t("views.shared.header.login"), new_user_session_path(return_to: request.fullpath), class: "whitespace-nowrap rounded-lg bg-amber-50/70 px-3 py-2 text-sm font-bold text-[#5a3318] shadow-sm backdrop-blur-sm hover:bg-amber-50" %>
-        <%= link_to t("views.shared.header.sign_up"), new_user_registration_path(return_to: request.fullpath), class: "whitespace-nowrap rounded-lg bg-amber-600 px-4 py-2 text-sm font-bold text-white" %>
+        <%= link_to t("views.shared.header.login"), new_user_session_path(return_to: request.fullpath), class: "whitespace-nowrap rounded-lg border border-amber-200/80 bg-amber-50/90 px-3.5 py-2 text-xs font-bold text-[#5a3318] shadow-sm backdrop-blur-sm transition-colors hover:bg-amber-100 sm:hidden" %>
+        <div class="hidden items-center gap-4 sm:flex">
+          <%= link_to t("views.shared.header.login"), new_user_session_path(return_to: request.fullpath), class: "whitespace-nowrap rounded-lg bg-amber-50/70 px-3 py-2 text-sm font-bold text-[#5a3318] shadow-sm backdrop-blur-sm hover:bg-amber-50" %>
+          <%= link_to t("views.shared.header.sign_up"), new_user_registration_path(return_to: request.fullpath), class: "whitespace-nowrap rounded-lg bg-amber-600 px-4 py-2 text-sm font-bold text-white" %>
+        </div>
       <% end %>
     </div>
   </div>

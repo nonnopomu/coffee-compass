@@ -28,7 +28,7 @@ class ApplicationController < ActionController::Base
     redirect_back fallback_location: root_path, alert: t("flash.authorization.forbidden")
   end
 
-  def safe_return_path(fallback_path)
-    url_from(params[:return_to]) || fallback_path
+  def safe_return_path(fallback_path, return_to: params[:return_to])
+    url_from(return_to) || fallback_path
   end
 end

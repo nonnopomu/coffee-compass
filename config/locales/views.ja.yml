@@ -215,6 +215,13 @@ ja:
       omniauth:
         separator: または
         google: Googleでログイン
+        google_sign_up: Googleで登録
+        recommended: おすすめ
+        easy_login: かんたんログイン
+        easy_sign_up: かんたん登録
+        email_login: メールアドレスでログイン
+        email_sign_up: メールアドレスで登録
+        google_help: Googleアカウントでかんたん・安全に利用できます
       sessions:
         new:
           page_title: ログイン
@@ -227,10 +234,13 @@ ja:
           page_title: 新規登録
           title: Coffee Compassへようこそ
           tagline: あなたのお気に入りの一杯を記録し、最高のカフェ体験を共有しましょう。
-          name_placeholder: "例: コーヒー太郎"
+          name_placeholder: "例: こはくラテ"
           password_placeholder: 8文字以上の半角英数字
           password_confirmation_placeholder: パスワードを再入力
           submit: アカウントを作成する
+          agreement_prefix: 登録することで、
+          agreement_middle: と
+          agreement_suffix: に同意したものとします。
           already_have_account: すでにアカウントをお持ちですか？
           login_link: ログインはこちら ›
         edit:

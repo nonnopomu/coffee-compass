@@ -1,42 +1,45 @@
 <% content_for :page_title, t("views.devise.passwords.new.page_title") %>
 <% content_for :back_path, new_user_session_path %>
 <% content_for :hide_user_icon, true %>
+<% content_for :page_bg, "bg-amber-50" %>
 
-<div class="flex flex-col items-center px-6 pt-10 pb-6">
-
-    <div class="w-20 h-20 bg-amber-100 rounded-full flex items-center justify-center mb-6">
-      <svg xmlns="http://www.w3.org/2000/svg" class="h-10 w-10 text-amber-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 12.75L11.25 15 15 9.75m-3-7.036A11.959 11.959 0 013.598 6 11.99 11.99 0 003 9.749c0 5.592 3.824 10.29 9 11.623 5.176-1.332 9-6.03 9-11.622 0-1.31-.21-2.571-.598-3.751h-.152c-3.196 0-6.1-1.248-8.25-3.285z" />
-      </svg>
+<div class="flex flex-1 flex-col items-center bg-amber-50 px-5 pt-8 pb-8">
+  <div class="flex min-h-[620px] w-full max-w-md flex-col items-center rounded-3xl border border-amber-100 bg-white px-5 py-8 shadow-[0_4px_18px_rgba(90,51,24,0.08)]">
+    <div class="mb-5 h-16 w-16 rounded-2xl border border-amber-100 bg-amber-50 p-1.5 shadow-sm">
+      <%= image_tag "coffee_compass_orbit_transparent.png", alt: t("app.name"), class: "h-full w-full object-contain" %>
     </div>
 
-    <h1 class="text-xl font-bold text-gray-900 mb-3"><%= t("views.devise.passwords.new.title") %></h1>
-    <p class="text-sm text-gray-500 text-center mb-8"><%= t("views.devise.passwords.new.description") %></p>
+    <p class="brand-wordmark mb-7 text-2xl font-bold text-[#5a3318]"><%= t("app.name") %></p>
 
-    <%= form_for(resource, as: resource_name, url: password_path(resource_name), html: { method: :post }) do |f| %>
+    <div class="mb-8 w-full max-w-[340px] text-center">
+      <h1 class="mb-3 text-xl font-bold text-gray-900"><%= t("views.devise.passwords.new.title") %></h1>
+      <p class="text-sm leading-relaxed text-gray-500"><%= t("views.devise.passwords.new.description") %></p>
+    </div>
+
+    <%= form_for(resource, as: resource_name, url: password_path(resource_name), html: { method: :post, class: "w-full max-w-[340px]" }) do |f| %>
       <%= render "devise/shared/error_messages", resource: resource %>
 
-      <div class="w-full mb-6">
+      <div class="mb-6 w-full">
+        <%= f.label :email, class: "mb-1 block text-sm font-medium text-gray-700" %>
         <div class="relative">
-          <div class="absolute inset-y-0 left-3 flex items-center pointer-events-none">
+          <div class="pointer-events-none absolute inset-y-0 left-3 flex items-center">
             <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
             </svg>
           </div>
-          <%= f.email_field :email, autofocus: true, autocomplete: "email", placeholder: "example@coffee.com",
-              class: "w-full pl-10 pr-4 py-3 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-amber-500" %>
+          <%= f.email_field :email, autofocus: true, autocomplete: "email", placeholder: "example@coffee.com", required: true,
+              class: "w-full rounded-xl border border-gray-200 bg-white py-3 pl-10 pr-4 text-sm focus:border-amber-500 focus:outline-none focus:ring-2 focus:ring-amber-100" %>
         </div>
       </div>
 
-      <div class="w-full mb-4">
+      <div class="mb-4 w-full">
         <%= f.submit t("views.devise.passwords.new.submit"),
-            class: "w-full py-3 bg-amber-600 text-white text-sm font-medium rounded-lg hover:bg-amber-700 transition-colors cursor-pointer" %>
+            class: "w-full cursor-pointer rounded-xl bg-amber-600 py-3 text-sm font-semibold text-white transition-colors hover:bg-amber-700" %>
       </div>
     <% end %>
 
-    <div class="mb-8">
+    <div class="mt-1">
       <%= link_to t("views.devise.passwords.new.cancel"), new_user_session_path, class: "text-sm text-amber-600 hover:underline" %>
     </div>
-
-
   </div>
+</div>
