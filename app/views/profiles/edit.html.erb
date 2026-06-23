@@ -1,5 +1,5 @@
 <% content_for :page_title, t("views.profiles.edit.page_title") %>
-<% content_for :back_path, user_path(@user) %>
+<% content_for :back_path, mypage_path %>
 
 <div class="min-h-full bg-gray-50">
   <div class="px-4 py-5">
@@ -47,7 +47,7 @@
       </section>
 
       <div class="grid grid-cols-2 gap-3 pb-6">
-        <%= link_to t("views.common.cancel"), user_path(@user), class: "rounded-lg border border-gray-200 bg-white px-4 py-3 text-center text-sm font-semibold text-gray-700" %>
+        <%= link_to t("views.common.cancel"), mypage_path, class: "rounded-lg border border-gray-200 bg-white px-4 py-3 text-center text-sm font-semibold text-gray-700" %>
         <%= f.submit t("views.common.update"), class: "rounded-lg bg-amber-600 px-4 py-3 text-sm font-semibold text-white" %>
       </div>
     <% end %>

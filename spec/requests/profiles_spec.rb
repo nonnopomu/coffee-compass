@@ -26,7 +26,7 @@ RSpec.describe "Profiles", type: :request do
       sign_in user
       patch profile_path, params: { user: { name: "変更後" } }
 
-      expect(response).to redirect_to(user_path(user))
+      expect(response).to redirect_to(mypage_path)
       expect(user.reload.name).to eq("変更後")
     end
 
@@ -47,7 +47,7 @@ RSpec.describe "Profiles", type: :request do
       sign_in user
       patch profile_path, params: { user: { name: user.name, avatar: } }
 
-      expect(response).to redirect_to(user_path(user))
+      expect(response).to redirect_to(mypage_path)
       expect(user.reload.avatar).to be_attached
     end
 
