@@ -3,6 +3,6 @@ class AddOmniauthToUsers < ActiveRecord::Migration[8.1]
     add_column :users, :provider, :string
     add_column :users, :uid, :string
 
-    add_index :users, [:provider, :uid], unique: true, where: "provider IS NOT NULL AND uid IS NOT NULL"
+    add_index :users, [ :provider, :uid ], unique: true, where: "provider IS NOT NULL AND uid IS NOT NULL"
   end
 end
