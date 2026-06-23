@@ -1,15 +1,48 @@
 <% content_for :page_title, t("views.devise.sessions.new.page_title") %>
 <% content_for :back_path, root_path %>
 <% content_for :hide_user_icon, true %>
+<% content_for :page_bg, "bg-amber-50" %>
 
-<div class="flex flex-col items-center px-6 pt-8 pb-6">
-    <div class="mb-6 h-16 w-16">
+<div class="flex flex-1 flex-col items-center bg-amber-50 px-5 pt-8 pb-8">
+  <div class="flex min-h-[760px] w-full max-w-md flex-col items-center rounded-3xl border border-amber-100 bg-white px-5 py-8 shadow-[0_4px_18px_rgba(90,51,24,0.08)]">
+    <div class="mb-5 h-16 w-16 rounded-2xl border border-amber-100 bg-amber-50 p-1.5 shadow-sm">
       <%= image_tag "coffee_compass_orbit_transparent.png", alt: t("app.name"), class: "h-full w-full object-contain" %>
     </div>
 
-    <p class="text-sm text-gray-500 text-center mb-8"><%= t("views.devise.sessions.new.tagline") %></p>
+    <p class="brand-wordmark mb-7 text-2xl font-bold text-[#5a3318]"><%= t("app.name") %></p>
 
-    <%= form_for(resource, as: resource_name, url: session_path(resource_name)) do |f| %>
+    <%= render "devise/shared/auth_tabs", active: :login %>
+
+    <div class="flex w-full flex-col items-center px-6">
+      <div class="mb-4 flex w-full max-w-[340px] items-center gap-3">
+        <div class="h-px w-16 bg-amber-100"></div>
+        <div class="flex shrink-0 items-center gap-2">
+          <span class="rounded-full border border-amber-200 bg-amber-50 px-2 py-0.5 text-[11px] font-bold text-amber-700">
+            <%= t("views.devise.omniauth.recommended") %>
+          </span>
+          <p class="text-sm font-bold text-[#5a3318]"><%= t("views.devise.omniauth.easy_login") %></p>
+        </div>
+        <div class="h-px flex-1 bg-amber-100"></div>
+      </div>
+
+      <%= button_to user_google_oauth2_omniauth_authorize_path(return_to: params[:return_to]),
+          method: :post,
+          data: { turbo: false },
+          form_class: "w-full max-w-[340px]",
+          class: "flex w-full items-center justify-center gap-3 rounded-2xl border border-amber-200 bg-white px-4 py-4 text-sm font-bold text-amber-900 shadow-sm transition-colors hover:bg-amber-50 cursor-pointer" do %>
+        <%= image_tag "google_logo_g_logo_icon.webp", alt: "", class: "h-5 w-5 object-contain" %>
+        <span><%= t("views.devise.omniauth.google") %></span>
+      <% end %>
+      <p class="mt-2 max-w-[320px] text-center text-xs font-medium leading-relaxed text-amber-700"><%= t("views.devise.omniauth.google_help") %></p>
+
+      <div class="my-6 flex w-full max-w-[340px] items-center gap-3">
+        <div class="h-px flex-1 bg-gray-200"></div>
+        <span class="shrink-0 text-xs font-bold text-gray-500"><%= t("views.devise.omniauth.email_login") %></span>
+        <div class="h-px flex-1 bg-gray-200"></div>
+      </div>
+    </div>
+
+    <%= form_for(resource, as: resource_name, url: session_path(resource_name), html: { class: "w-full max-w-[340px]" }) do |f| %>
       <%= render "devise/shared/error_messages", resource: resource %>
       <%= hidden_field_tag :return_to, params[:return_to] if params[:return_to].present? %>
 
@@ -21,8 +54,8 @@
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
             </svg>
           </div>
-          <%= f.email_field :email, placeholder: "example@coffee.com", autofocus: true, autocomplete: "email",
-              class: "w-full pl-10 pr-4 py-3 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-amber-500" %>
+          <%= f.email_field :email, placeholder: "example@coffee.com", autofocus: true, autocomplete: "email", required: true,
+              class: "w-full rounded-xl border border-gray-200 bg-white py-3 pl-10 pr-4 text-sm focus:border-amber-500 focus:outline-none focus:ring-2 focus:ring-amber-100" %>
         </div>
       </div>
 
@@ -34,43 +67,19 @@
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
             </svg>
           </div>
-          <%= f.password_field :password, autocomplete: "current-password",
-              class: "w-full pl-10 pr-4 py-3 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-amber-500" %>
+          <%= f.password_field :password, autocomplete: "current-password", required: true, minlength: Devise.password_length.min,
+              class: "w-full rounded-xl border border-gray-200 bg-white py-3 pl-10 pr-4 text-sm focus:border-amber-500 focus:outline-none focus:ring-2 focus:ring-amber-100" %>
         </div>
       </div>
 
       <div class="w-full mb-3">
         <%= f.submit t("views.shared.header.login"),
-            class: "w-full py-3 bg-amber-600 text-white text-sm font-medium rounded-lg hover:bg-amber-700 transition-colors cursor-pointer" %>
+            class: "w-full rounded-xl bg-amber-600 py-3 text-sm font-semibold text-white transition-colors hover:bg-amber-700 cursor-pointer" %>
       </div>
     <% end %>
 
-    <div class="my-6 flex w-full items-center gap-3">
-      <div class="h-px flex-1 bg-gray-200"></div>
-      <span class="text-xs font-medium text-gray-400"><%= t("views.devise.omniauth.separator") %></span>
-      <div class="h-px flex-1 bg-gray-200"></div>
-    </div>
-
-    <%= button_to user_google_oauth2_omniauth_authorize_path(return_to: params[:return_to]),
-        method: :post,
-        data: { turbo: false },
-        class: "mb-6 flex w-full items-center justify-center gap-3 rounded-lg border border-gray-200 bg-white px-4 py-3 text-sm font-medium text-gray-700 shadow-sm transition-colors hover:bg-gray-50 cursor-pointer" do %>
-      <span class="flex h-5 w-5 items-center justify-center rounded-full bg-white text-sm font-bold text-blue-600">G</span>
-      <%= t("views.devise.omniauth.google") %>
-    <% end %>
-
-    <div class="mb-8">
+    <div class="mt-1">
       <%= link_to t("views.devise.sessions.new.forgot_password"), new_user_password_path, class: "text-sm text-amber-600 hover:underline" %>
     </div>
-
-    <div class="w-full text-center mb-4">
-      <p class="text-sm text-gray-400"><%= t("views.devise.sessions.new.first_time") %></p>
-    </div>
-
-    <%= link_to new_user_registration_path(return_to: params[:return_to]), class: "inline-flex items-center justify-center gap-2 px-8 py-3 border border-amber-600 text-amber-600 text-sm font-medium rounded-lg hover:bg-amber-50 transition-colors" do %>
-      <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
-      </svg>
-      <%= t("views.devise.sessions.new.sign_up") %>
-    <% end %>
   </div>
+</div>

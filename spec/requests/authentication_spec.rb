@@ -1,6 +1,50 @@
 require "rails_helper"
 
 RSpec.describe "Authentication", type: :request do
+  describe "GET /users/sign_in" do
+    it "ログインフォームに必須入力とパスワード最小文字数の入力補助があること" do
+      get new_user_session_path
+
+      html = Nokogiri::HTML(response.body)
+      email_field = html.at_css('input[name="user[email]"]')
+      password_field = html.at_css('input[name="user[password]"]')
+
+      expect(email_field["required"]).to eq("required")
+      expect(password_field["required"]).to eq("required")
+      expect(password_field["minlength"]).to eq(Devise.password_length.min.to_s)
+    end
+  end
+
+  describe "GET /users/sign_up" do
+    it "新規登録フォームに必須入力とパスワード最小文字数の入力補助があること" do
+      get new_user_registration_path
+
+      html = Nokogiri::HTML(response.body)
+      name_field = html.at_css('input[name="user[name]"]')
+      email_field = html.at_css('input[name="user[email]"]')
+      password_field = html.at_css('input[name="user[password]"]')
+      password_confirmation_field = html.at_css('input[name="user[password_confirmation]"]')
+
+      expect(name_field["required"]).to eq("required")
+      expect(email_field["required"]).to eq("required")
+      expect(password_field["required"]).to eq("required")
+      expect(password_field["minlength"]).to eq(Devise.password_length.min.to_s)
+      expect(password_confirmation_field["required"]).to eq("required")
+      expect(password_confirmation_field["minlength"]).to eq(Devise.password_length.min.to_s)
+    end
+  end
+
+  describe "GET /users/password/new" do
+    it "パスワード再設定フォームに必須入力の入力補助があること" do
+      get new_user_password_path
+
+      html = Nokogiri::HTML(response.body)
+      email_field = html.at_css('input[name="user[email]"]')
+
+      expect(email_field["required"]).to eq("required")
+    end
+  end
+
   describe "POST /users" do
     it "ユーザー登録できること" do
       expect {
@@ -129,7 +173,7 @@ RSpec.describe "Authentication", type: :request do
     end
 
     it "同じメールアドレスの通常ユーザーが存在する場合は既存ユーザーでログインできること" do
-      existing_user = create_user(email: "oauth-user@example.com")
+      existing_user = create_user(email: "oauth-user@example.com", name: "編集済みユーザー")
 
       expect {
         post user_google_oauth2_omniauth_authorize_path
@@ -139,6 +183,34 @@ RSpec.describe "Authentication", type: :request do
       existing_user.reload
       expect(existing_user.provider).to eq("google_oauth2")
       expect(existing_user.uid).to eq("request-google-uid")
+      expect(existing_user.name).to eq("編集済みユーザー")
+      expect(response).to redirect_to(root_path)
+    end
+
+    it "ログイン必須ページで保存された戻り先がある場合はGoogleログイン後に元ページへ戻ること" do
+      get mypage_path
+
+      expect(response).to redirect_to(new_user_session_path)
+
+      post user_google_oauth2_omniauth_authorize_path
+      follow_redirect!
+
+      expect(response).to redirect_to(mypage_path)
+    end
+
+    it "return_toが指定されている場合はGoogleログイン後に指定ページへリダイレクトされること" do
+      cafe = create_cafe(status: :published)
+
+      post user_google_oauth2_omniauth_authorize_path(return_to: cafe_path(cafe))
+      follow_redirect!
+
+      expect(response).to redirect_to(cafe_path(cafe))
+    end
+
+    it "return_toに外部URLが指定されている場合はGoogleログイン後にトップページへリダイレクトされること" do
+      post user_google_oauth2_omniauth_authorize_path(return_to: "//evil.example.com/phishing")
+      follow_redirect!
+
       expect(response).to redirect_to(root_path)
     end
 

@@ -16,7 +16,7 @@ class User < ApplicationRecord
 
     user.provider = auth.provider
     user.uid = auth.uid
-    user.name = auth.info.name.presence || auth.info.email.split("@").first
+    user.name = auth.info.name.presence || auth.info.email.split("@").first if user.name.blank?
     user.password = Devise.friendly_token[0, 20] if user.new_record?
 
     user.save!
