@@ -14,15 +14,15 @@
     <%= render "devise/shared/auth_tabs", active: :sign_up %>
 
     <div class="flex w-full flex-col items-center px-6">
-      <div class="mb-4 flex w-full max-w-[340px] items-center gap-3">
-        <div class="h-px w-16 bg-amber-100"></div>
-        <div class="flex shrink-0 items-center gap-2">
+      <div class="mb-4 grid w-full max-w-[340px] grid-cols-[1fr_auto_1fr] items-center gap-2 sm:gap-3">
+        <div class="h-px bg-amber-100"></div>
+        <div class="flex items-center justify-center gap-2">
           <span class="rounded-full border border-amber-200 bg-amber-50 px-2 py-0.5 text-[11px] font-bold text-amber-700">
             <%= t("views.devise.omniauth.recommended") %>
           </span>
           <p class="text-sm font-bold text-[#5a3318]"><%= t("views.devise.omniauth.easy_sign_up") %></p>
         </div>
-        <div class="h-px flex-1 bg-amber-100"></div>
+        <div class="h-px bg-amber-100"></div>
       </div>
 
       <%= button_to user_google_oauth2_omniauth_authorize_path(return_to: params[:return_to]),
@@ -106,9 +106,9 @@
 
     <p class="mt-5 max-w-[340px] text-center text-xs font-medium leading-relaxed text-gray-500">
       <%= t("views.devise.registrations.new.agreement_prefix") %>
-      <%= link_to t("views.shared.footer.terms"), terms_path, class: "font-bold text-amber-700 underline decoration-amber-300 underline-offset-2" %>
+      <%= link_to t("views.shared.footer.terms"), terms_path(return_to: request.fullpath), class: "font-bold text-amber-700 underline decoration-amber-300 underline-offset-2" %>
       <%= t("views.devise.registrations.new.agreement_middle") %>
-      <%= link_to t("views.shared.footer.privacy"), privacy_path, class: "font-bold text-amber-700 underline decoration-amber-300 underline-offset-2" %>
+      <%= link_to t("views.shared.footer.privacy"), privacy_path(return_to: request.fullpath), class: "font-bold text-amber-700 underline decoration-amber-300 underline-offset-2" %>
       <%= t("views.devise.registrations.new.agreement_suffix") %>
     </p>
   </div>

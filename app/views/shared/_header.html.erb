@@ -4,7 +4,7 @@
   <div class="relative flex min-h-8 items-center gap-3">
     <% if content_for?(:back_path) %>
       <div class="flex shrink-0 items-center">
-      <%= link_to yield(:back_path), class: "text-gray-600" do %>
+      <%= link_to yield(:back_path), class: "text-[#5a3318]" do %>
         <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
         </svg>
@@ -17,7 +17,7 @@
         <% if content_for?(:header_center) %>
           <%= yield :header_center %>
         <% else %>
-          <span class="truncate text-base font-medium text-gray-900"><%= yield :page_title %></span>
+          <span class="truncate text-base font-semibold text-[#3f2a1d]"><%= yield :page_title %></span>
         <% end %>
       </div>
     </div>
@@ -41,12 +41,12 @@
             <span class="text-sm font-medium text-white"><%= current_user.name[0] %></span>
           </div>
         <% end %>
-      <% else %>
-        <%= link_to t("views.shared.header.login"), new_user_session_path(return_to: request.fullpath), class: "whitespace-nowrap rounded-lg border border-amber-200/80 bg-amber-50/90 px-3.5 py-2 text-xs font-bold text-[#5a3318] shadow-sm backdrop-blur-sm transition-colors hover:bg-amber-100 sm:hidden" %>
-        <div class="hidden items-center gap-4 sm:flex">
-          <%= link_to t("views.shared.header.login"), new_user_session_path(return_to: request.fullpath), class: "whitespace-nowrap rounded-lg bg-amber-50/70 px-3 py-2 text-sm font-bold text-[#5a3318] shadow-sm backdrop-blur-sm hover:bg-amber-50" %>
-          <%= link_to t("views.shared.header.sign_up"), new_user_registration_path(return_to: request.fullpath), class: "whitespace-nowrap rounded-lg bg-amber-600 px-4 py-2 text-sm font-bold text-white" %>
-        </div>
+      <% elsif transparent_header %>
+          <%= link_to t("views.shared.header.login"), new_user_session_path(return_to: request.fullpath), class: "whitespace-nowrap rounded-lg border border-amber-200/80 bg-amber-50/90 px-3.5 py-2 text-xs font-bold text-[#5a3318] shadow-sm backdrop-blur-sm transition-colors hover:bg-amber-100 sm:hidden" %>
+          <div class="hidden items-center gap-4 sm:flex">
+            <%= link_to t("views.shared.header.login"), new_user_session_path(return_to: request.fullpath), class: "whitespace-nowrap rounded-lg bg-amber-50/70 px-3 py-2 text-sm font-bold text-[#5a3318] shadow-sm backdrop-blur-sm hover:bg-amber-50" %>
+            <%= link_to t("views.shared.header.sign_up"), new_user_registration_path(return_to: request.fullpath), class: "whitespace-nowrap rounded-lg bg-amber-600 px-4 py-2 text-sm font-bold text-white" %>
+          </div>
       <% end %>
     </div>
   </div>

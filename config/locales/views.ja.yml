@@ -221,7 +221,7 @@ ja:
         easy_sign_up: かんたん登録
         email_login: メールアドレスでログイン
         email_sign_up: メールアドレスで登録
-        google_help: Googleアカウントでかんたん・安全に利用できます
+        google_help: Googleアカウントで安全に利用できます
       sessions:
         new:
           page_title: ログイン
