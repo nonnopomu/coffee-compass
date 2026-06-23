@@ -45,6 +45,20 @@
       </div>
     <% end %>
 
+    <div class="my-6 flex w-full items-center gap-3">
+      <div class="h-px flex-1 bg-gray-200"></div>
+      <span class="text-xs font-medium text-gray-400"><%= t("views.devise.omniauth.separator") %></span>
+      <div class="h-px flex-1 bg-gray-200"></div>
+    </div>
+
+    <%= button_to user_google_oauth2_omniauth_authorize_path(return_to: params[:return_to]),
+        method: :post,
+        data: { turbo: false },
+        class: "mb-6 flex w-full items-center justify-center gap-3 rounded-lg border border-gray-200 bg-white px-4 py-3 text-sm font-medium text-gray-700 shadow-sm transition-colors hover:bg-gray-50 cursor-pointer" do %>
+      <span class="flex h-5 w-5 items-center justify-center rounded-full bg-white text-sm font-bold text-blue-600">G</span>
+      <%= t("views.devise.omniauth.google") %>
+    <% end %>
+
     <div class="mb-8">
       <%= link_to t("views.devise.sessions.new.forgot_password"), new_user_password_path, class: "text-sm text-amber-600 hover:underline" %>
     </div>

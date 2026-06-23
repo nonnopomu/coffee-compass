@@ -212,6 +212,9 @@ ja:
           active_label: 有効にする
           active_help: 有効なタグだけが検索画面や登録フォームに表示されます。
     devise:
+      omniauth:
+        separator: または
+        google: Googleでログイン
       sessions:
         new:
           page_title: ログイン
