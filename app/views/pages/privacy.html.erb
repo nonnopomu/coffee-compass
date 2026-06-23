@@ -1,6 +1,8 @@
 <% content_for :page_title, t("views.pages.privacy.page_title") %>
 <% content_for :title, "#{t("views.pages.privacy.page_title")} | #{t("app.name")}" %>
-<% content_for :back_path, root_path %>
+<% content_for :back_path, safe_return_path(root_path, return_to: params[:return_to].presence || request.referer) %>
+<% content_for :header_center, "" %>
+<% content_for :hide_user_icon, true %>
 <% content_for :page_bg, "bg-gray-50" %>
 
 <main class="px-5 py-6">
