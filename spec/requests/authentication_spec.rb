@@ -91,6 +91,77 @@ RSpec.describe "Authentication", type: :request do
     end
   end
 
+  describe "POST /users/auth/google_oauth2" do
+    let(:google_auth) do
+      OmniAuth::AuthHash.new(
+        provider: "google_oauth2",
+        uid: "request-google-uid",
+        info: {
+          email: "oauth-user@example.com",
+          name: "OAuthユーザー"
+        }
+      )
+    end
+
+    before do
+      OmniAuth.config.test_mode = true
+      OmniAuth.config.mock_auth[:google_oauth2] = google_auth
+    end
+
+    after do
+      OmniAuth.config.mock_auth[:google_oauth2] = nil
+      OmniAuth.config.test_mode = false
+    end
+
+    it "Google認証情報からユーザー登録とログインができること" do
+      expect {
+        post user_google_oauth2_omniauth_authorize_path
+        follow_redirect!
+      }.to change(User, :count).by(1)
+
+      user = User.last
+
+      expect(user.email).to eq("oauth-user@example.com")
+      expect(user.name).to eq("OAuthユーザー")
+      expect(user.provider).to eq("google_oauth2")
+      expect(user.uid).to eq("request-google-uid")
+      expect(response).to redirect_to(root_path)
+    end
+
+    it "同じメールアドレスの通常ユーザーが存在する場合は既存ユーザーでログインできること" do
+      existing_user = create_user(email: "oauth-user@example.com")
+
+      expect {
+        post user_google_oauth2_omniauth_authorize_path
+        follow_redirect!
+      }.not_to change(User, :count)
+
+      existing_user.reload
+      expect(existing_user.provider).to eq("google_oauth2")
+      expect(existing_user.uid).to eq("request-google-uid")
+      expect(response).to redirect_to(root_path)
+    end
+
+    it "Google認証情報を保存できない場合はログイン画面へ戻ること" do
+      OmniAuth.config.mock_auth[:google_oauth2] = OmniAuth::AuthHash.new(
+        provider: "google_oauth2",
+        uid: "invalid-google-uid",
+        info: {
+          email: "invalid-oauth-user@example.com",
+          name: "a" * 51
+        }
+      )
+
+      expect {
+        post user_google_oauth2_omniauth_authorize_path
+        follow_redirect!
+      }.not_to change(User, :count)
+
+      expect(response).to redirect_to(new_user_session_path)
+      expect(flash[:alert]).to eq(I18n.t("flash.omniauth.failure"))
+    end
+  end
+
   describe "DELETE /users/sign_out" do
     it "ログアウトできること" do
       user = create_user
