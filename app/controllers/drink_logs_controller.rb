@@ -57,6 +57,7 @@ class DrinkLogsController < ApplicationController
       :roast_level_tag_id,
       :brew_method_tag_id,
       :memo,
+      :image,
       taste_tag_ids: []
     )
   end
@@ -68,6 +69,7 @@ class DrinkLogsController < ApplicationController
       :roast_level_tag_id,
       :brew_method_tag_id,
       :memo,
+      :image,
       taste_tag_ids: []
     )
   end

@@ -129,6 +129,11 @@ ja:
         no_brew_method_tags: 選択できる提供スタイルタグがありません
         memo: 感想メモ
         memo_placeholder: 味の印象やまた飲みたい理由など
+        image: 写真
+        image_help: コーヒーやお店の雰囲気が伝わる写真を1枚添付できます。
+        image_update_help: 新しい写真を選ぶと、登録済みの写真を差し替えます。
+        image_preview_alt: 選択した写真のプレビュー
+        image_preview_placeholder: 写真を選択
     mypages:
       show:
         page_title: マイページ
@@ -157,7 +162,6 @@ ja:
         current_avatar: 現在のプロフィール画像
         avatar_help: 画像はプロフィール画面に表示されます。
         choose_avatar: 画像を選択
-        no_avatar_selected: 選択されていません
         name_placeholder: "例: コーヒー太郎"
     admin:
       dashboards:
@@ -184,6 +188,11 @@ ja:
         edit:
           page_title: カフェ編集
         form:
+          image: カフェ画像
+          image_help: カフェの雰囲気が伝わる画像を1枚添付できます。
+          image_update_help: 新しい画像を選ぶと、登録済みのカフェ画像を差し替えます。
+          image_preview_alt: カフェ画像のプレビュー
+          image_preview_placeholder: 画像を選択
           basic_info: 基本情報
           name_placeholder: "例: Blue Pine Coffee"
           prefecture_prompt: 都道府県を選択

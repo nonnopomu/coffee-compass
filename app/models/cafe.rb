@@ -4,6 +4,7 @@ class Cafe < ApplicationRecord
   has_many :cafe_tags, dependent: :destroy
   has_many :tags, through: :cafe_tags
   has_many :drink_logs, dependent: :destroy
+  has_one_attached :image
 
   validates :prefecture, presence: true, length: { maximum: 50 }
   validates :name, presence: true, length: { maximum: 100 }

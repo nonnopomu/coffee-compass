@@ -49,6 +49,19 @@ RSpec.describe "Admin::Cafes", type: :request do
 
       expect(response).to have_http_status(:ok)
     end
+
+    it "管理者はカフェ画像選択UIを確認できること" do
+      admin = create_user(role: :admin)
+
+      sign_in admin
+      get new_admin_cafe_path
+
+      html = Nokogiri::HTML(response.body)
+      image_field = html.at_css('input[name="cafe[image]"]')
+
+      expect(image_field["accept"]).to eq("image/*")
+      expect(response.body).to include(I18n.t("views.admin.cafes.form.image_preview_placeholder"))
+    end
   end
 
   describe "POST /admin/cafes" do
@@ -67,6 +80,22 @@ RSpec.describe "Admin::Cafes", type: :request do
       expect(response).to redirect_to(admin_cafes_path)
       expect(Cafe.last.name).to eq("登録確認カフェ")
       expect(Cafe.last.tags).to include(feature_tag)
+    end
+
+    it "管理者はカフェ画像を添付して登録できること" do
+      admin = create_user(role: :admin)
+      image = Rack::Test::UploadedFile.new(Rails.root.join("spec/fixtures/files/avatar.png"), "image/png")
+
+      sign_in admin
+
+      expect {
+        post admin_cafes_path, params: {
+          cafe: admin_cafe_params(name: "画像付きカフェ", image:)
+        }
+      }.to change(Cafe, :count).by(1)
+
+      expect(response).to redirect_to(admin_cafes_path)
+      expect(Cafe.last.image).to be_attached
     end
 
     it "入力値が不正な場合は登録せず、新規登録画面を再表示すること" do
@@ -119,6 +148,20 @@ RSpec.describe "Admin::Cafes", type: :request do
       expect(response).to redirect_to(admin_cafes_path)
       expect(cafe.reload.name).to eq("更新後カフェ")
       expect(cafe).to be_closed
+    end
+
+    it "管理者はカフェ画像を添付して更新できること" do
+      admin = create_user(role: :admin)
+      cafe = create_cafe
+      image = Rack::Test::UploadedFile.new(Rails.root.join("spec/fixtures/files/avatar.png"), "image/png")
+
+      sign_in admin
+      patch admin_cafe_path(cafe), params: {
+        cafe: admin_cafe_params(image:)
+      }
+
+      expect(response).to redirect_to(admin_cafes_path)
+      expect(cafe.reload.image).to be_attached
     end
 
     it "入力値が不正な場合は更新せず、編集画面を再表示すること" do

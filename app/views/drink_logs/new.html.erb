@@ -27,6 +27,28 @@
         </div>
       <% end %>
 
+      <section class="space-y-4" data-controller="image-preview">
+        <div class="flex items-center gap-2 border-l-4 border-amber-600 pl-3">
+          <h2 class="text-sm font-semibold text-gray-900"><%= t("views.drink_logs.form.image") %></h2>
+        </div>
+
+        <div class="rounded-lg border border-gray-200 bg-white px-4 py-4">
+          <%= f.file_field :image,
+                           accept: "image/*",
+                           data: { image_preview_target: "input", action: "change->image-preview#show" },
+                           class: "sr-only" %>
+          <%= f.label :image, class: "block cursor-pointer overflow-hidden rounded-lg border border-dashed border-amber-200 bg-amber-50/40 transition-colors hover:bg-amber-50" do %>
+            <img data-image-preview-target="image"
+                 alt="<%= t("views.drink_logs.form.image_preview_alt") %>"
+                 class="hidden h-48 w-full object-cover">
+            <div data-image-preview-target="placeholder" class="flex h-48 items-center justify-center px-4 text-center text-sm font-semibold text-amber-700">
+              <%= t("views.drink_logs.form.image_preview_placeholder") %>
+            </div>
+          <% end %>
+          <p class="mt-2 text-xs leading-5 text-gray-500"><%= t("views.drink_logs.form.image_help") %></p>
+        </div>
+      </section>
+
       <section class="space-y-4">
         <div class="flex items-center gap-2 border-l-4 border-amber-600 pl-3">
           <h2 class="text-sm font-semibold text-gray-900"><%= t("views.drink_logs.form.basic_info") %></h2>

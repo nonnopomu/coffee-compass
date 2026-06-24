@@ -15,6 +15,7 @@ class DrinkLog < ApplicationRecord
   belongs_to :brew_method_tag, class_name: "Tag"
   has_many :drink_log_taste_tags, dependent: :destroy
   has_many :taste_tags, through: :drink_log_taste_tags, source: :tag
+  has_one_attached :image
 
   validates :menu_name, presence: true, length: { maximum: 100 }
   validates :drank_on, presence: true
