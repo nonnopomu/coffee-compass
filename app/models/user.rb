@@ -9,6 +9,7 @@ class User < ApplicationRecord
   has_one_attached :avatar
 
   validates :name, presence: true, length: { maximum: 50 }
+  validate :email_cannot_be_changed_for_google_oauth_user, if: -> { persisted? && will_save_change_to_email? }
 
   def self.from_omniauth(auth)
     user = find_by(provider: auth.provider, uid: auth.uid)
@@ -21,5 +22,17 @@ class User < ApplicationRecord
 
     user.save!
     user
+  end
+
+  def google_oauth_user?
+    provider == "google_oauth2" && uid.present?
+  end
+
+  private
+
+  def email_cannot_be_changed_for_google_oauth_user
+    return unless google_oauth_user?
+
+    errors.add(:email, :google_oauth_user_email_change_restricted)
   end
 end

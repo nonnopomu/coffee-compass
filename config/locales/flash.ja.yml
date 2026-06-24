@@ -16,5 +16,7 @@ ja:
       update: プロフィールを更新しました
     omniauth:
       failure: Googleログインに失敗しました。時間をおいて再度お試しください。
+    registrations:
+      delete_confirmation_required: アカウント削除の確認にチェックを入れてください。
     authorization:
       forbidden: 権限がありません。

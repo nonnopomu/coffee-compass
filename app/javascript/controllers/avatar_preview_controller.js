@@ -1,12 +1,18 @@
 import { Controller } from "@hotwired/stimulus"
 
 export default class extends Controller {
-  static targets = ["input", "image", "placeholder"]
+  static targets = ["input", "image", "placeholder", "filename"]
 
   show() {
     const file = this.inputTarget.files[0]
 
-    if (!file || !file.type.startsWith("image/")) return
+    if (!file) return
+
+    if (this.hasFilenameTarget) {
+      this.filenameTarget.textContent = file.name
+    }
+
+    if (!file.type.startsWith("image/")) return
 
     const reader = new FileReader()
 

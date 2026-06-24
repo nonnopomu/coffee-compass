@@ -27,6 +27,7 @@ ja:
       profile: プロフィール
       view_profile: プロフィールを見る
       edit_profile: プロフィールを編集
+      account_settings: アカウント設定
     shared:
       header:
         normal: 通常
@@ -150,6 +151,8 @@ ja:
         avatar: プロフィール画像
         current_avatar: 現在のプロフィール画像
         avatar_help: 画像はプロフィール画面に表示されます。
+        choose_avatar: 画像を選択
+        no_avatar_selected: 選択されていません
         name_placeholder: "例: コーヒー太郎"
     admin:
       dashboards:
@@ -245,10 +248,24 @@ ja:
           login_link: ログインはこちら ›
         edit:
           title: "%{resource}編集"
+          page_title: アカウント設定
+          description: メールアドレスの確認やアカウント削除を行えます。
+          email_section: メールアドレス
+          email_description: ログインや通知に使うメールアドレスです。
+          google_email_locked: Googleアカウントと連携しているため、メールアドレスはGoogle側で管理されています。
+          password_section: パスワード変更
+          password_description: 変更しない場合は空欄のままで大丈夫です。
+          new_password: 新しいパスワード
+          password_placeholder: 8文字以上の半角英数字
+          password_confirmation_placeholder: 新しいパスワードを再入力
           waiting_confirmation: "%{email} の確認待ち"
           password_help: 変更しない場合は空欄のままにしてください
           minimum_password_length: "%{count}文字以上"
           current_password_help: 変更を反映するには現在のパスワードを入力してください
+          delete_section: アカウント削除
+          delete_agreement: アカウントを削除すると、投稿したログも削除されることを確認しました。
+          delete_button: アカウントを削除する
+          delete_confirm: アカウントを削除しますか？投稿したログも削除され、この操作は元に戻せません。
           cancel_account: アカウント削除
           unhappy: ご利用を停止しますか？
           confirm: 本当によろしいですか？

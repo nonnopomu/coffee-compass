@@ -6,7 +6,8 @@ Rails.application.routes.draw do
   resources :drink_logs, only: [ :new, :create, :show, :edit, :update, :destroy ]
 
   devise_for :users, controllers: {
-    omniauth_callbacks: "users/omniauth_callbacks"
+    omniauth_callbacks: "users/omniauth_callbacks",
+    registrations: "users/registrations"
   }
 
   resource :mypage, only: [ :show ]

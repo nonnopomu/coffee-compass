@@ -13,6 +13,9 @@ application.register("avatar-preview", AvatarPreviewController)
 import CafeSelectionController from "./cafe_selection_controller"
 application.register("cafe-selection", CafeSelectionController)
 
+import DestructiveConfirmationController from "./destructive_confirmation_controller"
+application.register("destructive-confirmation", DestructiveConfirmationController)
+
 import FlashController from "./flash_controller"
 application.register("flash", FlashController)
 
