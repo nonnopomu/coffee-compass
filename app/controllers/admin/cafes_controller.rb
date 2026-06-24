@@ -57,6 +57,7 @@ class Admin::CafesController < Admin::BaseController
       :instagram_url,
       :description,
       :status,
+      :image,
       tag_ids: []
     )
   end

@@ -14,6 +14,26 @@ RSpec.describe "Drink logs", type: :request do
     }.merge(overrides)
   end
 
+  def uploaded_image
+    Rack::Test::UploadedFile.new(Rails.root.join("spec/fixtures/files/avatar.png"), "image/png")
+  end
+
+  describe "GET /drink_logs/new" do
+    it "ログインユーザーは画像選択UIを確認できること" do
+      user = create_user
+
+      sign_in user
+      get new_drink_log_path
+
+      html = Nokogiri::HTML(response.body)
+      image_field = html.at_css('input[name="drink_log[image]"]')
+
+      expect(response).to have_http_status(:ok)
+      expect(image_field["accept"]).to eq("image/*")
+      expect(response.body).to include(I18n.t("views.drink_logs.form.image_preview_placeholder"))
+    end
+  end
+
   describe "POST /drink_logs" do
     it "ログインユーザーは飲んだログを投稿できること" do
       user = create_user
@@ -36,6 +56,31 @@ RSpec.describe "Drink logs", type: :request do
       }.to change(user.drink_logs, :count).by(1)
 
       expect(response).to redirect_to(cafe_path(cafe, tab: "logs"))
+    end
+
+    it "ログインユーザーは画像を添付して飲んだログを投稿できること" do
+      user = create_user
+      cafe = create_cafe(status: :published)
+      roast_level_tag = create_roast_level_tag
+      brew_method_tag = create_brew_method_tag
+      taste_tag = create_taste_tag
+
+      sign_in user
+
+      expect {
+        post drink_logs_path, params: {
+          drink_log: drink_log_params(
+            cafe:,
+            roast_level_tag:,
+            brew_method_tag:,
+            taste_tags: [ taste_tag ],
+            image: uploaded_image
+          )
+        }
+      }.to change(user.drink_logs, :count).by(1)
+
+      expect(response).to redirect_to(cafe_path(cafe, tab: "logs"))
+      expect(DrinkLog.last.image).to be_attached
     end
 
     it "入力値が不正な場合は投稿できず、作成画面を再表示すること" do
@@ -136,6 +181,21 @@ RSpec.describe "Drink logs", type: :request do
       expect(response).to have_http_status(:ok)
     end
 
+    it "投稿者本人は画像選択UIを確認できること" do
+      user = create_user
+      drink_log = create_drink_log(user:)
+
+      sign_in user
+      get edit_drink_log_path(drink_log)
+
+      html = Nokogiri::HTML(response.body)
+      image_field = html.at_css('input[name="drink_log[image]"]')
+
+      expect(response).to have_http_status(:ok)
+      expect(image_field["accept"]).to eq("image/*")
+      expect(response.body).to include(I18n.t("views.drink_logs.form.image_preview_placeholder"))
+    end
+
     it "一般ユーザーは他人の編集画面を閲覧できないこと" do
       user = create_user
       drink_log = create_drink_log
@@ -178,6 +238,28 @@ RSpec.describe "Drink logs", type: :request do
 
       expect(response).to redirect_to(drink_log_path(drink_log))
       expect(drink_log.reload.menu_name).to eq("更新後のログ")
+    end
+
+    it "投稿者本人は画像を添付して飲んだログを更新できること" do
+      user = create_user
+      drink_log = create_drink_log(user:)
+      roast_level_tag = create_roast_level_tag
+      brew_method_tag = create_brew_method_tag
+      taste_tag = create_taste_tag
+
+      sign_in user
+      patch drink_log_path(drink_log), params: {
+        drink_log: drink_log_params(
+          cafe: drink_log.cafe,
+          roast_level_tag:,
+          brew_method_tag:,
+          taste_tags: [ taste_tag ],
+          image: uploaded_image
+        )
+      }
+
+      expect(response).to redirect_to(drink_log_path(drink_log))
+      expect(drink_log.reload.image).to be_attached
     end
 
     it "入力値が不正な場合は更新せず、編集画面を再表示すること" do

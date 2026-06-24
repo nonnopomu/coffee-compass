@@ -19,6 +19,7 @@ ja:
         instagram_url: Instagram URL
         description: 説明文
         status: 公開状態
+        image: カフェ画像
         tag_ids: タグ
       tag:
         name: タグ名

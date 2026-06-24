@@ -26,7 +26,7 @@ RSpec.describe "Profiles", type: :request do
       expect(name_field["maxlength"]).to eq("50")
       expect(avatar_field["accept"]).to eq("image/*")
       expect(response.body).to include(I18n.t("views.profiles.edit.choose_avatar"))
-      expect(response.body).to include(I18n.t("views.profiles.edit.no_avatar_selected"))
+      expect(response.body).not_to include("選択されていません")
     end
 
     it "未ログインユーザーはプロフィール編集画面を閲覧できないこと" do

@@ -19,6 +19,9 @@ application.register("destructive-confirmation", DestructiveConfirmationControll
 import FlashController from "./flash_controller"
 application.register("flash", FlashController)
 
+import ImagePreviewController from "./image_preview_controller"
+application.register("image-preview", ImagePreviewController)
+
 import ModalController from "./modal_controller"
 application.register("modal", ModalController)
 
