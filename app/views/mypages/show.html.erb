@@ -6,10 +6,10 @@
       <% if current_user.avatar.attached? %>
         <%= image_tag current_user.avatar,
                       alt: t("views.users.show.avatar_alt", name: current_user.name),
-                      class: "h-16 w-16 rounded-full border border-amber-100 object-cover shadow-sm" %>
+                      class: "h-16 w-16 rounded-full border border-gray-200 object-cover shadow-sm" %>
       <% else %>
-        <div class="flex h-16 w-16 shrink-0 items-center justify-center rounded-full border border-amber-100 bg-amber-50 shadow-sm" aria-label="<%= t("views.users.show.avatar_placeholder", name: current_user.name) %>">
-          <span class="text-xl font-bold text-amber-700"><%= current_user.name.first %></span>
+        <div class="flex h-16 w-16 shrink-0 items-center justify-center rounded-full border border-gray-200 bg-white shadow-sm" aria-label="<%= t("views.users.show.avatar_placeholder", name: current_user.name) %>">
+          <span class="text-xl font-bold text-gray-700"><%= current_user.name.first %></span>
         </div>
       <% end %>
 
