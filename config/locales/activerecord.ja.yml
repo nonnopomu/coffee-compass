@@ -58,3 +58,7 @@ ja:
           attributes:
             tag:
               invalid_taste_tag: は味わいタグを選択してください
+        user:
+          attributes:
+            email:
+              google_oauth_user_email_change_restricted: はGoogleアカウントと連携しているため変更できません

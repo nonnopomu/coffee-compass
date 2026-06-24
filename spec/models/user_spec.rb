@@ -41,6 +41,24 @@ RSpec.describe User, type: :model do
       expect(user).not_to be_valid
       expect(user.errors[:name]).to be_present
     end
+
+    it "通常ユーザーはメールアドレスを変更できること" do
+      user = create_user(email: "changeable@example.com")
+
+      user.email = "changed@example.com"
+
+      expect(user).to be_valid
+    end
+
+    it "Google連携ユーザーはメールアドレスを変更できないこと" do
+      user = create_user(email: "google-linked@example.com")
+      user.update!(provider: "google_oauth2", uid: "google-uid-123")
+
+      user.email = "changed-google@example.com"
+
+      expect(user).not_to be_valid
+      expect(user.errors[:email]).to include(I18n.t("activerecord.errors.models.user.attributes.email.google_oauth_user_email_change_restricted"))
+    end
   end
 
   describe "ロール" do
@@ -117,6 +135,31 @@ RSpec.describe User, type: :model do
       user = described_class.from_omniauth(auth_without_name)
 
       expect(user.name).to eq("google-user")
+    end
+  end
+
+  describe "#google_oauth_user?" do
+    it "providerがgoogle_oauth2でuidがある場合はtrueを返すこと" do
+      user = build_user.tap do |user|
+        user.provider = "google_oauth2"
+        user.uid = "google-uid-123"
+      end
+
+      expect(user.google_oauth_user?).to be true
+    end
+
+    it "providerとuidがない通常ユーザーの場合はfalseを返すこと" do
+      user = build_user
+
+      expect(user.google_oauth_user?).to be false
+    end
+
+    it "providerがgoogle_oauth2でもuidがない場合はfalseを返すこと" do
+      user = build_user.tap do |user|
+        user.provider = "google_oauth2"
+      end
+
+      expect(user.google_oauth_user?).to be false
     end
   end
 

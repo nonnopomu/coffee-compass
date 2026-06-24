@@ -12,6 +12,23 @@ RSpec.describe "Profiles", type: :request do
       expect(response.body).to include(I18n.t("views.profiles.edit.page_title"))
     end
 
+    it "プロフィール編集フォームに入力補助と画像選択UIがあること" do
+      user = create_user
+
+      sign_in user
+      get edit_profile_path
+
+      html = Nokogiri::HTML(response.body)
+      name_field = html.at_css('input[name="user[name]"]')
+      avatar_field = html.at_css('input[name="user[avatar]"]')
+
+      expect(name_field["required"]).to eq("required")
+      expect(name_field["maxlength"]).to eq("50")
+      expect(avatar_field["accept"]).to eq("image/*")
+      expect(response.body).to include(I18n.t("views.profiles.edit.choose_avatar"))
+      expect(response.body).to include(I18n.t("views.profiles.edit.no_avatar_selected"))
+    end
+
     it "未ログインユーザーはプロフィール編集画面を閲覧できないこと" do
       get edit_profile_path
 

@@ -24,6 +24,17 @@ RSpec.describe "Mypage", type: :request do
       expect(response.body).not_to include(other_log.menu_name)
     end
 
+    it "プロフィール編集とアカウント設定への導線が表示されること" do
+      user = create_user
+
+      sign_in user
+      get mypage_path
+
+      expect(response.body).to include(I18n.t("views.common.edit_profile"))
+      expect(response.body).to include(I18n.t("views.common.account_settings"))
+      expect(response.body).not_to include(I18n.t("views.common.view_profile"))
+    end
+
     it "未ログインユーザーがマイページを閲覧できないこと" do
       get mypage_path
 

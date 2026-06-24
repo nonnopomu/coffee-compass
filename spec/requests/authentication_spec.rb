@@ -45,6 +45,68 @@ RSpec.describe "Authentication", type: :request do
     end
   end
 
+  describe "GET /users/edit" do
+    it "ログインユーザーがアカウント設定画面を閲覧できること" do
+      user = create_user
+
+      sign_in user
+      get edit_user_registration_path
+
+      expect(response).to have_http_status(:ok)
+      expect(response.body).to include(I18n.t("views.devise.registrations.edit.page_title"))
+      expect(response.body).to include(user.email)
+    end
+
+    it "通常ユーザーにはメールアドレス変更用の現在のパスワード入力が表示されること" do
+      user = create_user
+
+      sign_in user
+      get edit_user_registration_path
+
+      html = Nokogiri::HTML(response.body)
+
+      expect(html.at_css('input[name="user[current_password]"]')).to be_present
+      expect(html.at_css('input[name="user[password]"]')).to be_nil
+      expect(html.at_css('input[name="user[password_confirmation]"]')).to be_nil
+    end
+
+    it "Google連携ユーザーはメールアドレスを画面上で変更できないこと" do
+      user = create_user(email: "google-view@example.com")
+      user.update!(provider: "google_oauth2", uid: "google-view-uid")
+
+      sign_in user
+      get edit_user_registration_path
+
+      html = Nokogiri::HTML(response.body)
+      email_field = html.at_css('input[name="user[email]"]')
+
+      expect(email_field["disabled"]).to eq("disabled")
+      expect(html.at_css('input[name="user[current_password]"]')).to be_nil
+      expect(response.body).to include(I18n.t("views.devise.registrations.edit.google_email_locked"))
+    end
+
+    it "アカウント削除は確認チェックを入れるまでボタンが無効であること" do
+      user = create_user
+
+      sign_in user
+      get edit_user_registration_path
+
+      html = Nokogiri::HTML(response.body)
+      checkbox = html.at_css('input[name="confirm_account_deletion"]')
+      delete_button = html.at_css('input[type="submit"][value="アカウントを削除する"]')
+
+      expect(checkbox).to be_present
+      expect(checkbox["required"]).to eq("required")
+      expect(delete_button["disabled"]).to eq("disabled")
+    end
+
+    it "未ログインユーザーはログイン画面へリダイレクトされること" do
+      get edit_user_registration_path
+
+      expect(response).to redirect_to(new_user_session_path)
+    end
+  end
+
   describe "POST /users" do
     it "ユーザー登録できること" do
       expect {
@@ -88,6 +150,52 @@ RSpec.describe "Authentication", type: :request do
       }
 
       expect(response).to redirect_to(cafe_path(cafe))
+    end
+  end
+
+  describe "PATCH /users" do
+    it "通常ユーザーは現在のパスワードを入力するとメールアドレスを変更できること" do
+      user = create_user(email: "before-change@example.com", password: "password")
+
+      sign_in user
+      patch user_registration_path, params: {
+        user: {
+          email: "after-change@example.com",
+          current_password: "password"
+        }
+      }
+
+      expect(user.reload.email).to eq("after-change@example.com")
+      expect(response).to redirect_to(root_path)
+    end
+
+    it "通常ユーザーは現在のパスワードがないとメールアドレスを変更できないこと" do
+      user = create_user(email: "no-password-before@example.com", password: "password")
+
+      sign_in user
+      patch user_registration_path, params: {
+        user: {
+          email: "no-password-after@example.com"
+        }
+      }
+
+      expect(response).to have_http_status(:unprocessable_entity)
+      expect(user.reload.email).to eq("no-password-before@example.com")
+    end
+
+    it "Google連携ユーザーはPATCHで送られてもメールアドレスを変更できないこと" do
+      user = create_user(email: "google-patch-before@example.com")
+      user.update!(provider: "google_oauth2", uid: "google-patch-uid")
+
+      sign_in user
+      patch user_registration_path, params: {
+        user: {
+          email: "google-patch-after@example.com"
+        }
+      }
+
+      expect(response).to have_http_status(:unprocessable_entity)
+      expect(user.reload.email).to eq("google-patch-before@example.com")
     end
   end
 
@@ -231,6 +339,33 @@ RSpec.describe "Authentication", type: :request do
 
       expect(response).to redirect_to(new_user_session_path)
       expect(flash[:alert]).to eq(I18n.t("flash.omniauth.failure"))
+    end
+  end
+
+  describe "DELETE /users" do
+    it "確認チェックがない場合はアカウントを削除できないこと" do
+      user = create_user
+
+      sign_in user
+
+      expect {
+        delete user_registration_path
+      }.not_to change(User, :count)
+
+      expect(response).to redirect_to(edit_user_registration_path)
+      expect(flash[:alert]).to eq(I18n.t("flash.registrations.delete_confirmation_required"))
+    end
+
+    it "確認チェックがある場合はアカウントを削除できること" do
+      user = create_user
+
+      sign_in user
+
+      expect {
+        delete user_registration_path, params: { confirm_account_deletion: "1" }
+      }.to change(User, :count).by(-1)
+
+      expect(response).to redirect_to(root_path)
     end
   end
 
