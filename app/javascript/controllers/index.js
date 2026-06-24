@@ -27,3 +27,6 @@ application.register("tabs", TabsController)
 
 import TagSelectionController from "./tag_selection_controller"
 application.register("tag-selection", TagSelectionController)
+
+import UserMenuController from "./user_menu_controller"
+application.register("user-menu", UserMenuController)

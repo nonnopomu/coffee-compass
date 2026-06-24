@@ -34,6 +34,12 @@ ja:
         admin: 管理
         login: ログイン
         sign_up: 新規登録
+        open_user_menu: ユーザーメニューを開く
+        admin_dashboard: 管理者画面
+        mypage: マイページ
+        account_settings: アカウント設定
+        logout: ログアウト
+        logout_confirm: ログアウトしますか？
       footer:
         search_cafes: カフェを探す
         record_log: ログを記録
