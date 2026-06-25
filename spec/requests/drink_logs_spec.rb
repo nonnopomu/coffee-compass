@@ -208,6 +208,22 @@ RSpec.describe "Drink logs", type: :request do
       expect(response.body).to include(I18n.t("views.drink_logs.form.image_preview_placeholder"))
     end
 
+    it "画像付きのログでは写真削除ボタンを確認できること" do
+      user = create_user
+      drink_log = create_drink_log(user:)
+      attach_valid_image(drink_log, :image, filename: "drink_log.png")
+
+      sign_in user
+      get edit_drink_log_path(drink_log)
+
+      html = Nokogiri::HTML(response.body)
+      remove_image_field = html.at_css('input[name="drink_log[remove_image]"]')
+
+      expect(response).to have_http_status(:ok)
+      expect(remove_image_field["value"]).to eq("0")
+      expect(response.body).to include(I18n.t("views.drink_logs.form.remove_image"))
+    end
+
     it "一般ユーザーは他人の編集画面を閲覧できないこと" do
       user = create_user
       drink_log = create_drink_log
@@ -271,6 +287,53 @@ RSpec.describe "Drink logs", type: :request do
       }
 
       expect(response).to redirect_to(drink_log_path(drink_log))
+      expect(drink_log.reload.image).to be_attached
+    end
+
+    it "投稿者本人は飲んだログ画像を削除できること" do
+      user = create_user
+      drink_log = create_drink_log(user:)
+      attach_valid_image(drink_log, :image, filename: "drink_log.png")
+      roast_level_tag = create_roast_level_tag
+      brew_method_tag = create_brew_method_tag
+      taste_tag = create_taste_tag
+
+      sign_in user
+      patch drink_log_path(drink_log), params: {
+        drink_log: drink_log_params(
+          cafe: drink_log.cafe,
+          roast_level_tag:,
+          brew_method_tag:,
+          taste_tags: [ taste_tag ],
+          remove_image: "1"
+        )
+      }
+
+      expect(response).to redirect_to(drink_log_path(drink_log))
+      expect(drink_log.reload.image).not_to be_attached
+    end
+
+    it "入力値が不正な場合は飲んだログ画像を削除しないこと" do
+      user = create_user
+      drink_log = create_drink_log(user:)
+      attach_valid_image(drink_log, :image, filename: "drink_log.png")
+      roast_level_tag = create_roast_level_tag
+      brew_method_tag = create_brew_method_tag
+      taste_tag = create_taste_tag
+
+      sign_in user
+      patch drink_log_path(drink_log), params: {
+        drink_log: drink_log_params(
+          cafe: drink_log.cafe,
+          roast_level_tag:,
+          brew_method_tag:,
+          taste_tags: [ taste_tag ],
+          menu_name: "",
+          remove_image: "1"
+        )
+      }
+
+      expect(response).to have_http_status(:unprocessable_content)
       expect(drink_log.reload.image).to be_attached
     end
 
