@@ -23,6 +23,12 @@
             <% end %>
           </div>
 
+          <% if drink_log.image.attached? %>
+            <%= image_tag drink_log.image,
+                          alt: drink_log.menu_name,
+                          class: "mt-3 aspect-video w-full rounded-lg border border-gray-100 object-cover" %>
+          <% end %>
+
           <% if drink_log.memo.present? %>
             <p class="mt-3 whitespace-pre-wrap text-sm leading-6 text-gray-700"><%= drink_log.memo %></p>
           <% end %>

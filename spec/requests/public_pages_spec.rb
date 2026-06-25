@@ -40,6 +40,31 @@ RSpec.describe "Public pages", type: :request do
       expect(response).to have_http_status(:ok)
     end
 
+    it "カフェ詳細でカフェ画像が表示されること" do
+      cafe = create_cafe(name: "詳細画像カフェ", status: :published)
+      attach_valid_image(cafe, :image, filename: "cafe.png")
+
+      get cafe_path(cafe)
+
+      html = Nokogiri::HTML(response.body)
+
+      expect(response).to have_http_status(:ok)
+      expect(html.at_css('img[alt="詳細画像カフェ"]')).to be_present
+    end
+
+    it "カフェ詳細のみんなのログで飲んだログ画像が表示されること" do
+      cafe = create_cafe(status: :published)
+      drink_log = create_drink_log(cafe:, menu_name: "画像付きログ")
+      attach_valid_image(drink_log, :image, filename: "drink_log.png")
+
+      get cafe_path(cafe), params: { tab: "logs" }
+
+      html = Nokogiri::HTML(response.body)
+
+      expect(response).to have_http_status(:ok)
+      expect(html.at_css('img[alt="画像付きログ"]')).to be_present
+    end
+
     it "飲んだログ詳細を閲覧できること" do
       drink_log = create_drink_log(cafe: create_cafe(status: :published))
 

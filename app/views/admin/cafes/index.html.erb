@@ -33,7 +33,19 @@
     <div class="divide-y divide-gray-100">
       <% @cafes.each do |cafe| %>
         <article class="bg-white px-4 py-4">
-          <div class="flex items-start justify-between gap-3">
+          <div class="flex items-start gap-3">
+            <div class="flex h-16 w-20 shrink-0 items-center justify-center overflow-hidden rounded-lg bg-gray-100">
+              <% if cafe.image.attached? %>
+                <%= image_tag cafe.image,
+                              alt: cafe.name,
+                              class: "h-full w-full object-cover" %>
+              <% else %>
+                <%= image_tag "cafe_placeholder.png",
+                              alt: "",
+                              class: "h-full w-full object-cover" %>
+              <% end %>
+            </div>
+
             <div class="min-w-0">
               <div class="mb-1 flex flex-wrap items-center gap-2">
                 <h2 class="text-base font-bold text-gray-900"><%= cafe.name %></h2>
