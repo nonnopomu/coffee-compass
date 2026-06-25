@@ -2,9 +2,12 @@
 <% return_to = params[:return_to].to_s %>
 <% safe_back_path = return_to.start_with?("/") && !return_to.start_with?("//") ? return_to : cafes_path %>
 <% content_for :back_path, safe_back_path %>
+<% content_for :page_bg, "bg-white sm:bg-amber-50" %>
 
+<div class="flex flex-1 flex-col bg-white sm:items-center sm:bg-amber-50 sm:px-5 sm:pt-6 sm:pb-8">
+  <div class="w-full overflow-hidden bg-white sm:max-w-md sm:rounded-3xl sm:border sm:border-amber-100 sm:shadow-[0_4px_18px_rgba(90,51,24,0.08)]">
 <%# 店舗写真エリア %>
-<div class="relative bg-gray-200 aspect-video flex items-center justify-center">
+<div class="relative flex aspect-video items-center justify-center bg-amber-50">
   <% if @cafe.image.attached? %>
     <%= image_tag @cafe.image,
                   alt: @cafe.name,
@@ -16,7 +19,7 @@
   <% end %>
 
   <%# 店舗名・エリア：写真の上にオーバーレイで表示 %>
-  <div class="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/60 to-transparent px-4 py-4">
+  <div class="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-[#2b170d]/70 to-transparent px-4 py-4">
     <p class="text-white/70 text-xs mb-0.5"><%= @cafe.prefecture %></p>
     <h1 class="text-white text-xl font-bold"><%= @cafe.name %></h1>
   </div>
@@ -25,7 +28,7 @@
 <%# タブナビゲーション：Stimulusでタブ切り替えを管理する %>
 <div data-controller="tabs">
   <%# タブボタン %>
-  <div class="flex border-b border-gray-200 bg-white sticky top-16 z-10">
+  <div class="sticky top-16 z-10 flex border-b border-gray-200 bg-white">
     <button data-tabs-target="tab"
             data-action="click->tabs#switch"
             data-index="0"
@@ -54,5 +57,7 @@
   <%# みんなのログパネル：現時点では空。ログ機能実装時に中身を追加する %>
   <div data-tabs-target="panel" class="hidden">
     <%= render "drink_logs_tab", cafe: @cafe, drink_logs: @drink_logs %>
+  </div>
+</div>
   </div>
 </div>

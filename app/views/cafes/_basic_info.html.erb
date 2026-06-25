@@ -1,6 +1,6 @@
-<div class="px-4 py-5 space-y-6">
+<div class="space-y-6 bg-white px-4 py-5">
   <%# 住所・営業時間・定休日 %>
-  <div class="space-y-3">
+  <div class="space-y-3 rounded-2xl border border-gray-200 bg-white px-4 py-4">
     <div class="flex gap-3">
       <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-gray-400 mt-0.5 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
@@ -30,7 +30,7 @@
 
   <%# Google Maps ボタン %>
   <%= link_to cafe.google_maps_url, target: "_blank", rel: "noopener noreferrer",
-              class: "flex items-center justify-center gap-2 w-full py-2.5 rounded-lg border border-amber-600 text-amber-600 text-sm font-medium" do %>
+              class: "flex items-center justify-center gap-2 w-full rounded-2xl border border-amber-200 bg-white py-3 text-sm font-semibold text-amber-800 shadow-sm transition-colors hover:bg-amber-50" do %>
     <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
       <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
       <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
@@ -46,11 +46,11 @@
   <%# 提供スタイルタグ：brew_method カテゴリのタグのみ絞り込んで表示 %>
   <% brew_method_tags = cafe.tags.select(&:brew_method?) %>
   <% if brew_method_tags.any? %>
-    <div>
+    <div class="rounded-2xl border border-gray-200 bg-white px-4 py-4">
       <h3 class="text-sm font-semibold text-amber-600 mb-2"><%= t("views.cafes.basic_info.brew_method") %></h3>
       <div class="flex flex-wrap gap-2">
         <% brew_method_tags.each do |tag| %>
-          <span class="text-xs text-gray-600 bg-gray-100 rounded-full px-3 py-1"><%= tag.name %></span>
+          <span class="rounded-full border border-amber-100 bg-amber-50 px-3 py-1 text-xs font-medium text-amber-800"><%= tag.name %></span>
         <% end %>
       </div>
     </div>
@@ -59,11 +59,11 @@
   <%# 店舗特徴タグ：cafe_feature カテゴリのタグのみ絞り込んで表示 %>
   <% feature_tags = cafe.tags.select(&:cafe_feature?) %>
   <% if feature_tags.any? %>
-    <div>
+    <div class="rounded-2xl border border-gray-200 bg-white px-4 py-4">
       <h3 class="text-sm font-semibold text-amber-600 mb-2"><%= t("views.cafes.basic_info.cafe_feature") %></h3>
       <div class="flex flex-wrap gap-2">
         <% feature_tags.each do |tag| %>
-          <span class="text-xs text-gray-600 bg-gray-100 rounded-full px-3 py-1"><%= tag.name %></span>
+          <span class="rounded-full border border-amber-100 bg-amber-50 px-3 py-1 text-xs font-medium text-amber-800"><%= tag.name %></span>
         <% end %>
       </div>
     </div>
@@ -71,7 +71,7 @@
 
   <%# 店舗説明 %>
   <% if cafe.description.present? %>
-    <div>
+    <div class="rounded-2xl border border-gray-200 bg-white px-4 py-4">
       <h3 class="text-sm font-semibold text-amber-600 mb-2"><%= t("views.cafes.basic_info.editor_note") %></h3>
       <p class="text-sm text-gray-700 leading-relaxed"><%= cafe.description %></p>
     </div>
@@ -79,7 +79,7 @@
 
   <%# 公式リンク：値がある項目のみ表示 %>
   <% if cafe.instagram_url.present? || cafe.website_url.present? %>
-    <div>
+    <div class="rounded-2xl border border-gray-200 bg-white px-4 py-4">
       <h3 class="text-sm font-semibold text-amber-600 mb-3"><%= t("views.cafes.basic_info.official_links") %></h3>
       <div class="flex gap-4">
         <% if cafe.instagram_url.present? %>

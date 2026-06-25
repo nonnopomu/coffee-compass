@@ -1,6 +1,8 @@
-<div class="bg-white px-4 py-4">
+<%= link_to cafe_path(cafe),
+            aria: { label: t("views.cafes.cafe_card.open_detail", name: cafe.name) },
+            class: "block rounded-3xl border border-stone-200 bg-white px-4 py-4 no-underline shadow-[0_4px_16px_rgba(90,51,24,0.05)]" do %>
   <%# 店舗写真エリア %>
-  <div class="relative rounded-xl overflow-hidden mb-3 bg-gray-100 aspect-video flex items-center justify-center">
+  <div class="relative rounded-2xl overflow-hidden mb-4 bg-amber-50 aspect-video flex items-center justify-center">
     <% if cafe.image.attached? %>
       <%= image_tag cafe.image,
                     alt: cafe.name,
@@ -12,44 +14,37 @@
     <% end %>
 
     <%# ログ数バッジ %>
-    <span class="absolute top-2 right-2 bg-black/60 text-white text-xs px-2.5 py-1 rounded-full font-medium">
+    <span class="absolute top-2 right-2 rounded-full bg-[#5a3318]/80 px-2.5 py-1 text-xs font-semibold text-white">
       <%= t("views.cafes.cafe_card.log_count", count: cafe.drink_logs.size) %>
     </span>
   </div>
 
   <%# エリア %>
-  <p class="text-xs text-gray-400 mb-0.5"><%= cafe.prefecture %></p>
+  <p class="mb-0.5 text-xs font-semibold text-amber-700"><%= cafe.prefecture %></p>
 
   <%# 店舗名 %>
-  <h2 class="text-base font-bold text-gray-900 mb-1"><%= cafe.name %></h2>
+  <h2 class="mb-1 text-base font-bold text-[#5a3318]"><%= cafe.name %></h2>
 
   <%# 住所 %>
-  <p class="text-xs text-gray-400 mb-2"><%= cafe.address %></p>
+  <p class="mb-2 text-xs text-gray-500"><%= cafe.address %></p>
 
   <%# 特徴タグ %>
   <% feature_tags = cafe.tags.select(&:cafe_feature?) %>
   <% if feature_tags.any? %>
     <div class="flex flex-wrap gap-1.5 mb-3">
       <% feature_tags.each do |tag| %>
-        <span class="text-xs text-gray-500 bg-gray-100 rounded-full px-2.5 py-0.5"><%= tag.name %></span>
+        <span class="rounded-full border border-amber-100 bg-amber-50 px-2.5 py-0.5 text-xs font-medium text-amber-800"><%= tag.name %></span>
       <% end %>
     </div>
   <% end %>
 
   <%# リンク %>
-  <div class="flex items-center justify-between pt-1">
-    <%= link_to cafe_path(cafe), class: "text-sm text-amber-600 font-medium flex items-center gap-0.5" do %>
+  <div class="flex items-center pt-1">
+    <span class="flex items-center gap-0.5 text-sm font-semibold text-amber-700">
       <%= t("views.common.show_detail") %>
       <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
       </svg>
-    <% end %>
-    <%= link_to cafe.google_maps_url, target: "_blank", rel: "noopener noreferrer", class: "text-xs text-gray-400 flex items-center gap-1" do %>
-      <svg xmlns="http://www.w3.org/2000/svg" class="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
-        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
-      </svg>
-      Google Maps
-    <% end %>
+    </span>
   </div>
-</div>
+<% end %>

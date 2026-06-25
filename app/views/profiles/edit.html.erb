@@ -1,8 +1,9 @@
 <% content_for :page_title, t("views.profiles.edit.page_title") %>
 <% content_for :back_path, mypage_path %>
+<% content_for :page_bg, "bg-white sm:bg-amber-50" %>
 
-<div class="min-h-full bg-gray-50">
-  <div class="px-4 py-5">
+<div class="flex flex-1 flex-col bg-white sm:items-center sm:bg-amber-50 sm:px-5 sm:pt-6 sm:pb-8">
+  <div class="w-full bg-white px-4 py-5 sm:max-w-md sm:rounded-3xl sm:border sm:border-amber-100 sm:px-5 sm:py-6 sm:shadow-[0_4px_18px_rgba(90,51,24,0.08)]">
     <%= form_with model: @user, url: profile_path, method: :patch, class: "space-y-6" do |f| %>
       <% if @user.errors.any? %>
         <div class="rounded-lg border border-red-200 bg-red-50 px-4 py-3">
@@ -15,7 +16,7 @@
         </div>
       <% end %>
 
-      <section data-controller="avatar-preview" class="rounded-lg border border-gray-200 bg-white px-4 py-5 shadow-sm">
+      <section data-controller="avatar-preview" class="rounded-2xl border border-gray-200 bg-white px-4 py-5">
         <div class="flex items-center gap-4">
           <% if @user.avatar.attached? %>
             <%= image_tag @user.avatar,
@@ -33,7 +34,7 @@
           <% end %>
 
           <div class="min-w-0 flex-1">
-            <p class="mb-2 block text-sm font-medium text-gray-700"><%= t("views.profiles.edit.avatar") %></p>
+            <p class="mb-2 block text-sm font-semibold text-[#5a3318]"><%= t("views.profiles.edit.avatar") %></p>
             <div class="flex min-w-0 flex-col gap-2 sm:flex-row sm:items-center">
               <%= f.file_field :avatar,
                                accept: "image/jpeg,image/png,image/webp",
@@ -47,18 +48,18 @@
         </div>
       </section>
 
-      <section class="rounded-lg border border-gray-200 bg-white px-4 py-5 shadow-sm">
-        <%= f.label :name, User.human_attribute_name(:name), class: "mb-2 block text-sm font-medium text-gray-700" %>
+      <section class="rounded-2xl border border-gray-200 bg-white px-4 py-5">
+        <%= f.label :name, User.human_attribute_name(:name), class: "mb-2 block text-sm font-semibold text-[#5a3318]" %>
         <%= f.text_field :name,
                          placeholder: t("views.profiles.edit.name_placeholder"),
                          required: true,
                          maxlength: 50,
-                         class: "w-full rounded-lg border border-gray-200 bg-white px-3 py-3 text-sm text-gray-900 focus:border-amber-600 focus:outline-none focus:ring-2 focus:ring-amber-100" %>
+                         class: "w-full rounded-xl border border-gray-200 bg-white px-3 py-3 text-sm text-gray-900 focus:border-amber-600 focus:outline-none focus:ring-2 focus:ring-amber-100" %>
       </section>
 
-      <div class="grid grid-cols-2 gap-3 pb-6">
-        <%= link_to t("views.common.cancel"), mypage_path, class: "rounded-lg border border-gray-200 bg-white px-4 py-3 text-center text-sm font-semibold text-gray-700" %>
-        <%= f.submit t("views.common.update"), class: "rounded-lg bg-amber-600 px-4 py-3 text-sm font-semibold text-white" %>
+      <div class="grid grid-cols-2 gap-3 border-t border-gray-200 pt-4">
+        <%= link_to t("views.common.cancel"), mypage_path, class: "rounded-2xl border border-amber-100 bg-white px-4 py-3 text-center text-sm font-semibold text-gray-700 transition-colors hover:bg-amber-50" %>
+        <%= f.submit t("views.common.update"), class: "rounded-2xl bg-amber-600 px-4 py-3 text-sm font-semibold text-white shadow-sm transition-colors hover:bg-amber-700" %>
       </div>
     <% end %>
   </div>
