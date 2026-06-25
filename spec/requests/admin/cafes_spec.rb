@@ -59,7 +59,7 @@ RSpec.describe "Admin::Cafes", type: :request do
       html = Nokogiri::HTML(response.body)
       image_field = html.at_css('input[name="cafe[image]"]')
 
-      expect(image_field["accept"]).to eq("image/*")
+      expect(image_field["accept"]).to eq("image/jpeg,image/png,image/webp")
       expect(response.body).to include(I18n.t("views.admin.cafes.form.image_preview_placeholder"))
     end
   end

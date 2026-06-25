@@ -29,7 +29,7 @@ RSpec.describe "Drink logs", type: :request do
       image_field = html.at_css('input[name="drink_log[image]"]')
 
       expect(response).to have_http_status(:ok)
-      expect(image_field["accept"]).to eq("image/*")
+      expect(image_field["accept"]).to eq("image/jpeg,image/png,image/webp")
       expect(response.body).to include(I18n.t("views.drink_logs.form.image_preview_placeholder"))
     end
   end
@@ -192,7 +192,7 @@ RSpec.describe "Drink logs", type: :request do
       image_field = html.at_css('input[name="drink_log[image]"]')
 
       expect(response).to have_http_status(:ok)
-      expect(image_field["accept"]).to eq("image/*")
+      expect(image_field["accept"]).to eq("image/jpeg,image/png,image/webp")
       expect(response.body).to include(I18n.t("views.drink_logs.form.image_preview_placeholder"))
     end
 
