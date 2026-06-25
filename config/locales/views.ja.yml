@@ -134,6 +134,7 @@ ja:
         image_update_help: 新しい写真を選ぶと、登録済みの写真を差し替えます。
         image_preview_alt: 選択した写真のプレビュー
         image_preview_placeholder: 写真を選択
+        remove_image: 写真を削除
     mypages:
       show:
         page_title: マイページ

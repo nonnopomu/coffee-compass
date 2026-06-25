@@ -37,6 +37,7 @@
                            accept: "image/jpeg,image/png,image/webp",
                            data: { image_preview_target: "input", action: "change->image-preview#show" },
                            class: "sr-only" %>
+          <%= hidden_field_tag "drink_log[remove_image]", "0", data: { image_preview_target: "removeField" } %>
           <%= f.label :image, class: "block cursor-pointer overflow-hidden rounded-lg border border-dashed border-amber-200 bg-amber-50/40 transition-colors hover:bg-amber-50" do %>
             <img data-image-preview-target="image"
                  alt="<%= t("views.drink_logs.form.image_preview_alt") %>"
@@ -45,6 +46,12 @@
               <%= t("views.drink_logs.form.image_preview_placeholder") %>
             </div>
           <% end %>
+          <button type="button"
+                  data-image-preview-target="removeButton"
+                  data-action="image-preview#remove"
+                  class="mt-3 hidden text-sm font-semibold text-red-600">
+            <%= t("views.drink_logs.form.remove_image") %>
+          </button>
           <p class="mt-2 text-xs leading-5 text-gray-500"><%= t("views.drink_logs.form.image_help") %></p>
         </div>
       </section>

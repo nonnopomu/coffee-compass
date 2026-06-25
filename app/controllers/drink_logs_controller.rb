@@ -34,6 +34,8 @@ class DrinkLogsController < ApplicationController
 
   def update
     if @drink_log.update(drink_log_update_params)
+      @drink_log.image.purge_later if remove_image_requested? && @drink_log.image.attached?
+
       redirect_to drink_log_path(@drink_log), notice: t("flash.drink_logs.update")
     else
       set_form_options
@@ -72,6 +74,10 @@ class DrinkLogsController < ApplicationController
       :image,
       taste_tag_ids: []
     )
+  end
+
+  def remove_image_requested?
+    params.dig(:drink_log, :remove_image) == "1" && params.dig(:drink_log, :image).blank?
   end
 
   def set_form_options
