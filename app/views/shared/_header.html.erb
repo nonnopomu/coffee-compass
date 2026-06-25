@@ -17,15 +17,23 @@
         <div class="absolute left-0 top-full z-30 mt-2 hidden w-40 overflow-hidden rounded-xl border border-amber-100 bg-white py-2 shadow-lg"
              data-user-menu-target="menu">
           <%= link_to t("views.shared.header.top"), root_path, class: "block px-4 py-2.5 text-sm font-medium text-gray-700 transition-colors hover:bg-amber-50 hover:text-amber-700" %>
+          <% if user_signed_in? %>
+            <%= link_to t("views.shared.header.record_log"), new_drink_log_path, class: "block px-4 py-2.5 text-sm font-medium text-gray-700 transition-colors hover:bg-amber-50 hover:text-amber-700" %>
+          <% end %>
         </div>
       </div>
 
-      <%= link_to root_path, class: "hidden min-w-0 items-center gap-2 text-[#5a3318] sm:flex" do %>
-        <div class="h-9 w-9 flex-shrink-0 rounded-xl border border-amber-100/80 bg-amber-50/85 p-0.5 shadow-sm">
-          <%= image_tag "coffee_compass_orbit_transparent.png", alt: t("app.name"), class: "h-full w-full scale-120 object-contain" %>
-        </div>
-        <span class="brand-wordmark truncate text-lg font-bold"><%= t("app.name") %></span>
-      <% end %>
+      <div class="hidden min-w-0 items-center gap-4 sm:flex">
+        <%= link_to root_path, class: "flex min-w-0 items-center gap-2 text-[#5a3318]" do %>
+          <div class="h-9 w-9 flex-shrink-0 p-0.5">
+            <%= image_tag "coffee_compass_orbit_transparent.png", alt: t("app.name"), class: "h-full w-full scale-125 object-contain" %>
+          </div>
+          <span class="brand-wordmark truncate text-lg font-bold"><%= t("app.name") %></span>
+        <% end %>
+        <% if user_signed_in? %>
+          <%= link_to t("views.shared.header.record_log"), new_drink_log_path, class: "whitespace-nowrap rounded-lg border border-amber-100 px-3 py-1.5 text-sm font-semibold text-[#5a3318] transition-colors hover:bg-amber-50 hover:text-amber-700" %>
+        <% end %>
+      </div>
     </div>
 
     <div class="<%= content_for?(:header_center) ? 'min-w-0 flex-1 text-left' : 'pointer-events-none absolute left-1/2 top-1/2 w-[min(14rem,calc(100%-8rem))] -translate-x-1/2 -translate-y-1/2 text-center sm:w-[min(14rem,calc(100%-18rem))]' %>">

@@ -1,7 +1,16 @@
 import { Controller } from "@hotwired/stimulus"
 
 export default class extends Controller {
-  static targets = ["query", "option", "value", "selected", "selectedName", "selectedAddress", "message"]
+  static targets = [
+    "query",
+    "option",
+    "value",
+    "selected",
+    "selectedImage",
+    "selectedName",
+    "selectedAddress",
+    "message"
+  ]
   static values = { noResultsMessage: String }
 
   connect() {
@@ -35,6 +44,8 @@ export default class extends Controller {
 
     this.valueTarget.value = option.dataset.cafeId
     this.queryTarget.value = option.dataset.cafeName
+    this.selectedImageTarget.src = option.dataset.cafeImageUrl
+    this.selectedImageTarget.alt = option.dataset.cafeName
     this.selectedNameTarget.textContent = option.dataset.cafeName
     this.selectedAddressTarget.textContent = option.dataset.cafeAddress
     this.selectedTarget.classList.remove("hidden")

@@ -28,6 +28,7 @@ ja:
       view_profile: プロフィールを見る
       edit_profile: プロフィールを編集
       account_settings: アカウント設定
+      required: 必須
     shared:
       header:
         normal: 通常
@@ -36,6 +37,7 @@ ja:
         sign_up: 新規登録
         open_site_menu: サイトメニューを開く
         top: カフェを探す
+        record_log: ログを記録
         open_user_menu: ユーザーメニューを開く
         admin_dashboard: 管理者画面
         mypage: マイページ
@@ -82,6 +84,7 @@ ja:
         logs: みんなのログ
       cafe_card:
         log_count: "%{count}ログ"
+        open_detail: "%{name}の詳細を見る"
       basic_info:
         closed_days: "定休日: %{closed_days}"
         brew_method: 提供スタイル
@@ -97,6 +100,7 @@ ja:
         brew_method: 提供スタイル
       drink_logs_tab:
         empty: まだログ投稿はありません。
+        record_this_cafe_log: このカフェのログを記録する
     drink_logs:
       new:
         page_title: ログ作成
@@ -142,6 +146,7 @@ ja:
         recorded_logs: 記録したログ
         visited_cafes: 訪れたカフェ
         my_logs: 自分のログ
+        record_log: ログを記録
         profile_actions: プロフィール
         no_logs_title: まだ飲んだログはありません。
         no_logs_body: 気になったカフェや飲んだコーヒーを記録していきましょう。

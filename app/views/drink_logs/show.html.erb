@@ -1,10 +1,12 @@
 <% content_for :page_title, t("views.drink_logs.show.page_title") %>
 <% content_for :back_path, @safe_back_path %>
+<% content_for :page_bg, "bg-white sm:bg-amber-50" %>
 
-<div class="min-h-full bg-gray-50">
-  <div class="border-b border-gray-200 bg-white px-4 py-5">
+<div class="flex flex-1 flex-col bg-white sm:items-center sm:bg-amber-50 sm:px-5 sm:pt-6 sm:pb-8">
+  <div class="w-full bg-white px-4 py-5 sm:max-w-md sm:rounded-3xl sm:border sm:border-amber-100 sm:px-5 sm:py-6 sm:shadow-[0_4px_18px_rgba(90,51,24,0.08)]">
+    <div class="border-b border-gray-200 pb-5">
     <p class="text-xs font-medium text-amber-600"><%= @drink_log.cafe.name %></p>
-    <h1 class="mt-2 text-xl font-bold text-gray-900"><%= @drink_log.menu_name %></h1>
+    <h1 class="mt-2 text-xl font-bold text-[#5a3318]"><%= @drink_log.menu_name %></h1>
     <div class="mt-3 flex flex-wrap items-center gap-x-3 gap-y-1 text-xs text-gray-500">
       <span><%= l(@drink_log.drank_on, format: :long) %></span>
       <span>
@@ -12,27 +14,27 @@
         <%= link_to @drink_log.user.name, user_path(@drink_log.user), class: "font-semibold text-amber-700" %>
       </span>
     </div>
-  </div>
+    </div>
 
-  <div class="px-4 py-5 space-y-6">
+    <div class="space-y-6 pt-5">
     <% if @drink_log.image.attached? %>
       <section class="space-y-4">
         <div class="flex items-center gap-2 border-l-4 border-amber-600 pl-3">
-          <h2 class="text-sm font-semibold text-gray-900"><%= DrinkLog.human_attribute_name(:image) %></h2>
+          <h2 class="text-sm font-semibold text-[#5a3318]"><%= DrinkLog.human_attribute_name(:image) %></h2>
         </div>
 
         <%= image_tag @drink_log.image,
                       alt: @drink_log.menu_name,
-                      class: "aspect-video w-full rounded-lg border border-gray-200 object-cover shadow-sm" %>
+                      class: "aspect-video w-full rounded-2xl border border-gray-200 object-cover" %>
       </section>
     <% end %>
 
     <section class="space-y-4">
       <div class="flex items-center gap-2 border-l-4 border-amber-600 pl-3">
-        <h2 class="text-sm font-semibold text-gray-900"><%= t("views.drink_logs.show.record_heading") %></h2>
+        <h2 class="text-sm font-semibold text-[#5a3318]"><%= t("views.drink_logs.show.record_heading") %></h2>
       </div>
 
-      <div class="divide-y divide-gray-100 rounded-lg border border-gray-200 bg-white">
+      <div class="divide-y divide-gray-100 rounded-2xl border border-gray-200 bg-white">
         <div class="flex items-start justify-between gap-4 px-4 py-3">
           <p class="text-sm text-gray-500"><%= t("views.drink_logs.show.cafe") %></p>
           <%= link_to @drink_log.cafe.name, @safe_back_path, class: "text-right text-sm font-semibold text-amber-700" %>
@@ -62,7 +64,7 @@
 
     <section class="space-y-4">
       <div class="flex items-center gap-2 border-l-4 border-amber-600 pl-3">
-        <h2 class="text-sm font-semibold text-gray-900"><%= t("views.drink_logs.form.taste") %></h2>
+        <h2 class="text-sm font-semibold text-[#5a3318]"><%= t("views.drink_logs.form.taste") %></h2>
       </div>
 
       <div class="flex flex-wrap gap-2">
@@ -74,10 +76,10 @@
 
     <section class="space-y-4">
       <div class="flex items-center gap-2 border-l-4 border-amber-600 pl-3">
-        <h2 class="text-sm font-semibold text-gray-900"><%= t("views.drink_logs.form.memo") %></h2>
+        <h2 class="text-sm font-semibold text-[#5a3318]"><%= t("views.drink_logs.form.memo") %></h2>
       </div>
 
-      <div class="rounded-lg border border-gray-200 bg-white px-4 py-4">
+      <div class="rounded-2xl border border-gray-200 bg-white px-4 py-4">
         <% if @drink_log.memo.present? %>
           <p class="whitespace-pre-wrap text-sm leading-6 text-gray-700"><%= @drink_log.memo %></p>
         <% else %>
@@ -88,16 +90,17 @@
 
     <% if user_signed_in? && @drink_log.user == current_user %>
       <section class="space-y-3">
-        <%= link_to t("views.common.edit_action"), edit_drink_log_path(@drink_log), class: "block w-full rounded-lg border border-amber-600 bg-white px-4 py-3 text-center text-sm font-semibold text-amber-700" %>
+        <%= link_to t("views.common.edit_action"), edit_drink_log_path(@drink_log), class: "block w-full rounded-2xl border border-amber-200 bg-white px-4 py-3 text-center text-sm font-semibold text-amber-800 transition-colors hover:bg-amber-50" %>
         <%= link_to t("views.common.delete_action"),
                     drink_log_path(@drink_log, return_to: @safe_back_path),
                     data: { turbo_method: :delete, turbo_confirm: t("views.common.delete_log_confirm") },
-                    class: "block w-full rounded-lg border border-red-200 bg-white px-4 py-3 text-center text-sm font-semibold text-red-600" %>
+                    class: "block w-full rounded-2xl border border-red-200 bg-white px-4 py-3 text-center text-sm font-semibold text-red-600 transition-colors hover:bg-red-50" %>
       </section>
     <% end %>
 
-    <div class="pb-6">
-      <%= link_to t("views.drink_logs.show.back_to_cafe"), @safe_back_path, class: "block w-full rounded-lg bg-amber-600 px-4 py-3 text-center text-sm font-semibold text-white" %>
+    <div>
+      <%= link_to t("views.drink_logs.show.back_to_cafe"), @safe_back_path, class: "block w-full rounded-2xl bg-amber-600 px-4 py-3 text-center text-sm font-semibold text-white shadow-sm transition-colors hover:bg-amber-700" %>
+    </div>
     </div>
   </div>
 </div>
