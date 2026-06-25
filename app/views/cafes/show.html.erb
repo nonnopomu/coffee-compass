@@ -3,12 +3,17 @@
 <% safe_back_path = return_to.start_with?("/") && !return_to.start_with?("//") ? return_to : cafes_path %>
 <% content_for :back_path, safe_back_path %>
 
-<%# 店舗写真エリア：MVPでは画像投稿機能がないためプレースホルダーで表示 %>
+<%# 店舗写真エリア %>
 <div class="relative bg-gray-200 aspect-video flex items-center justify-center">
-  <svg xmlns="http://www.w3.org/2000/svg" class="h-16 w-16 text-gray-300" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M3 9a2 2 0 012-2h14a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2V9z" />
-    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M19 11h2a2 2 0 010 4h-2" />
-  </svg>
+  <% if @cafe.image.attached? %>
+    <%= image_tag @cafe.image,
+                  alt: @cafe.name,
+                  class: "h-full w-full object-cover" %>
+  <% else %>
+    <%= image_tag "cafe_placeholder.png",
+                  alt: "",
+                  class: "h-full w-full object-cover" %>
+  <% end %>
 
   <%# 店舗名・エリア：写真の上にオーバーレイで表示 %>
   <div class="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/60 to-transparent px-4 py-4">

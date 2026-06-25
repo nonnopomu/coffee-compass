@@ -1,10 +1,15 @@
 <div class="bg-white px-4 py-4">
   <%# 店舗写真エリア %>
   <div class="relative rounded-xl overflow-hidden mb-3 bg-gray-100 aspect-video flex items-center justify-center">
-    <svg xmlns="http://www.w3.org/2000/svg" class="h-12 w-12 text-gray-300" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M3 9a2 2 0 012-2h14a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2V9z" />
-      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M19 11h2a2 2 0 010 4h-2" />
-    </svg>
+    <% if cafe.image.attached? %>
+      <%= image_tag cafe.image,
+                    alt: cafe.name,
+                    class: "h-full w-full object-cover" %>
+    <% else %>
+      <%= image_tag "cafe_placeholder.png",
+                    alt: "",
+                    class: "h-full w-full object-cover" %>
+    <% end %>
 
     <%# ログ数バッジ %>
     <span class="absolute top-2 right-2 bg-black/60 text-white text-xs px-2.5 py-1 rounded-full font-medium">

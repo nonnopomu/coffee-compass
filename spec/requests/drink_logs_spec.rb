@@ -138,6 +138,18 @@ RSpec.describe "Drink logs", type: :request do
       expect(response.body).to include("詳細確認ログ")
     end
 
+    it "飲んだログ画像がある場合は詳細に表示されること" do
+      drink_log = create_drink_log(menu_name: "画像付き詳細ログ")
+      attach_valid_image(drink_log, :image, filename: "drink_log.png")
+
+      get drink_log_path(drink_log)
+
+      html = Nokogiri::HTML(response.body)
+
+      expect(response).to have_http_status(:ok)
+      expect(html.at_css('img[alt="画像付き詳細ログ"]')).to be_present
+    end
+
     it "投稿者本人には編集・削除の導線が表示されること" do
       user = create_user
       drink_log = create_drink_log(user:)

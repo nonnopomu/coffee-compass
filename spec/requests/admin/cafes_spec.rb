@@ -24,6 +24,20 @@ RSpec.describe "Admin::Cafes", type: :request do
       expect(response).to have_http_status(:ok)
     end
 
+    it "管理者はカフェ管理一覧でカフェ画像を確認できること" do
+      admin = create_user(role: :admin)
+      cafe = create_cafe(name: "管理画像カフェ")
+      attach_valid_image(cafe, :image, filename: "cafe.png")
+
+      sign_in admin
+      get admin_cafes_path
+
+      html = Nokogiri::HTML(response.body)
+
+      expect(response).to have_http_status(:ok)
+      expect(html.at_css('img[alt="管理画像カフェ"]')).to be_present
+    end
+
     it "一般ユーザーはカフェ管理一覧を閲覧できないこと" do
       user = create_user
 

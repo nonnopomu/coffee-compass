@@ -15,6 +15,18 @@
   </div>
 
   <div class="px-4 py-5 space-y-6">
+    <% if @drink_log.image.attached? %>
+      <section class="space-y-4">
+        <div class="flex items-center gap-2 border-l-4 border-amber-600 pl-3">
+          <h2 class="text-sm font-semibold text-gray-900"><%= DrinkLog.human_attribute_name(:image) %></h2>
+        </div>
+
+        <%= image_tag @drink_log.image,
+                      alt: @drink_log.menu_name,
+                      class: "aspect-video w-full rounded-lg border border-gray-200 object-cover shadow-sm" %>
+      </section>
+    <% end %>
+
     <section class="space-y-4">
       <div class="flex items-center gap-2 border-l-4 border-amber-600 pl-3">
         <h2 class="text-sm font-semibold text-gray-900"><%= t("views.drink_logs.show.record_heading") %></h2>

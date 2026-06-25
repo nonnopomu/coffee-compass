@@ -14,6 +14,18 @@ RSpec.describe "Cafe search", type: :request do
       expect(response.body).not_to include(closed_cafe.name)
     end
 
+    it "カフェ画像がある場合は一覧に表示されること" do
+      cafe = create_cafe(name: "画像付きカフェ", status: :published)
+      attach_valid_image(cafe, :image, filename: "cafe.png")
+
+      get cafes_path
+
+      html = Nokogiri::HTML(response.body)
+
+      expect(response).to have_http_status(:ok)
+      expect(html.at_css('img[alt="画像付きカフェ"]')).to be_present
+    end
+
     it "都道府県で絞り込めること" do
       tokyo_cafe = create_cafe(name: "東京カフェ", prefecture: "東京都", status: :published)
       hokkaido_cafe = create_cafe(name: "北海道カフェ", prefecture: "北海道", status: :published)

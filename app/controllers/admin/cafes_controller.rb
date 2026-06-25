@@ -2,7 +2,7 @@ class Admin::CafesController < Admin::BaseController
   before_action :set_cafe, only: [ :edit, :update ]
 
   def index
-    @cafes = Cafe.includes(:tags).order(created_at: :desc)
+    @cafes = Cafe.with_attached_image.includes(:tags).order(created_at: :desc)
   end
 
   def new

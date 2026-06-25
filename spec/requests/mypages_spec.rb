@@ -24,6 +24,20 @@ RSpec.describe "Mypage", type: :request do
       expect(response.body).not_to include(other_log.menu_name)
     end
 
+    it "自分の飲んだログ画像が表示されること" do
+      user = create_user
+      drink_log = create_drink_log(user:, menu_name: "画像付き自分ログ")
+      attach_valid_image(drink_log, :image, filename: "drink_log.png")
+
+      sign_in user
+      get mypage_path
+
+      html = Nokogiri::HTML(response.body)
+
+      expect(response).to have_http_status(:ok)
+      expect(html.at_css('img[alt="画像付き自分ログ"]')).to be_present
+    end
+
     it "プロフィール編集への導線が表示されること" do
       user = create_user
 
