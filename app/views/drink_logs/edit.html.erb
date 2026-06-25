@@ -28,7 +28,7 @@
 
         <div class="rounded-lg border border-gray-200 bg-white px-4 py-4">
           <%= f.file_field :image,
-                           accept: "image/*",
+                           accept: "image/jpeg,image/png,image/webp",
                            data: { image_preview_target: "input", action: "change->image-preview#show" },
                            class: "sr-only" %>
           <%= f.label :image, class: "block cursor-pointer overflow-hidden rounded-lg border border-dashed border-amber-200 bg-amber-50/40 transition-colors hover:bg-amber-50" do %>

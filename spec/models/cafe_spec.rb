@@ -76,6 +76,38 @@ RSpec.describe Cafe, type: :model do
 
       expect(cafe).to be_valid
     end
+
+    it "カフェ画像はJPEG、PNG、WebP形式を添付できること" do
+      {
+        "image/jpeg" => "cafe.jpg",
+        "image/png" => "cafe.png",
+        "image/webp" => "cafe.webp"
+      }.each do |content_type, filename|
+        cafe = build_cafe
+
+        attach_valid_image(cafe, :image, content_type:, filename:)
+
+        expect(cafe).to be_valid
+      end
+    end
+
+    it "カフェ画像に許可されていない形式は添付できないこと" do
+      cafe = build_cafe
+
+      attach_invalid_type_image(cafe, :image)
+
+      expect(cafe).not_to be_valid
+      expect(cafe.errors[:image]).to include(I18n.t("activerecord.errors.messages.invalid_image_type"))
+    end
+
+    it "カフェ画像は5MB以下であること" do
+      cafe = build_cafe
+
+      attach_oversized_image(cafe, :image)
+
+      expect(cafe).not_to be_valid
+      expect(cafe.errors[:image]).to include(I18n.t("activerecord.errors.messages.image_too_large", max_size: "5MB"))
+    end
   end
 
   describe "ステータス" do

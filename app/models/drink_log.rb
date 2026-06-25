@@ -1,4 +1,6 @@
 class DrinkLog < ApplicationRecord
+  include ImageAttachmentValidatable
+
   enum :status, { published: 0, hidden: 1 }
 
   scope :with_display_associations, -> {
@@ -16,6 +18,8 @@ class DrinkLog < ApplicationRecord
   has_many :drink_log_taste_tags, dependent: :destroy
   has_many :taste_tags, through: :drink_log_taste_tags, source: :tag
   has_one_attached :image
+
+  validates_image_attachment :image
 
   validates :menu_name, presence: true, length: { maximum: 100 }
   validates :drank_on, presence: true

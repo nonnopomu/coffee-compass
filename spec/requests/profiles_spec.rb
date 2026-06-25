@@ -24,7 +24,7 @@ RSpec.describe "Profiles", type: :request do
 
       expect(name_field["required"]).to eq("required")
       expect(name_field["maxlength"]).to eq("50")
-      expect(avatar_field["accept"]).to eq("image/*")
+      expect(avatar_field["accept"]).to eq("image/jpeg,image/png,image/webp")
       expect(response.body).to include(I18n.t("views.profiles.edit.choose_avatar"))
       expect(response.body).not_to include("選択されていません")
     end

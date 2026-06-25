@@ -59,6 +59,38 @@ RSpec.describe User, type: :model do
       expect(user).not_to be_valid
       expect(user.errors[:email]).to include(I18n.t("activerecord.errors.models.user.attributes.email.google_oauth_user_email_change_restricted"))
     end
+
+    it "プロフィール画像はJPEG、PNG、WebP形式を添付できること" do
+      {
+        "image/jpeg" => "avatar.jpg",
+        "image/png" => "avatar.png",
+        "image/webp" => "avatar.webp"
+      }.each do |content_type, filename|
+        user = build_user
+
+        attach_valid_image(user, :avatar, content_type:, filename:)
+
+        expect(user).to be_valid
+      end
+    end
+
+    it "プロフィール画像に許可されていない形式は添付できないこと" do
+      user = build_user
+
+      attach_invalid_type_image(user, :avatar)
+
+      expect(user).not_to be_valid
+      expect(user.errors[:avatar]).to include(I18n.t("activerecord.errors.messages.invalid_image_type"))
+    end
+
+    it "プロフィール画像は5MB以下であること" do
+      user = build_user
+
+      attach_oversized_image(user, :avatar)
+
+      expect(user).not_to be_valid
+      expect(user.errors[:avatar]).to include(I18n.t("activerecord.errors.messages.image_too_large", max_size: "5MB"))
+    end
   end
 
   describe "ロール" do

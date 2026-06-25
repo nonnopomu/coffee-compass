@@ -1,4 +1,6 @@
 class User < ApplicationRecord
+  include ImageAttachmentValidatable
+
   devise :database_authenticatable, :registerable,
          :recoverable, :rememberable, :validatable,
          :omniauthable, omniauth_providers: [ :google_oauth2 ]
@@ -7,6 +9,8 @@ class User < ApplicationRecord
 
   has_many :drink_logs, dependent: :destroy
   has_one_attached :avatar
+
+  validates_image_attachment :avatar
 
   validates :name, presence: true, length: { maximum: 50 }
   validate :email_cannot_be_changed_for_google_oauth_user, if: -> { persisted? && will_save_change_to_email? }

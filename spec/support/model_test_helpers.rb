@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 require "securerandom"
+require "stringio"
 
 module ModelTestHelpers
   def unique_suffix
@@ -86,5 +87,31 @@ module ModelTestHelpers
 
   def create_drink_log(**attributes)
     build_drink_log(**attributes).tap(&:save!)
+  end
+
+  def attach_test_image(record, attachment_name, content_type: "image/png", byte_size: 1.kilobyte, filename: "test.png")
+    record.public_send(attachment_name).attach(
+      io: StringIO.new("a" * byte_size),
+      filename:,
+      content_type:
+    )
+  end
+
+  def attach_valid_image(record, attachment_name, content_type: "image/png", filename: "test.png")
+    attach_test_image(record, attachment_name, content_type:, filename:)
+  end
+
+  def attach_invalid_type_image(record, attachment_name)
+    attach_test_image(record, attachment_name, content_type: "text/plain", filename: "test.txt")
+  end
+
+  def attach_oversized_image(record, attachment_name, content_type: "image/png", filename: "large.png")
+    attach_test_image(
+      record,
+      attachment_name,
+      content_type:,
+      filename:,
+      byte_size: ImageAttachmentValidatable::MAX_IMAGE_SIZE + 1
+    )
   end
 end

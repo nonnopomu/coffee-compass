@@ -36,7 +36,7 @@
             <p class="mb-2 block text-sm font-medium text-gray-700"><%= t("views.profiles.edit.avatar") %></p>
             <div class="flex min-w-0 flex-col gap-2 sm:flex-row sm:items-center">
               <%= f.file_field :avatar,
-                               accept: "image/*",
+                               accept: "image/jpeg,image/png,image/webp",
                                data: { avatar_preview_target: "input", action: "change->avatar-preview#show" },
                                class: "sr-only" %>
               <%= f.label :avatar,

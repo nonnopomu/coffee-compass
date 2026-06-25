@@ -38,14 +38,19 @@ ja:
         brew_method_tag: 提供スタイル
         brew_method_tag_id: 提供スタイル
         memo: 感想メモ
+        image: 写真
         status: 公開状態
       user:
         name: ユーザー名
         email: メールアドレス
+        avatar: プロフィール画像
         password: パスワード
         password_confirmation: パスワード（確認）
         current_password: 現在のパスワード
     errors:
+      messages:
+        invalid_image_type: はJPEG、PNG、WebP形式でアップロードしてください
+        image_too_large: は%{max_size}以下の画像をアップロードしてください
       models:
         drink_log:
           attributes:
