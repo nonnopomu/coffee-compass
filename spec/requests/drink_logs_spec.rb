@@ -32,6 +32,19 @@ RSpec.describe "Drink logs", type: :request do
       expect(image_field["accept"]).to eq("image/jpeg,image/png,image/webp")
       expect(response.body).to include(I18n.t("views.drink_logs.form.image_preview_placeholder"))
     end
+
+    it "return_toをフォーム送信まで引き継ぐこと" do
+      user = create_user
+
+      sign_in user
+      get new_drink_log_path(return_to: mypage_path)
+
+      html = Nokogiri::HTML(response.body)
+      return_to_field = html.at_css('input[name="return_to"]')
+
+      expect(response).to have_http_status(:ok)
+      expect(return_to_field["value"]).to eq(mypage_path)
+    end
   end
 
   describe "POST /drink_logs" do
@@ -81,6 +94,54 @@ RSpec.describe "Drink logs", type: :request do
 
       expect(response).to redirect_to(cafe_path(cafe, tab: "logs"))
       expect(DrinkLog.last.image).to be_attached
+    end
+
+    it "return_toが指定された場合は投稿後に指定された戻り先へ遷移すること" do
+      user = create_user
+      cafe = create_cafe(status: :published)
+      roast_level_tag = create_roast_level_tag
+      brew_method_tag = create_brew_method_tag
+      taste_tag = create_taste_tag
+
+      sign_in user
+
+      expect {
+        post drink_logs_path, params: {
+          return_to: mypage_path,
+          drink_log: drink_log_params(
+            cafe:,
+            roast_level_tag:,
+            brew_method_tag:,
+            taste_tags: [ taste_tag ]
+          )
+        }
+      }.to change(user.drink_logs, :count).by(1)
+
+      expect(response).to redirect_to(mypage_path)
+    end
+
+    it "return_toに外部URLが指定された場合は外部URLへ遷移しないこと" do
+      user = create_user
+      cafe = create_cafe(status: :published)
+      roast_level_tag = create_roast_level_tag
+      brew_method_tag = create_brew_method_tag
+      taste_tag = create_taste_tag
+
+      sign_in user
+
+      expect {
+        post drink_logs_path, params: {
+          return_to: "//evil.example.com/phishing",
+          drink_log: drink_log_params(
+            cafe:,
+            roast_level_tag:,
+            brew_method_tag:,
+            taste_tags: [ taste_tag ]
+          )
+        }
+      }.to change(user.drink_logs, :count).by(1)
+
+      expect(response).to redirect_to(cafe_path(cafe, tab: "logs"))
     end
 
     it "入力値が不正な場合は投稿できず、作成画面を再表示すること" do
