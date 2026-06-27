@@ -28,6 +28,8 @@
     </div>
 
     <%= form_with model: @drink_log, url: drink_logs_path, method: :post, class: "space-y-6" do |f| %>
+      <%= hidden_field_tag :return_to, params[:return_to] if params[:return_to].present? %>
+
       <div class="space-y-6 pt-5">
       <% if @drink_log.errors.any? %>
         <div class="rounded-lg border border-red-200 bg-red-50 px-4 py-3">
