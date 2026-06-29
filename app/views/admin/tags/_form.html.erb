@@ -1,7 +1,17 @@
 <% category_options = Tag.categories.keys.map { |category| [t("enums.tag.category.#{category}"), category] } %>
+<% taste_parent_options = (@taste_parent_tags || []).map { |parent_tag| [parent_tag.name, parent_tag.id] } %>
+<% next_display_orders = @next_display_orders || {} %>
+<% tag_kind = tag.parent_id.present? ? "child" : "parent" %>
 
 <div class="min-h-full bg-gray-50">
-  <%= form_with model: [:admin, tag], class: "flex flex-col" do |f| %>
+  <%= form_with model: [:admin, tag],
+                class: "flex flex-col",
+                data: {
+                  controller: "admin-tag-form",
+                  admin_tag_form_next_display_orders_value: next_display_orders.to_json,
+                  admin_tag_form_taste_category_value: "taste",
+                  admin_tag_form_auto_order_value: tag.new_record?
+                } do |f| %>
     <div class="px-4 py-5 space-y-5">
       <% if tag.errors.any? %>
         <div class="rounded-lg border border-red-200 bg-red-50 px-4 py-3">
@@ -26,12 +36,78 @@
 
         <div>
           <%= f.label :category, class: "mb-1 block text-sm font-medium text-gray-700" %>
-          <%= f.select :category, options_for_select(category_options, tag.category), { prompt: t("views.admin.tags.form.category_prompt") }, { class: "w-full rounded-lg border border-gray-200 bg-white px-3 py-3 text-sm text-gray-900 focus:border-amber-600 focus:outline-none focus:ring-2 focus:ring-amber-100" } %>
+          <%= f.select :category,
+                       options_for_select(category_options, tag.category),
+                       { prompt: t("views.admin.tags.form.category_prompt") },
+                       {
+                         class: "w-full rounded-lg border border-gray-200 bg-white px-3 py-3 text-sm text-gray-900 focus:border-amber-600 focus:outline-none focus:ring-2 focus:ring-amber-100",
+                         data: {
+                           admin_tag_form_target: "category",
+                           action: "change->admin-tag-form#categoryChanged"
+                         }
+                       } %>
+        </div>
+
+        <div data-admin-tag-form-target="tasteOptions" class="hidden space-y-3 rounded-xl border border-gray-200 bg-white p-4">
+          <div>
+            <p class="text-sm font-semibold text-gray-900"><%= t("views.admin.tags.form.taste_tag_type") %></p>
+            <p class="mt-1 text-xs text-gray-500"><%= t("views.admin.tags.form.taste_tag_type_help") %></p>
+          </div>
+
+          <div class="grid grid-cols-1 gap-2 sm:grid-cols-2">
+            <%= label_tag :tag_kind_parent, class: "flex cursor-pointer items-start gap-3 rounded-lg border border-gray-200 px-3 py-3 has-[:checked]:border-amber-500 has-[:checked]:bg-amber-50" do %>
+              <%= radio_button_tag :tag_kind,
+                                   "parent",
+                                   tag_kind == "parent",
+                                   id: "tag_kind_parent",
+                                   class: "mt-0.5 h-4 w-4 border-gray-300 text-amber-600 focus:ring-amber-500",
+                                   data: {
+                                     admin_tag_form_target: "kind",
+                                     action: "change->admin-tag-form#kindChanged"
+                                   } %>
+              <span>
+                <span class="block text-sm font-semibold text-gray-900"><%= t("views.admin.tags.form.parent_tag_type") %></span>
+                <span class="mt-0.5 block text-xs text-gray-500"><%= t("views.admin.tags.form.parent_tag_type_help") %></span>
+              </span>
+            <% end %>
+
+            <%= label_tag :tag_kind_child, class: "flex cursor-pointer items-start gap-3 rounded-lg border border-gray-200 px-3 py-3 has-[:checked]:border-amber-500 has-[:checked]:bg-amber-50" do %>
+              <%= radio_button_tag :tag_kind,
+                                   "child",
+                                   tag_kind == "child",
+                                   id: "tag_kind_child",
+                                   class: "mt-0.5 h-4 w-4 border-gray-300 text-amber-600 focus:ring-amber-500",
+                                   data: {
+                                     admin_tag_form_target: "kind",
+                                     action: "change->admin-tag-form#kindChanged"
+                                   } %>
+              <span>
+                <span class="block text-sm font-semibold text-gray-900"><%= t("views.admin.tags.form.child_tag_type") %></span>
+                <span class="mt-0.5 block text-xs text-gray-500"><%= t("views.admin.tags.form.child_tag_type_help") %></span>
+              </span>
+            <% end %>
+          </div>
+
+          <div data-admin-tag-form-target="parentSection">
+            <%= f.label :parent_id, t("views.admin.tags.form.parent_tag"), class: "mb-1 block text-sm font-medium text-gray-700" %>
+            <%= f.select :parent_id,
+                         options_for_select(taste_parent_options, tag.parent_id),
+                         { prompt: t("views.admin.tags.form.parent_tag_prompt") },
+                         {
+                           class: "w-full rounded-lg border border-gray-200 bg-white px-3 py-3 text-sm text-gray-900 focus:border-amber-600 focus:outline-none focus:ring-2 focus:ring-amber-100",
+                           data: { admin_tag_form_target: "parentSelect" }
+                         } %>
+            <p class="mt-1 text-xs text-gray-400"><%= t("views.admin.tags.form.parent_tag_help") %></p>
+          </div>
         </div>
 
         <div>
           <%= f.label :display_order, class: "mb-1 block text-sm font-medium text-gray-700" %>
-          <%= f.number_field :display_order, min: 0, class: "w-full rounded-lg border border-gray-200 bg-white px-3 py-3 text-sm text-gray-900 focus:border-amber-600 focus:outline-none focus:ring-2 focus:ring-amber-100", placeholder: t("views.admin.tags.form.display_order_placeholder") %>
+          <%= f.number_field :display_order,
+                             min: 0,
+                             class: "w-full rounded-lg border border-gray-200 bg-white px-3 py-3 text-sm text-gray-900 focus:border-amber-600 focus:outline-none focus:ring-2 focus:ring-amber-100",
+                             placeholder: t("views.admin.tags.form.display_order_placeholder"),
+                             data: { admin_tag_form_target: "displayOrder" } %>
           <p class="mt-1 text-xs text-gray-400"><%= t("views.admin.tags.form.display_order_help") %></p>
         </div>
       </section>

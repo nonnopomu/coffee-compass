@@ -107,31 +107,6 @@
                 <div>
                   <div class="mb-1 flex items-center gap-2">
                     <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-amber-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 9a2 2 0 012-2h14a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2V9z" />
-                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11h2a2 2 0 010 4h-2" />
-                    </svg>
-                    <h2 class="text-sm font-semibold text-gray-900"><%= t("views.searches.tag.brew_method_heading") %></h2>
-                  </div>
-                  <p class="mb-3 text-xs text-gray-400"><%= t("views.searches.tag.brew_method_description") %></p>
-                  <div class="flex flex-wrap gap-2">
-                    <% @brew_method_tags.each do |tag| %>
-                      <button type="button"
-                              data-action="click->tag-selection#toggle"
-                              data-tag-selection-target="chip"
-                              data-tag-id="<%= tag.id %>"
-                              data-tag-name="<%= tag.name %>"
-                              data-selected="false"
-                              class="cursor-pointer rounded-full border border-gray-200 bg-white px-4 py-1.5 text-sm text-gray-700">
-                        <%= tag.name %>
-                      </button>
-                      <input type="checkbox" name="tag_ids[]" value="<%= tag.id %>" class="hidden" data-tag-id="<%= tag.id %>">
-                    <% end %>
-                  </div>
-                </div>
-
-                <div>
-                  <div class="mb-1 flex items-center gap-2">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-amber-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                       <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z" />
                     </svg>
                     <h2 class="text-sm font-semibold text-gray-900"><%= t("views.searches.tag.feature_heading") %></h2>

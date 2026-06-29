@@ -10,7 +10,6 @@ RSpec.describe "Public pages", type: :request do
 
     it "トップページでエリア・タグ検索のモーダル導線を確認できること" do
       create_cafe(prefecture: "愛知県", status: :published)
-      create_tag(name: "ハンドドリップ", category: :brew_method)
       create_tag(name: "落ち着いている", category: :cafe_feature)
 
       get root_path
@@ -20,7 +19,6 @@ RSpec.describe "Public pages", type: :request do
       expect(response.body).to include("エリアを選択")
       expect(response.body).to include("タグを選択")
       expect(response.body).to include("愛知県")
-      expect(response.body).to include("ハンドドリップ")
       expect(response.body).to include("落ち着いている")
     end
 

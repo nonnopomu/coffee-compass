@@ -1,14 +1,13 @@
 require "rails_helper"
 
 RSpec.describe "Drink logs", type: :request do
-  def drink_log_params(cafe:, roast_level_tag:, brew_method_tag:, taste_tags:, **overrides)
+  def drink_log_params(cafe:, roast_level_tag:, taste_tags:, **overrides)
     # フォームのhidden fieldから送るcafe_idと、選択式のタグIDをまとめて再現する。
     {
       cafe_id: cafe.id,
       menu_name: "本日のコーヒー",
       drank_on: Date.current,
       roast_level_tag_id: roast_level_tag.id,
-      brew_method_tag_id: brew_method_tag.id,
       memo: "香りがよかった",
       taste_tag_ids: taste_tags.map(&:id)
     }.merge(overrides)
@@ -52,7 +51,6 @@ RSpec.describe "Drink logs", type: :request do
       user = create_user
       cafe = create_cafe(status: :published)
       roast_level_tag = create_roast_level_tag
-      brew_method_tag = create_brew_method_tag
       taste_tag = create_taste_tag
 
       sign_in user
@@ -62,7 +60,6 @@ RSpec.describe "Drink logs", type: :request do
           drink_log: drink_log_params(
             cafe:,
             roast_level_tag:,
-            brew_method_tag:,
             taste_tags: [ taste_tag ]
           )
         }
@@ -75,7 +72,6 @@ RSpec.describe "Drink logs", type: :request do
       user = create_user
       cafe = create_cafe(status: :published)
       roast_level_tag = create_roast_level_tag
-      brew_method_tag = create_brew_method_tag
       taste_tag = create_taste_tag
 
       sign_in user
@@ -85,7 +81,6 @@ RSpec.describe "Drink logs", type: :request do
           drink_log: drink_log_params(
             cafe:,
             roast_level_tag:,
-            brew_method_tag:,
             taste_tags: [ taste_tag ],
             image: uploaded_image
           )
@@ -100,7 +95,6 @@ RSpec.describe "Drink logs", type: :request do
       user = create_user
       cafe = create_cafe(status: :published)
       roast_level_tag = create_roast_level_tag
-      brew_method_tag = create_brew_method_tag
       taste_tag = create_taste_tag
 
       sign_in user
@@ -111,7 +105,6 @@ RSpec.describe "Drink logs", type: :request do
           drink_log: drink_log_params(
             cafe:,
             roast_level_tag:,
-            brew_method_tag:,
             taste_tags: [ taste_tag ]
           )
         }
@@ -124,7 +117,6 @@ RSpec.describe "Drink logs", type: :request do
       user = create_user
       cafe = create_cafe(status: :published)
       roast_level_tag = create_roast_level_tag
-      brew_method_tag = create_brew_method_tag
       taste_tag = create_taste_tag
 
       sign_in user
@@ -135,7 +127,6 @@ RSpec.describe "Drink logs", type: :request do
           drink_log: drink_log_params(
             cafe:,
             roast_level_tag:,
-            brew_method_tag:,
             taste_tags: [ taste_tag ]
           )
         }
@@ -148,7 +139,6 @@ RSpec.describe "Drink logs", type: :request do
       user = create_user
       cafe = create_cafe(status: :published)
       roast_level_tag = create_roast_level_tag
-      brew_method_tag = create_brew_method_tag
       taste_tag = create_taste_tag
 
       sign_in user
@@ -158,7 +148,6 @@ RSpec.describe "Drink logs", type: :request do
           drink_log: drink_log_params(
             cafe:,
             roast_level_tag:,
-            brew_method_tag:,
             taste_tags: [ taste_tag ],
             menu_name: ""
           )
@@ -171,7 +160,6 @@ RSpec.describe "Drink logs", type: :request do
     it "未ログインユーザーは投稿できないこと" do
       cafe = create_cafe(status: :published)
       roast_level_tag = create_roast_level_tag
-      brew_method_tag = create_brew_method_tag
       taste_tag = create_taste_tag
 
       expect {
@@ -179,7 +167,6 @@ RSpec.describe "Drink logs", type: :request do
           drink_log: drink_log_params(
             cafe:,
             roast_level_tag:,
-            brew_method_tag:,
             taste_tags: [ taste_tag ]
           )
         }
@@ -311,7 +298,6 @@ RSpec.describe "Drink logs", type: :request do
       user = create_user
       drink_log = create_drink_log(user:)
       roast_level_tag = create_roast_level_tag
-      brew_method_tag = create_brew_method_tag
       taste_tag = create_taste_tag
 
       sign_in user
@@ -319,7 +305,6 @@ RSpec.describe "Drink logs", type: :request do
         drink_log: drink_log_params(
           cafe: drink_log.cafe,
           roast_level_tag:,
-          brew_method_tag:,
           taste_tags: [ taste_tag ],
           menu_name: "更新後のログ"
         )
@@ -333,7 +318,6 @@ RSpec.describe "Drink logs", type: :request do
       user = create_user
       drink_log = create_drink_log(user:)
       roast_level_tag = create_roast_level_tag
-      brew_method_tag = create_brew_method_tag
       taste_tag = create_taste_tag
 
       sign_in user
@@ -341,7 +325,6 @@ RSpec.describe "Drink logs", type: :request do
         drink_log: drink_log_params(
           cafe: drink_log.cafe,
           roast_level_tag:,
-          brew_method_tag:,
           taste_tags: [ taste_tag ],
           image: uploaded_image
         )
@@ -356,7 +339,6 @@ RSpec.describe "Drink logs", type: :request do
       drink_log = create_drink_log(user:)
       attach_valid_image(drink_log, :image, filename: "drink_log.png")
       roast_level_tag = create_roast_level_tag
-      brew_method_tag = create_brew_method_tag
       taste_tag = create_taste_tag
 
       sign_in user
@@ -364,7 +346,6 @@ RSpec.describe "Drink logs", type: :request do
         drink_log: drink_log_params(
           cafe: drink_log.cafe,
           roast_level_tag:,
-          brew_method_tag:,
           taste_tags: [ taste_tag ],
           remove_image: "1"
         )
@@ -379,7 +360,6 @@ RSpec.describe "Drink logs", type: :request do
       drink_log = create_drink_log(user:)
       attach_valid_image(drink_log, :image, filename: "drink_log.png")
       roast_level_tag = create_roast_level_tag
-      brew_method_tag = create_brew_method_tag
       taste_tag = create_taste_tag
 
       sign_in user
@@ -387,7 +367,6 @@ RSpec.describe "Drink logs", type: :request do
         drink_log: drink_log_params(
           cafe: drink_log.cafe,
           roast_level_tag:,
-          brew_method_tag:,
           taste_tags: [ taste_tag ],
           menu_name: "",
           remove_image: "1"
@@ -402,7 +381,6 @@ RSpec.describe "Drink logs", type: :request do
       user = create_user
       drink_log = create_drink_log(user:, menu_name: "更新前のログ")
       roast_level_tag = create_roast_level_tag
-      brew_method_tag = create_brew_method_tag
       taste_tag = create_taste_tag
 
       sign_in user
@@ -410,7 +388,6 @@ RSpec.describe "Drink logs", type: :request do
         drink_log: drink_log_params(
           cafe: drink_log.cafe,
           roast_level_tag:,
-          brew_method_tag:,
           taste_tags: [ taste_tag ],
           menu_name: ""
         )
@@ -424,7 +401,6 @@ RSpec.describe "Drink logs", type: :request do
       user = create_user
       drink_log = create_drink_log(menu_name: "他人のログ")
       roast_level_tag = create_roast_level_tag
-      brew_method_tag = create_brew_method_tag
       taste_tag = create_taste_tag
 
       sign_in user
@@ -434,7 +410,6 @@ RSpec.describe "Drink logs", type: :request do
           drink_log: drink_log_params(
             cafe: drink_log.cafe,
             roast_level_tag:,
-            brew_method_tag:,
             taste_tags: [ taste_tag ],
             menu_name: "不正な更新"
           )
@@ -448,7 +423,6 @@ RSpec.describe "Drink logs", type: :request do
       admin = create_user(role: :admin)
       drink_log = create_drink_log(menu_name: "他人のログ")
       roast_level_tag = create_roast_level_tag
-      brew_method_tag = create_brew_method_tag
       taste_tag = create_taste_tag
 
       sign_in admin
@@ -458,7 +432,6 @@ RSpec.describe "Drink logs", type: :request do
           drink_log: drink_log_params(
             cafe: drink_log.cafe,
             roast_level_tag:,
-            brew_method_tag:,
             taste_tags: [ taste_tag ],
             menu_name: "管理者による更新"
           )
@@ -474,7 +447,6 @@ RSpec.describe "Drink logs", type: :request do
       other_cafe = create_cafe(status: :published)
       drink_log = create_drink_log(user:, cafe: original_cafe)
       roast_level_tag = create_roast_level_tag
-      brew_method_tag = create_brew_method_tag
       taste_tag = create_taste_tag
 
       sign_in user
@@ -482,7 +454,6 @@ RSpec.describe "Drink logs", type: :request do
         drink_log: drink_log_params(
           cafe: other_cafe,
           roast_level_tag:,
-          brew_method_tag:,
           taste_tags: [ taste_tag ]
         )
       }
