@@ -124,6 +124,12 @@ ja:
         roast_level: 焙煎度
         no_roast_level_tags: 選択できる焙煎度タグがありません
         taste: 味わい
+        taste_help: 以下の画像から、強く感じた順に3つまで選んでください
+        taste_help_before_limit: 以下の画像から、強く感じた順に
+        taste_limit: 3つまで
+        taste_help_after_limit: 選んでください
+        taste_hint: 正解はありません、近いと感じるものを選んでください。
+        taste_limit_message: 選べる味わいは3つまでです
         no_taste_tags: 選択できる味わいタグがありません
         memo: 感想メモ
         memo_placeholder: 味の印象やまた飲みたい理由など

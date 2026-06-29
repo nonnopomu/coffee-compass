@@ -16,11 +16,17 @@ application.register("avatar-preview", AvatarPreviewController)
 import CafeSelectionController from "./cafe_selection_controller"
 application.register("cafe-selection", CafeSelectionController)
 
+import DatePickerController from "./date_picker_controller"
+application.register("date-picker", DatePickerController)
+
 import DestructiveConfirmationController from "./destructive_confirmation_controller"
 application.register("destructive-confirmation", DestructiveConfirmationController)
 
 import FlashController from "./flash_controller"
 application.register("flash", FlashController)
+
+import FlavorSelectorController from "./flavor_selector_controller"
+application.register("flavor-selector", FlavorSelectorController)
 
 import ImagePreviewController from "./image_preview_controller"
 application.register("image-preview", ImagePreviewController)

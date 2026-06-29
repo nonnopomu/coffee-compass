@@ -44,6 +44,40 @@ RSpec.describe "Drink logs", type: :request do
       expect(response).to have_http_status(:ok)
       expect(return_to_field["value"]).to eq(mypage_path)
     end
+
+    it "初心者向け味わいタグは大項目だけを選択対象にすること" do
+      user = create_user
+      parent_tag = Tag.create!(
+        category: :taste,
+        name: "花",
+        display_order: 1,
+        beginner_display_order: 1,
+        color_hex: "#EFB8C8",
+        is_active: true
+      )
+      child_tag = Tag.create!(
+        category: :taste,
+        name: "ジャスミン",
+        display_order: 2,
+        parent: parent_tag,
+        color_hex: "#FFFFFF",
+        is_active: true
+      )
+
+      sign_in user
+      get new_drink_log_path
+
+      html = Nokogiri::HTML(response.body)
+      parent_input = html.at_css(%(input[name="drink_log[taste_tag_ids][]"][value="#{parent_tag.id}"]))
+      child_input = html.at_css(%(input[name="drink_log[taste_tag_ids][]"][value="#{child_tag.id}"]))
+
+      expect(response).to have_http_status(:ok)
+      expect(response.body).to include(I18n.t("views.drink_logs.form.taste_help"))
+      expect(response.body).to include("花")
+      expect(response.body).to include("ジャスミン")
+      expect(parent_input).to be_present
+      expect(child_input).to be_nil
+    end
   end
 
   describe "POST /drink_logs" do
@@ -155,6 +189,46 @@ RSpec.describe "Drink logs", type: :request do
       }.not_to change(DrinkLog, :count)
 
       expect(response).to have_http_status(:unprocessable_content)
+    end
+
+    it "入力値が不正な場合も初心者向け味わいタグを再表示すること" do
+      user = create_user
+      cafe = create_cafe(status: :published)
+      roast_level_tag = create_roast_level_tag
+      parent_tag = Tag.create!(
+        category: :taste,
+        name: "ベリー",
+        display_order: 1,
+        beginner_display_order: 1,
+        color_hex: "#D64550",
+        is_active: true
+      )
+      child_tag = Tag.create!(
+        category: :taste,
+        name: "ストロベリー",
+        display_order: 2,
+        parent: parent_tag,
+        color_hex: "#D64550",
+        is_active: true
+      )
+
+      sign_in user
+      post drink_logs_path, params: {
+        drink_log: drink_log_params(
+          cafe:,
+          roast_level_tag:,
+          taste_tags: [ parent_tag ],
+          menu_name: ""
+        )
+      }
+
+      html = Nokogiri::HTML(response.body)
+      parent_input = html.at_css(%(input[name="drink_log[taste_tag_ids][]"][value="#{parent_tag.id}"]))
+      child_input = html.at_css(%(input[name="drink_log[taste_tag_ids][]"][value="#{child_tag.id}"]))
+
+      expect(response).to have_http_status(:unprocessable_content)
+      expect(parent_input).to be_present
+      expect(child_input).to be_nil
     end
 
     it "未ログインユーザーは投稿できないこと" do

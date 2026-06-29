@@ -33,20 +33,20 @@
                            data: { image_preview_target: "input", action: "change->image-preview#show" },
                            class: "sr-only" %>
           <%= hidden_field_tag "drink_log[remove_image]", "0", data: { image_preview_target: "removeField" } %>
-          <%= f.label :image, class: "block cursor-pointer overflow-hidden rounded-2xl border border-dashed border-amber-200 bg-amber-50/40 transition-colors hover:bg-amber-50" do %>
+          <%= f.label :image, class: "block cursor-pointer overflow-hidden rounded-2xl border border-dashed border-gray-200 bg-gray-50/70 transition-colors hover:border-gray-300 hover:bg-white" do %>
             <% if @drink_log.image.attached? %>
               <%= image_tag @drink_log.image,
                             alt: t("views.drink_logs.form.image_preview_alt"),
                             data: { image_preview_target: "image" },
                             class: "h-48 w-full object-cover" %>
-              <div data-image-preview-target="placeholder" class="hidden h-48 items-center justify-center px-4 text-center text-sm font-semibold text-amber-700">
+              <div data-image-preview-target="placeholder" class="hidden h-48 items-center justify-center px-4 text-center text-sm font-semibold text-[#5a3318]">
                 <%= t("views.drink_logs.form.image_preview_placeholder") %>
               </div>
             <% else %>
               <img data-image-preview-target="image"
                    alt="<%= t("views.drink_logs.form.image_preview_alt") %>"
                    class="hidden h-48 w-full object-cover">
-              <div data-image-preview-target="placeholder" class="flex h-48 items-center justify-center px-4 text-center text-sm font-semibold text-amber-700">
+              <div data-image-preview-target="placeholder" class="flex h-48 items-center justify-center px-4 text-center text-sm font-semibold text-[#5a3318]">
                 <%= t("views.drink_logs.form.image_preview_placeholder") %>
               </div>
             <% end %>
@@ -79,7 +79,10 @@
             <%= DrinkLog.human_attribute_name(:drank_on) %>
             <span class="text-sm font-semibold text-amber-700" aria-label="<%= t("views.common.required") %>">*</span>
           <% end %>
-          <%= f.date_field :drank_on, required: true, class: "w-full rounded-xl border border-gray-200 bg-white px-3 py-3 text-sm text-gray-900 focus:border-amber-600 focus:outline-none focus:ring-2 focus:ring-amber-100" %>
+          <%= f.date_field :drank_on,
+                           required: true,
+                           data: { controller: "date-picker", action: "click->date-picker#open keydown->date-picker#open" },
+                           class: "w-full cursor-pointer rounded-xl border border-gray-200 bg-white px-3 py-3 text-sm text-gray-900 focus:border-amber-600 focus:outline-none focus:ring-2 focus:ring-amber-100" %>
         </div>
       </section>
 
@@ -92,7 +95,7 @@
         <div class="grid grid-cols-1 gap-2">
           <% if @roast_level_tags.any? %>
             <%= f.collection_radio_buttons :roast_level_tag_id, @roast_level_tags, :id, :name do |tag_builder| %>
-              <%= tag_builder.label class: "flex cursor-pointer items-center gap-3 rounded-2xl border border-amber-100 bg-white px-4 py-3 shadow-sm has-[:checked]:border-amber-600 has-[:checked]:bg-amber-50" do %>
+              <%= tag_builder.label class: "flex cursor-pointer items-center gap-3 rounded-2xl border border-gray-200 bg-white px-4 py-3 shadow-sm has-[:checked]:border-amber-600 has-[:checked]:bg-amber-50" do %>
                 <%= tag_builder.radio_button class: "h-4 w-4 border-gray-300 text-amber-600 focus:ring-amber-500" %>
                 <span class="text-sm font-medium text-gray-900"><%= tag_builder.text %></span>
               <% end %>
@@ -109,19 +112,7 @@
           <span class="text-sm font-semibold text-amber-700" aria-label="<%= t("views.common.required") %>">*</span>
         </div>
 
-        <div class="flex flex-wrap gap-2">
-          <%= f.hidden_field :taste_tag_ids, multiple: true, value: "" %>
-          <% if @taste_tags.any? %>
-            <%= f.collection_check_boxes :taste_tag_ids, @taste_tags, :id, :name, include_hidden: false do |tag_builder| %>
-              <%= tag_builder.label class: "inline-flex cursor-pointer items-center gap-2 rounded-full border border-amber-100 bg-white px-3 py-2 text-sm text-gray-700 shadow-sm has-[:checked]:border-amber-600 has-[:checked]:bg-amber-50 has-[:checked]:text-amber-700" do %>
-                <%= tag_builder.check_box class: "h-4 w-4 rounded border-gray-300 text-amber-600 focus:ring-amber-500" %>
-                <span><%= tag_builder.text %></span>
-              <% end %>
-            <% end %>
-          <% else %>
-            <p class="w-full rounded-lg border border-gray-200 bg-white px-4 py-3 text-sm text-gray-500"><%= t("views.drink_logs.form.no_taste_tags") %></p>
-          <% end %>
-        </div>
+        <%= render "beginner_taste_selector", f: f, taste_tags: @taste_tags %>
       </section>
 
       <section class="space-y-4">

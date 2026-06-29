@@ -8,7 +8,7 @@ class DrinkLogsController < ApplicationController
     @cafes = Cafe.published.order(:prefecture, :name) unless @cafe
     @drink_log = DrinkLog.new(cafe: @cafe)
     @roast_level_tags = Tag.where(category: :roast_level, is_active: true).order(:display_order)
-    @taste_tags = Tag.where(category: :taste, is_active: true).order(:display_order)
+    @taste_tags = beginner_taste_tags
   end
 
   def create
@@ -81,7 +81,14 @@ class DrinkLogsController < ApplicationController
     @cafe = @drink_log.cafe if @drink_log.cafe.present?
     @cafes = Cafe.published.order(:prefecture, :name) unless @cafe
     @roast_level_tags = Tag.where(category: :roast_level, is_active: true).order(:display_order)
-    @taste_tags = Tag.where(category: :taste, is_active: true).order(:display_order)
+    @taste_tags = beginner_taste_tags
+  end
+
+  def beginner_taste_tags
+    Tag.taste
+       .where(parent_id: nil, is_active: true)
+       .includes(:children)
+       .order(:beginner_display_order, :display_order)
   end
 
   def set_drink_log

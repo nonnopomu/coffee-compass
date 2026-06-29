@@ -9,7 +9,8 @@ export default class extends Controller {
     "selectedImage",
     "selectedName",
     "selectedAddress",
-    "message"
+    "message",
+    "results"
   ]
   static values = { noResultsMessage: String }
 
@@ -31,11 +32,14 @@ export default class extends Controller {
 
     if (query.length === 0) {
       this.messageTarget.classList.add("hidden")
+      this.resultsTarget.classList.add("hidden")
     } else if (visibleCount === 0) {
       this.messageTarget.textContent = this.noResultsMessageValue
       this.messageTarget.classList.remove("hidden")
+      this.resultsTarget.classList.remove("hidden")
     } else {
       this.messageTarget.classList.add("hidden")
+      this.resultsTarget.classList.remove("hidden")
     }
   }
 
@@ -52,6 +56,7 @@ export default class extends Controller {
 
     this.optionTargets.forEach((candidate) => candidate.classList.add("hidden"))
     this.messageTarget.classList.add("hidden")
+    this.resultsTarget.classList.add("hidden")
   }
 
   normalize(text) {

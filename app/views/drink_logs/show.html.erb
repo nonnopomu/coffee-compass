@@ -65,7 +65,7 @@
 
       <div class="flex flex-wrap gap-2">
         <% @drink_log.taste_tags.each do |tag| %>
-          <span class="rounded-full border border-amber-200 bg-amber-50 px-3 py-1.5 text-sm font-medium text-amber-700"><%= tag.name %></span>
+          <%= render "shared/taste_tag_badge", tag: tag %>
         <% end %>
       </div>
     </section>
