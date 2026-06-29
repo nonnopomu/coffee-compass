@@ -9,7 +9,6 @@ class DrinkLogsController < ApplicationController
     @drink_log = DrinkLog.new(cafe: @cafe)
     @roast_level_tags = Tag.where(category: :roast_level, is_active: true).order(:display_order)
     @taste_tags = Tag.where(category: :taste, is_active: true).order(:display_order)
-    @brew_method_tags = Tag.where(category: :brew_method, is_active: true).order(:display_order)
   end
 
   def create
@@ -57,7 +56,6 @@ class DrinkLogsController < ApplicationController
       :menu_name,
       :drank_on,
       :roast_level_tag_id,
-      :brew_method_tag_id,
       :memo,
       :image,
       taste_tag_ids: []
@@ -69,7 +67,6 @@ class DrinkLogsController < ApplicationController
       :menu_name,
       :drank_on,
       :roast_level_tag_id,
-      :brew_method_tag_id,
       :memo,
       :image,
       taste_tag_ids: []
@@ -85,7 +82,6 @@ class DrinkLogsController < ApplicationController
     @cafes = Cafe.published.order(:prefecture, :name) unless @cafe
     @roast_level_tags = Tag.where(category: :roast_level, is_active: true).order(:display_order)
     @taste_tags = Tag.where(category: :taste, is_active: true).order(:display_order)
-    @brew_method_tags = Tag.where(category: :brew_method, is_active: true).order(:display_order)
   end
 
   def set_drink_log

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_06_22_132954) do
+ActiveRecord::Schema[8.1].define(version: 2026_06_29_081314) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -82,7 +82,6 @@ ActiveRecord::Schema[8.1].define(version: 2026_06_22_132954) do
   end
 
   create_table "drink_logs", force: :cascade do |t|
-    t.bigint "brew_method_tag_id", null: false
     t.bigint "cafe_id", null: false
     t.datetime "created_at", null: false
     t.date "drank_on", null: false
@@ -92,7 +91,6 @@ ActiveRecord::Schema[8.1].define(version: 2026_06_22_132954) do
     t.integer "status", default: 0, null: false
     t.datetime "updated_at", null: false
     t.bigint "user_id", null: false
-    t.index ["brew_method_tag_id"], name: "index_drink_logs_on_brew_method_tag_id"
     t.index ["cafe_id", "status", "created_at"], name: "index_drink_logs_on_cafe_id_and_status_and_created_at"
     t.index ["cafe_id"], name: "index_drink_logs_on_cafe_id"
     t.index ["created_at"], name: "index_drink_logs_on_created_at"
@@ -104,17 +102,22 @@ ActiveRecord::Schema[8.1].define(version: 2026_06_22_132954) do
   end
 
   create_table "tags", force: :cascade do |t|
+    t.integer "beginner_display_order"
     t.integer "category", null: false
+    t.string "color_hex"
     t.datetime "created_at", null: false
     t.integer "display_order", default: 0, null: false
     t.boolean "is_active", default: true, null: false
     t.string "name", null: false
+    t.bigint "parent_id"
     t.datetime "updated_at", null: false
     t.index ["category", "display_order"], name: "index_tags_on_category_and_display_order"
     t.index ["category", "is_active"], name: "index_tags_on_category_and_is_active"
-    t.index ["category", "name"], name: "index_tags_on_category_and_name", unique: true
+    t.index ["category", "name"], name: "index_tags_on_category_and_name_without_parent", unique: true, where: "(parent_id IS NULL)"
+    t.index ["category", "parent_id", "name"], name: "index_tags_on_category_parent_and_name", unique: true, where: "(parent_id IS NOT NULL)"
     t.index ["category"], name: "index_tags_on_category"
     t.index ["is_active"], name: "index_tags_on_is_active"
+    t.index ["parent_id"], name: "index_tags_on_parent_id"
   end
 
   create_table "users", force: :cascade do |t|
@@ -142,7 +145,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_06_22_132954) do
   add_foreign_key "drink_log_taste_tags", "drink_logs"
   add_foreign_key "drink_log_taste_tags", "tags"
   add_foreign_key "drink_logs", "cafes"
-  add_foreign_key "drink_logs", "tags", column: "brew_method_tag_id"
   add_foreign_key "drink_logs", "tags", column: "roast_level_tag_id"
   add_foreign_key "drink_logs", "users"
+  add_foreign_key "tags", "tags", column: "parent_id"
 end

@@ -67,8 +67,6 @@ ja:
       tag:
         modal_title: タグを選択
         modal_description: 複数選択できます
-        brew_method_heading: 提供スタイル
-        brew_method_description: 抽出方法や提供の仕方にこだわりたいとき
         feature_heading: 店舗に関する特徴
         feature_description: 豆の質やお店の設備、雰囲気に合わせたいとき
         submit: この条件で検索する
@@ -87,7 +85,6 @@ ja:
         open_detail: "%{name}の詳細を見る"
       basic_info:
         closed_days: "定休日: %{closed_days}"
-        brew_method: 提供スタイル
         cafe_feature: 店舗の特徴
         editor_note: Coffee Compass 編集者より
         official_links: 公式リンク
@@ -97,7 +94,6 @@ ja:
         summary: "公開ログ %{count}件から集計"
         taste_tags: みんなが感じた味わい
         roast_level_distribution: 焙煎度の分布
-        brew_method: 提供スタイル
       drink_logs_tab:
         empty: まだログ投稿はありません。
         record_this_cafe_log: このカフェのログを記録する
@@ -124,13 +120,11 @@ ja:
         back_to_cafe: カフェ詳細へ戻る
       form:
         basic_info: 基本情報
-        menu_name_placeholder: "例: ハンドドリップ"
+        menu_name_placeholder: "例: エチオピア イルガチェフェ ウォッシュド"
         roast_level: 焙煎度
         no_roast_level_tags: 選択できる焙煎度タグがありません
         taste: 味わい
         no_taste_tags: 選択できる味わいタグがありません
-        brew_method: 提供スタイル
-        no_brew_method_tags: 選択できる提供スタイルタグがありません
         memo: 感想メモ
         memo_placeholder: 味の印象やまた飲みたい理由など
         image: 写真
@@ -221,6 +215,9 @@ ja:
           empty: 登録済みのタグはありません
           create_link: タグを作成する
           display_order: "表示順: %{order}"
+          parent_tag: 大項目
+          child_tags: 小項目
+          no_child_tags: 小項目はありません
         new:
           page_title: タグ新規作成
         edit:
@@ -229,8 +226,17 @@ ja:
           basic_info: 基本情報
           name_placeholder: "例: 浅煎り"
           category_prompt: カテゴリを選択
+          taste_tag_type: 味わいタグの種類
+          taste_tag_type_help: 大項目として追加するか、既存の大項目に紐づく小項目として追加するかを選択します。
+          parent_tag_type: 大項目
+          parent_tag_type_help: 初心者向けの12項目として扱います。
+          child_tag_type: 小項目
+          child_tag_type_help: 選択した大項目の詳細タグとして扱います。
+          parent_tag: 親になる大項目
+          parent_tag_prompt: 大項目を選択
+          parent_tag_help: 小項目は選択した大項目の下に表示されます。
           display_order_placeholder: "例: 10"
-          display_order_help: 数字が小さいタグから先に表示されます。
+          display_order_help: 新規作成時はカテゴリごとの次の番号が自動で入ります。数字が小さいタグから先に表示されます。
           status: 公開状態
           active_label: 有効にする
           active_help: 有効なタグだけが検索画面や登録フォームに表示されます。

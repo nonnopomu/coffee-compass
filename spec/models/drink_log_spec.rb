@@ -62,20 +62,6 @@ RSpec.describe DrinkLog, type: :model do
       expect(drink_log.errors[:roast_level_tag]).to be_present
     end
 
-    it "提供スタイルタグが必須であること" do
-      drink_log = build_drink_log(brew_method_tag: nil)
-
-      expect(drink_log).not_to be_valid
-      expect(drink_log.errors[:brew_method_tag]).to be_present
-    end
-
-    it "提供スタイルタグには提供スタイルカテゴリのタグだけを選べること" do
-      drink_log = build_drink_log(brew_method_tag: create_taste_tag)
-
-      expect(drink_log).not_to be_valid
-      expect(drink_log.errors[:brew_method_tag]).to be_present
-    end
-
     it "味わいタグが1つ以上必要であること" do
       drink_log = build_drink_log(taste_tag: nil)
 
@@ -136,13 +122,11 @@ RSpec.describe DrinkLog, type: :model do
       expect(drink_log.cafe).to eq(cafe)
     end
 
-    it "焙煎度タグと提供スタイルタグに紐づくこと" do
+    it "焙煎度タグに紐づくこと" do
       roast_level_tag = create_roast_level_tag
-      brew_method_tag = create_brew_method_tag
-      drink_log = create_drink_log(roast_level_tag:, brew_method_tag:)
+      drink_log = create_drink_log(roast_level_tag:)
 
       expect(drink_log.roast_level_tag).to eq(roast_level_tag)
-      expect(drink_log.brew_method_tag).to eq(brew_method_tag)
     end
 
     it "複数の味わいタグに紐づけられること" do

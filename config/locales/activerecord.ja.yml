@@ -24,6 +24,7 @@ ja:
       tag:
         name: タグ名
         category: カテゴリ
+        parent_id: 親タグ
         display_order: 表示順
         is_active: 有効
       drink_log:
@@ -35,8 +36,6 @@ ja:
         roast_level_tag_id: 焙煎度
         taste_tags: 味わいタグ
         taste_tag_ids: 味わいタグ
-        brew_method_tag: 提供スタイル
-        brew_method_tag_id: 提供スタイル
         memo: 感想メモ
         image: 写真
         status: 公開状態
@@ -56,8 +55,6 @@ ja:
           attributes:
             roast_level_tag:
               invalid_roast_level: は焙煎度タグを選択してください
-            brew_method_tag:
-              invalid_brew_method: は提供スタイルタグを選択してください
             base:
               taste_tags_required: 味わいタグを1つ以上選択してください
         drink_log_taste_tag:

@@ -126,26 +126,6 @@
 
       <section class="space-y-4">
         <div class="flex items-center gap-2 border-l-4 border-amber-600 pl-3">
-          <h2 class="text-sm font-semibold text-[#5a3318]"><%= t("views.drink_logs.form.brew_method") %></h2>
-          <span class="text-sm font-semibold text-amber-700" aria-label="<%= t("views.common.required") %>">*</span>
-        </div>
-
-        <div class="grid grid-cols-1 gap-2">
-          <% if @brew_method_tags.any? %>
-            <%= f.collection_radio_buttons :brew_method_tag_id, @brew_method_tags, :id, :name do |tag_builder| %>
-              <%= tag_builder.label class: "flex cursor-pointer items-center gap-3 rounded-2xl border border-amber-100 bg-white px-4 py-3 shadow-sm has-[:checked]:border-amber-600 has-[:checked]:bg-amber-50" do %>
-                <%= tag_builder.radio_button class: "h-4 w-4 border-gray-300 text-amber-600 focus:ring-amber-500" %>
-                <span class="text-sm font-medium text-gray-900"><%= tag_builder.text %></span>
-              <% end %>
-            <% end %>
-          <% else %>
-            <p class="rounded-lg border border-gray-200 bg-white px-4 py-3 text-sm text-gray-500"><%= t("views.drink_logs.form.no_brew_method_tags") %></p>
-          <% end %>
-        </div>
-      </section>
-
-      <section class="space-y-4">
-        <div class="flex items-center gap-2 border-l-4 border-amber-600 pl-3">
           <h2 class="text-sm font-semibold text-[#5a3318]"><%= t("views.drink_logs.form.memo") %></h2>
         </div>
 

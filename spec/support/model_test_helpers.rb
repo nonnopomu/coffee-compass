@@ -37,7 +37,9 @@ module ModelTestHelpers
     build_cafe(**attributes).tap(&:save!)
   end
 
-  def create_tag(category:, name: "#{category}-#{unique_suffix}", display_order: 1, is_active: true)
+  def create_tag(category:, name: "#{category}-#{unique_suffix}", display_order: nil, is_active: true)
+    display_order ||= Tag.where(category:, is_active: true).maximum(:display_order).to_i + 1
+
     Tag.create!(category:, name:, display_order:, is_active:)
   end
 
@@ -49,10 +51,6 @@ module ModelTestHelpers
     create_tag(category: :taste, name: "フルーティー #{unique_suffix}", **attributes)
   end
 
-  def create_brew_method_tag(**attributes)
-    create_tag(category: :brew_method, name: "ハンドドリップ #{unique_suffix}", **attributes)
-  end
-
   def create_cafe_feature_tag(**attributes)
     create_tag(category: :cafe_feature, name: "静か #{unique_suffix}", **attributes)
   end
@@ -61,7 +59,6 @@ module ModelTestHelpers
     user: create_user,
     cafe: create_cafe,
     roast_level_tag: create_roast_level_tag,
-    brew_method_tag: create_brew_method_tag,
     taste_tag: create_taste_tag,
     menu_name: "本日のコーヒー",
     drank_on: Date.current,
@@ -72,7 +69,6 @@ module ModelTestHelpers
       user:,
       cafe:,
       roast_level_tag:,
-      brew_method_tag:,
       menu_name:,
       drank_on:,
       memo:,

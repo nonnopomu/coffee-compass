@@ -40,21 +40,7 @@
 
   <%= render "log_trends",
              roast_level_trends: roast_level_trends,
-             taste_tag_trends: taste_tag_trends,
-             brew_method_trends: brew_method_trends %>
-
-  <%# 提供スタイルタグ：brew_method カテゴリのタグのみ絞り込んで表示 %>
-  <% brew_method_tags = cafe.tags.select(&:brew_method?) %>
-  <% if brew_method_tags.any? %>
-    <div class="rounded-2xl border border-gray-200 bg-white px-4 py-4">
-      <h3 class="text-sm font-semibold text-amber-600 mb-2"><%= t("views.cafes.basic_info.brew_method") %></h3>
-      <div class="flex flex-wrap gap-2">
-        <% brew_method_tags.each do |tag| %>
-          <span class="rounded-full border border-amber-100 bg-amber-50 px-3 py-1 text-xs font-medium text-amber-800"><%= tag.name %></span>
-        <% end %>
-      </div>
-    </div>
-  <% end %>
+             taste_tag_trends: taste_tag_trends %>
 
   <%# 店舗特徴タグ：cafe_feature カテゴリのタグのみ絞り込んで表示 %>
   <% feature_tags = cafe.tags.select(&:cafe_feature?) %>

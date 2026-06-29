@@ -13,7 +13,6 @@ ja:
       category:
         roast_level: 焙煎度
         taste: 味わい
-        brew_method: 抽出スタイル
         cafe_feature: 店舗の特徴
       is_active:
         "true": 有効

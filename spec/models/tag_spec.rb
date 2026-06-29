@@ -34,12 +34,34 @@ RSpec.describe Tag, type: :model do
       expect(tag.errors[:display_order]).to be_present
     end
 
-    it "同じカテゴリ内で同じ名前は登録できないこと" do
+    it "同じカテゴリ内で有効タグの表示順は重複できないこと" do
+      create_taste_tag(name: "花", display_order: 1)
+      duplicate_order_tag = Tag.new(name: "ベリー", category: :taste, display_order: 1, is_active: true)
+
+      expect(duplicate_order_tag).not_to be_valid
+      expect(duplicate_order_tag.errors[:display_order]).to be_present
+    end
+
+    it "同じカテゴリ内でも無効タグ同士の表示順重複は許可すること" do
+      create_taste_tag(name: "古い花", display_order: 1, is_active: false)
+      inactive_tag = Tag.new(name: "古いベリー", category: :taste, display_order: 1, is_active: false)
+
+      expect(inactive_tag).to be_valid
+    end
+
+    it "同じカテゴリかつ同じ親タグ内で同じ名前は登録できないこと" do
       create_taste_tag(name: "フルーティー")
       duplicate_tag = Tag.new(name: "フルーティー", category: :taste, display_order: 2)
 
       expect(duplicate_tag).not_to be_valid
       expect(duplicate_tag.errors[:name]).to be_present
+    end
+
+    it "同じ名前でも親タグが異なれば登録できること" do
+      parent_tag = create_taste_tag(name: "桃")
+      child_tag = Tag.new(name: "桃", category: :taste, display_order: 2, parent: parent_tag)
+
+      expect(child_tag).to be_valid
     end
 
     it "同じ名前でもカテゴリが異なれば登録できること" do
@@ -51,11 +73,10 @@ RSpec.describe Tag, type: :model do
   end
 
   describe "カテゴリ" do
-    it "焙煎度、味わい、提供スタイル、店舗特徴を扱えること" do
+    it "焙煎度、味わい、店舗特徴を扱えること" do
       expect(described_class.categories).to include(
         "roast_level" => 0,
         "taste" => 1,
-        "brew_method" => 2,
         "cafe_feature" => 3
       )
     end
@@ -68,6 +89,40 @@ RSpec.describe Tag, type: :model do
   end
 
   describe "関連付け" do
+    it "親タグを持たない大項目タグを作成できること" do
+      tag = Tag.new(
+        name: "フローラル・ティー",
+        category: :taste,
+        display_order: 1,
+        color_hex: "#D8A24A",
+        beginner_display_order: 1
+      )
+
+      expect(tag).to be_valid
+    end
+
+    it "子タグから親タグを参照できること" do
+      parent_tag = create_taste_tag(name: "フローラル・ティー")
+      child_tag = Tag.create!(name: "ジャスミン", category: :taste, display_order: 2, parent: parent_tag)
+
+      expect(child_tag.parent).to eq(parent_tag)
+    end
+
+    it "親タグから子タグ一覧を参照できること" do
+      parent_tag = create_taste_tag(name: "フローラル・ティー")
+      child_tag = Tag.create!(name: "ジャスミン", category: :taste, display_order: 2, parent: parent_tag)
+
+      expect(parent_tag.children).to include(child_tag)
+    end
+
+    it "親タグ削除時に子タグは削除せず親への参照だけ外れること" do
+      parent_tag = create_taste_tag(name: "フローラル・ティー")
+      child_tag = Tag.create!(name: "ジャスミン", category: :taste, display_order: 2, parent: parent_tag)
+
+      expect { parent_tag.destroy }.to change(Tag, :count).by(-1)
+      expect(child_tag.reload.parent).to be_nil
+    end
+
     it "カフェに紐づけられること" do
       tag = create_cafe_feature_tag
       cafe = create_cafe

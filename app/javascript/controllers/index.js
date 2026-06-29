@@ -4,6 +4,9 @@
 
 import { application } from "./application"
 
+import AdminTagFormController from "./admin_tag_form_controller"
+application.register("admin-tag-form", AdminTagFormController)
+
 import AreaSelectionController from "./area_selection_controller"
 application.register("area-selection", AreaSelectionController)
 
