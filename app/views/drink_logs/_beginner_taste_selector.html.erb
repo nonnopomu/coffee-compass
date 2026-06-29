@@ -1,0 +1,61 @@
+<% icon_file_names = {
+  "花" => "flower.png",
+  "ベリー" => "berry.png",
+  "ブドウ・ワイン" => "grape.png",
+  "シトラス" => "citrus.png",
+  "リンゴ" => "apple.png",
+  "ストーンフルーツ" => "stone.png",
+  "トロピカルフルーツ" => "tropical.png",
+  "はちみつ" => "honey.png",
+  "黒糖・キャラメル" => "caramel.png",
+  "ナッツ" => "nuts.png",
+  "チョコレート" => "chocolate.png",
+  "トースト" => "toast.png"
+} %>
+
+<div class="space-y-3" data-controller="flavor-selector" data-flavor-selector-max-value="3">
+  <div>
+    <p class="text-sm font-semibold text-gray-800" aria-label="<%= t("views.drink_logs.form.taste_help") %>">
+      <%= t("views.drink_logs.form.taste_help_before_limit") %><span class="text-amber-700"><%= t("views.drink_logs.form.taste_limit") %></span><%= t("views.drink_logs.form.taste_help_after_limit") %>
+    </p>
+    <p class="mt-2 hidden text-xs font-semibold text-amber-700" data-flavor-selector-target="limitMessage"><%= t("views.drink_logs.form.taste_limit_message") %></p>
+  </div>
+
+  <%= f.hidden_field :taste_tag_ids, multiple: true, value: "" %>
+
+  <% if taste_tags.any? %>
+    <div class="grid grid-cols-3 gap-3 sm:grid-cols-4">
+      <%= f.collection_check_boxes :taste_tag_ids, taste_tags, :id, :name, include_hidden: false do |tag_builder| %>
+        <% tag = tag_builder.object %>
+        <% color_hex = tag.color_hex.to_s.match?(/\A#[0-9a-fA-F]{6}\z/) ? tag.color_hex : "#D99A2B" %>
+        <% child_names = tag.children.select(&:is_active?).sort_by { |child| [child.display_order, child.name] }.map(&:name).first(4) %>
+        <% icon_file_name = icon_file_names.fetch(tag.name, "honey.png") %>
+        <% aria_label = child_names.any? ? "#{tag.name}（#{child_names.join("、")}）" : tag.name %>
+
+        <%= tag_builder.label class: "flavor-card relative cursor-pointer overflow-hidden rounded-2xl border bg-white p-1.5 transition-colors",
+                              style: "--flavor-color: #{color_hex};" do %>
+          <%= tag_builder.check_box class: "sr-only",
+                                    aria: { label: aria_label },
+                                    data: {
+                                      flavor_selector_target: "checkbox",
+                                      action: "change->flavor-selector#toggle"
+                                    } %>
+
+          <span class="sr-only"><%= aria_label %></span>
+          <span class="flavor-card-check absolute right-2 top-2 z-[1] flex h-6 w-6 shrink-0 items-center justify-center rounded-full border text-xs font-bold shadow-sm"
+                data-flavor-selector-target="orderBadge"
+                aria-hidden="true"></span>
+
+          <span class="flavor-card-image flex aspect-square items-center justify-center overflow-hidden rounded-xl">
+            <%= image_tag "flavor_tags/#{icon_file_name}",
+                          alt: "",
+                          class: "h-full w-full object-cover",
+                          loading: "lazy" %>
+          </span>
+        <% end %>
+      <% end %>
+    </div>
+  <% else %>
+    <p class="w-full rounded-lg border border-gray-200 bg-white px-4 py-3 text-sm text-gray-500"><%= t("views.drink_logs.form.no_taste_tags") %></p>
+  <% end %>
+</div>

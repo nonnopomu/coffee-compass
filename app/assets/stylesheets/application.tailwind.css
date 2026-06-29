@@ -15,4 +15,44 @@
     letter-spacing: 0;
     text-shadow: 0 1px 0 rgba(255, 251, 235, 0.75);
   }
+
+  .flavor-card {
+    border-color: #e5e7eb;
+  }
+
+  .flavor-card-image {
+    background: #fffbeb;
+  }
+
+  .flavor-card:focus-within {
+    outline: 2px solid var(--flavor-color);
+    outline-offset: 2px;
+  }
+
+  .flavor-card:has(input:checked) {
+    background: color-mix(in srgb, var(--flavor-color) 18%, #ffffff);
+    border-color: var(--flavor-color);
+    box-shadow: inset 0 0 0 2px color-mix(in srgb, var(--flavor-color) 30%, transparent);
+  }
+
+  .flavor-card:has(input:checked) .flavor-card-image {
+    background: color-mix(in srgb, var(--flavor-color) 16%, #ffffff);
+  }
+
+  .flavor-card:has(input:disabled:not(:checked)) {
+    cursor: not-allowed;
+    opacity: 0.45;
+  }
+
+  .flavor-card-check {
+    background: #ffffff;
+    border-color: #d1d5db;
+    color: transparent;
+  }
+
+  .flavor-card:has(input:checked) .flavor-card-check {
+    background: var(--flavor-color);
+    border-color: var(--flavor-color);
+    color: #ffffff;
+  }
 }
