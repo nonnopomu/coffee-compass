@@ -53,7 +53,7 @@
                            data: { image_preview_target: "input", action: "change->image-preview#show" },
                            class: "sr-only" %>
           <%= hidden_field_tag "drink_log[remove_image]", "0", data: { image_preview_target: "removeField" } %>
-          <%= f.label :image, class: "block cursor-pointer overflow-hidden rounded-2xl border border-dashed border-gray-200 bg-gray-50/70 transition-colors hover:border-gray-300 hover:bg-white" do %>
+          <%= f.label :image, class: "block cursor-pointer overflow-hidden rounded-2xl border border-dashed border-gray-200 bg-gray-50/70" do %>
             <img data-image-preview-target="image"
                  alt="<%= t("views.drink_logs.form.image_preview_alt") %>"
                  class="hidden h-48 w-full object-cover">
