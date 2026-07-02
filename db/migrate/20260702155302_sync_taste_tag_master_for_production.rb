@@ -157,7 +157,7 @@ class SyncTasteTagMasterForProduction < ActiveRecord::Migration[8.1]
 
         active_taste_tag_ids << parent_tag.id
         taste_display_order += 1
-        
+
         group.fetch(:children).each do |child|
           child_tag = Tag.taste.where(parent: parent_tag).find_or_initialize_by(name: child.fetch(:name))
           child_tag.assign_attributes(
