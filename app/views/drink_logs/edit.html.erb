@@ -1,134 +1,147 @@
 <% content_for :page_title, t("views.drink_logs.edit.page_title") %>
 <% content_for :back_path, @safe_back_path %>
-<% content_for :page_bg, "bg-amber-50" %>
+<% content_for :page_bg, "bg-white sm:bg-amber-50" %>
 
-<div class="min-h-full bg-amber-50">
-  <div class="border-b border-gray-200 bg-white px-4 py-4">
-    <p class="text-xs text-gray-500"><%= t("views.drink_logs.edit.selected_cafe_label") %></p>
-    <h1 class="mt-1 text-lg font-bold text-gray-900"><%= @drink_log.cafe.name %></h1>
-    <p class="mt-1 text-sm text-gray-600"><%= @drink_log.cafe.address %></p>
-  </div>
+<div class="flex flex-1 flex-col bg-white sm:items-center sm:bg-amber-50 sm:px-5 sm:pt-6 sm:pb-8">
+  <div class="w-full bg-white px-4 py-5 sm:max-w-md sm:rounded-3xl sm:border sm:border-amber-100 sm:px-5 sm:py-6 sm:shadow-[0_4px_18px_rgba(90,51,24,0.08)]">
+    <div class="border-b border-gray-200 pb-5">
+      <div class="flex items-center gap-3">
+        <% if @drink_log.cafe.image.attached? %>
+          <%= image_tag @drink_log.cafe.image,
+                        alt: @drink_log.cafe.name,
+                        class: "h-14 w-14 rounded-2xl border border-amber-100 object-cover" %>
+        <% else %>
+          <%= image_tag "cafe_placeholder.png",
+                        alt: "",
+                        class: "h-14 w-14 rounded-2xl border border-amber-100 object-cover" %>
+        <% end %>
 
-  <%= form_with model: @drink_log, url: drink_log_path(@drink_log), method: :patch, class: "flex flex-col" do |f| %>
-    <div class="px-4 py-5 space-y-6">
-      <% if @drink_log.errors.any? %>
-        <div class="rounded-lg border border-red-200 bg-red-50 px-4 py-3">
-          <p class="text-sm font-semibold text-red-700"><%= t("views.common.error_heading") %></p>
-          <ul class="mt-2 space-y-1">
-            <% @drink_log.errors.full_messages.each do |message| %>
-              <li class="text-sm text-red-700"><%= message %></li>
-            <% end %>
-          </ul>
+        <div class="min-w-0">
+          <h1 class="break-words text-lg font-bold text-gray-900"><%= @drink_log.cafe.name %></h1>
+          <p class="mt-1 break-words text-sm text-gray-600"><%= @drink_log.cafe.address %></p>
         </div>
-      <% end %>
-
-      <section class="space-y-4" data-controller="image-preview">
-        <div class="flex items-center gap-2 border-l-4 border-amber-600 pl-3">
-          <h2 class="text-sm font-semibold text-[#5a3318]"><%= t("views.drink_logs.form.image") %></h2>
-        </div>
-
-        <div class="rounded-3xl border border-amber-100 bg-white px-4 py-4 shadow-[0_4px_18px_rgba(90,51,24,0.08)]">
-          <%= f.file_field :image,
-                           accept: "image/jpeg,image/png,image/webp",
-                           data: { image_preview_target: "input", action: "change->image-preview#show" },
-                           class: "sr-only" %>
-          <%= hidden_field_tag "drink_log[remove_image]", "0", data: { image_preview_target: "removeField" } %>
-          <%= f.label :image, class: "block cursor-pointer overflow-hidden rounded-2xl border border-dashed border-gray-200 bg-gray-50/70" do %>
-            <% if @drink_log.image.attached? %>
-              <%= image_tag @drink_log.image,
-                            alt: t("views.drink_logs.form.image_preview_alt"),
-                            data: { image_preview_target: "image" },
-                            class: "h-48 w-full object-cover" %>
-              <div data-image-preview-target="placeholder" class="hidden h-48 items-center justify-center px-4 text-center text-sm font-semibold text-[#5a3318]">
-                <%= t("views.drink_logs.form.image_preview_placeholder") %>
-              </div>
-            <% else %>
-              <img data-image-preview-target="image"
-                   alt="<%= t("views.drink_logs.form.image_preview_alt") %>"
-                   class="hidden h-48 w-full object-cover">
-              <div data-image-preview-target="placeholder" class="flex h-48 items-center justify-center px-4 text-center text-sm font-semibold text-[#5a3318]">
-                <%= t("views.drink_logs.form.image_preview_placeholder") %>
-              </div>
-            <% end %>
-          <% end %>
-          <button type="button"
-                  data-image-preview-target="removeButton"
-                  data-action="image-preview#remove"
-                  class="mt-3 <%= "hidden" unless @drink_log.image.attached? %> text-sm font-semibold text-red-600">
-            <%= t("views.drink_logs.form.remove_image") %>
-          </button>
-          <p class="mt-2 text-xs leading-5 text-gray-500"><%= t("views.drink_logs.form.image_update_help") %></p>
-        </div>
-      </section>
-
-      <section class="space-y-4">
-        <div class="flex items-center gap-2 border-l-4 border-amber-600 pl-3">
-          <h2 class="text-sm font-semibold text-[#5a3318]"><%= t("views.drink_logs.form.basic_info") %></h2>
-        </div>
-
-        <div>
-          <%= f.label :menu_name, class: "mb-1 flex items-center gap-2 text-sm font-medium text-gray-700" do %>
-            <%= DrinkLog.human_attribute_name(:menu_name) %>
-            <span class="text-sm font-semibold text-amber-700" aria-label="<%= t("views.common.required") %>">*</span>
-          <% end %>
-          <%= f.text_field :menu_name, required: true, class: "w-full rounded-xl border border-gray-200 bg-white px-3 py-3 text-sm text-gray-900 focus:border-amber-600 focus:outline-none focus:ring-2 focus:ring-amber-100", placeholder: t("views.drink_logs.form.menu_name_placeholder") %>
-        </div>
-
-        <div>
-          <%= f.label :drank_on, class: "mb-1 flex items-center gap-2 text-sm font-medium text-gray-700" do %>
-            <%= DrinkLog.human_attribute_name(:drank_on) %>
-            <span class="text-sm font-semibold text-amber-700" aria-label="<%= t("views.common.required") %>">*</span>
-          <% end %>
-          <%= f.date_field :drank_on,
-                           required: true,
-                           data: { controller: "date-picker", action: "click->date-picker#open keydown->date-picker#open" },
-                           class: "w-full cursor-pointer rounded-xl border border-gray-200 bg-white px-3 py-3 text-sm text-gray-900 focus:border-amber-600 focus:outline-none focus:ring-2 focus:ring-amber-100" %>
-        </div>
-      </section>
-
-      <section class="space-y-4">
-        <div class="flex items-center gap-2 border-l-4 border-amber-600 pl-3">
-          <h2 class="text-sm font-semibold text-[#5a3318]"><%= t("views.drink_logs.form.roast_level") %></h2>
-          <span class="text-sm font-semibold text-amber-700" aria-label="<%= t("views.common.required") %>">*</span>
-        </div>
-
-        <div class="grid grid-cols-1 gap-2">
-          <% if @roast_level_tags.any? %>
-            <%= f.collection_radio_buttons :roast_level_tag_id, @roast_level_tags, :id, :name do |tag_builder| %>
-              <%= tag_builder.label class: "flex cursor-pointer items-center gap-3 rounded-2xl border border-gray-200 bg-white px-4 py-3 shadow-sm has-[:checked]:border-amber-600 has-[:checked]:bg-amber-50" do %>
-                <%= tag_builder.radio_button class: "h-4 w-4 border-gray-300 text-amber-600 focus:ring-amber-500" %>
-                <span class="text-sm font-medium text-gray-900"><%= tag_builder.text %></span>
-              <% end %>
-            <% end %>
-          <% else %>
-            <p class="rounded-lg border border-gray-200 bg-white px-4 py-3 text-sm text-gray-500"><%= t("views.drink_logs.form.no_roast_level_tags") %></p>
-          <% end %>
-        </div>
-      </section>
-
-      <section class="space-y-4">
-        <div class="flex items-center gap-2 border-l-4 border-amber-600 pl-3">
-          <h2 class="text-sm font-semibold text-[#5a3318]"><%= t("views.drink_logs.form.taste") %></h2>
-          <span class="text-sm font-semibold text-amber-700" aria-label="<%= t("views.common.required") %>">*</span>
-        </div>
-
-        <%= render "beginner_taste_selector", f: f, taste_tags: @taste_tags %>
-      </section>
-
-      <section class="space-y-4">
-        <div class="flex items-center gap-2 border-l-4 border-amber-600 pl-3">
-          <h2 class="text-sm font-semibold text-[#5a3318]"><%= t("views.drink_logs.form.memo") %></h2>
-        </div>
-
-        <%= f.text_area :memo, rows: 5, maxlength: 200, class: "w-full resize-y rounded-2xl border border-gray-200 bg-white px-3 py-3 text-sm leading-6 text-gray-900 focus:border-amber-600 focus:outline-none focus:ring-2 focus:ring-amber-100", placeholder: t("views.drink_logs.form.memo_placeholder") %>
-      </section>
-    </div>
-
-    <div class="sticky bottom-0 border-t border-gray-200 bg-white/95 px-4 py-3 backdrop-blur">
-      <div class="mx-auto flex max-w-screen-sm gap-3">
-        <%= link_to t("views.common.cancel"), @safe_back_path, class: "flex-1 rounded-lg border border-gray-200 bg-white px-4 py-3 text-center text-sm font-medium text-gray-700" %>
-        <%= button_tag t("views.common.update"), type: "submit", class: "flex-1 rounded-lg bg-amber-600 px-4 py-3 text-sm font-semibold text-white" %>
       </div>
     </div>
-  <% end %>
+
+    <%= form_with model: @drink_log, url: drink_log_path(@drink_log), method: :patch, class: "space-y-6" do |f| %>
+      <div class="space-y-6 pt-5">
+        <% if @drink_log.errors.any? %>
+          <div class="rounded-lg border border-red-200 bg-red-50 px-4 py-3">
+            <p class="text-sm font-semibold text-red-700"><%= t("views.common.error_heading") %></p>
+            <ul class="mt-2 space-y-1">
+              <% @drink_log.errors.full_messages.each do |message| %>
+                <li class="text-sm text-red-700"><%= message %></li>
+              <% end %>
+            </ul>
+          </div>
+        <% end %>
+
+        <section class="space-y-4" data-controller="image-preview">
+          <div class="flex items-center gap-2 border-l-4 border-amber-600 pl-3">
+            <h2 class="text-sm font-semibold text-[#5a3318]"><%= t("views.drink_logs.form.image") %></h2>
+          </div>
+
+          <div class="rounded-2xl border border-gray-200 bg-white px-4 py-4">
+            <%= f.file_field :image,
+                             accept: "image/jpeg,image/png,image/webp",
+                             data: { image_preview_target: "input", action: "change->image-preview#show" },
+                             class: "sr-only" %>
+            <%= hidden_field_tag "drink_log[remove_image]", "0", data: { image_preview_target: "removeField" } %>
+            <%= f.label :image, class: "block cursor-pointer overflow-hidden rounded-2xl border border-dashed border-gray-200 bg-gray-50/70" do %>
+              <% if @drink_log.image.attached? %>
+                <%= image_tag @drink_log.image,
+                              alt: t("views.drink_logs.form.image_preview_alt"),
+                              data: { image_preview_target: "image" },
+                              class: "h-48 w-full object-cover" %>
+                <div data-image-preview-target="placeholder" class="hidden h-48 items-center justify-center px-4 text-center text-sm font-semibold text-[#5a3318]">
+                  <%= t("views.drink_logs.form.image_preview_placeholder") %>
+                </div>
+              <% else %>
+                <img data-image-preview-target="image"
+                     alt="<%= t("views.drink_logs.form.image_preview_alt") %>"
+                     class="hidden h-48 w-full object-cover">
+                <div data-image-preview-target="placeholder" class="flex h-48 items-center justify-center px-4 text-center text-sm font-semibold text-[#5a3318]">
+                  <%= t("views.drink_logs.form.image_preview_placeholder") %>
+                </div>
+              <% end %>
+            <% end %>
+            <button type="button"
+                    data-image-preview-target="removeButton"
+                    data-action="image-preview#remove"
+                    class="mt-3 <%= "hidden" unless @drink_log.image.attached? %> text-sm font-semibold text-red-600">
+              <%= t("views.drink_logs.form.remove_image") %>
+            </button>
+            <p class="mt-2 text-xs leading-5 text-gray-500"><%= t("views.drink_logs.form.image_update_help") %></p>
+          </div>
+        </section>
+
+        <section class="space-y-4">
+          <div class="flex items-center gap-2 border-l-4 border-amber-600 pl-3">
+            <h2 class="text-sm font-semibold text-[#5a3318]"><%= t("views.drink_logs.form.basic_info") %></h2>
+          </div>
+
+          <div>
+            <%= f.label :menu_name, class: "mb-1 flex items-center gap-2 text-sm font-medium text-gray-700" do %>
+              <%= DrinkLog.human_attribute_name(:menu_name) %>
+              <span class="text-sm font-semibold text-amber-700" aria-label="<%= t("views.common.required") %>">*</span>
+            <% end %>
+            <%= f.text_field :menu_name, required: true, class: "w-full rounded-xl border border-gray-200 bg-white px-3 py-3 text-sm text-gray-900 focus:border-amber-600 focus:outline-none focus:ring-2 focus:ring-amber-100", placeholder: t("views.drink_logs.form.menu_name_placeholder") %>
+          </div>
+
+          <div>
+            <%= f.label :drank_on, class: "mb-1 flex items-center gap-2 text-sm font-medium text-gray-700" do %>
+              <%= DrinkLog.human_attribute_name(:drank_on) %>
+              <span class="text-sm font-semibold text-amber-700" aria-label="<%= t("views.common.required") %>">*</span>
+            <% end %>
+            <%= f.date_field :drank_on,
+                             required: true,
+                             data: { controller: "date-picker", action: "click->date-picker#open keydown->date-picker#open" },
+                             class: "w-full cursor-pointer rounded-xl border border-gray-200 bg-white px-3 py-3 text-sm text-gray-900 focus:border-amber-600 focus:outline-none focus:ring-2 focus:ring-amber-100" %>
+          </div>
+        </section>
+
+        <section class="space-y-4">
+          <div class="flex items-center gap-2 border-l-4 border-amber-600 pl-3">
+            <h2 class="text-sm font-semibold text-[#5a3318]"><%= t("views.drink_logs.form.roast_level") %></h2>
+            <span class="text-sm font-semibold text-amber-700" aria-label="<%= t("views.common.required") %>">*</span>
+          </div>
+
+          <div class="grid grid-cols-1 gap-2">
+            <% if @roast_level_tags.any? %>
+              <%= f.collection_radio_buttons :roast_level_tag_id, @roast_level_tags, :id, :name do |tag_builder| %>
+                <%= tag_builder.label class: "flex cursor-pointer items-center gap-3 rounded-2xl border border-gray-200 bg-white px-4 py-3 has-[:checked]:border-amber-600 has-[:checked]:bg-amber-50" do %>
+                  <%= tag_builder.radio_button class: "h-4 w-4 border-gray-300 text-amber-600 focus:ring-amber-500" %>
+                  <span class="text-sm font-medium text-gray-900"><%= tag_builder.text %></span>
+                <% end %>
+              <% end %>
+            <% else %>
+              <p class="rounded-lg border border-gray-200 bg-white px-4 py-3 text-sm text-gray-500"><%= t("views.drink_logs.form.no_roast_level_tags") %></p>
+            <% end %>
+          </div>
+        </section>
+
+        <section class="space-y-4">
+          <div class="flex items-center gap-2 border-l-4 border-amber-600 pl-3">
+            <h2 class="text-sm font-semibold text-[#5a3318]"><%= t("views.drink_logs.form.taste") %></h2>
+            <span class="text-sm font-semibold text-amber-700" aria-label="<%= t("views.common.required") %>">*</span>
+          </div>
+
+          <%= render "beginner_taste_selector", f: f, taste_tags: @taste_tags %>
+        </section>
+
+        <section class="space-y-4">
+          <div class="flex items-center gap-2 border-l-4 border-amber-600 pl-3">
+            <h2 class="text-sm font-semibold text-[#5a3318]"><%= t("views.drink_logs.form.memo") %></h2>
+          </div>
+
+          <%= f.text_area :memo, rows: 5, maxlength: 200, class: "w-full resize-y rounded-2xl border border-gray-200 bg-white px-3 py-3 text-sm leading-6 text-gray-900 focus:border-amber-600 focus:outline-none focus:ring-2 focus:ring-amber-100", placeholder: t("views.drink_logs.form.memo_placeholder") %>
+        </section>
+      </div>
+
+      <div class="grid grid-cols-2 gap-3 border-t border-gray-200 pt-4">
+        <%= link_to t("views.common.cancel"), @safe_back_path, class: "rounded-2xl border border-gray-200 bg-white px-4 py-3 text-center text-sm font-semibold text-gray-700 transition-colors hover:bg-amber-50" %>
+        <%= button_tag t("views.common.update"), type: "submit", class: "rounded-2xl bg-amber-600 px-4 py-3 text-sm font-semibold text-white transition-colors hover:bg-amber-700" %>
+      </div>
+    <% end %>
+  </div>
 </div>

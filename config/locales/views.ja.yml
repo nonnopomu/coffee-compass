@@ -131,6 +131,13 @@ ja:
         taste_hint: 正解はありません、近いと感じるものを選んでください。
         taste_limit_message: 選べる味わいは3つまでです
         no_taste_tags: 選択できる味わいタグがありません
+        taste_record_method: 記録方法
+        image_taste_mode: 画像から記録する
+        detailed_taste_button: タグから記録する
+        detailed_taste_limit_before: 味わいの系統を
+        detailed_taste_limit: 3つまで
+        detailed_taste_limit_after: タグで詳しく記録できます
+        detailed_taste_limit_message: 味わいの系統は3つまで選べます。同じ系統内のタグはいくつでも選べます。
         memo: 感想メモ
         memo_placeholder: 味の印象やまた飲みたい理由など
         image: 写真

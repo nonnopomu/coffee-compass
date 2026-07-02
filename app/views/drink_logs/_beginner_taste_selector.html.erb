@@ -12,50 +12,79 @@
   "チョコレート" => "chocolate.png",
   "トースト" => "toast.png"
 } %>
+<% selected_taste_tag_ids = f.object.taste_tag_ids.map(&:to_i) %>
+<% active_child_tag_ids = taste_tags.flat_map { |tag| tag.children.select(&:is_active?).map(&:id) } %>
+<% detail_mode_selected = (selected_taste_tag_ids & active_child_tag_ids).any? %>
 
-<div class="space-y-3" data-controller="flavor-selector" data-flavor-selector-max-value="3">
-  <div>
-    <p class="text-sm font-semibold text-gray-800" aria-label="<%= t("views.drink_logs.form.taste_help") %>">
-      <%= t("views.drink_logs.form.taste_help_before_limit") %><span class="text-amber-700"><%= t("views.drink_logs.form.taste_limit") %></span><%= t("views.drink_logs.form.taste_help_after_limit") %>
-    </p>
-    <p class="mt-2 hidden text-xs font-semibold text-amber-700" data-flavor-selector-target="limitMessage"><%= t("views.drink_logs.form.taste_limit_message") %></p>
-  </div>
-
+<div class="space-y-4"
+     data-controller="flavor-selector"
+     data-flavor-selector-max-value="3"
+     data-flavor-selector-image-mode-label-value="<%= t("views.drink_logs.form.image_taste_mode") %>"
+     data-flavor-selector-detail-mode-label-value="<%= t("views.drink_logs.form.detailed_taste_button") %>">
   <%= f.hidden_field :taste_tag_ids, multiple: true, value: "" %>
 
-  <% if taste_tags.any? %>
-    <div class="grid grid-cols-3 gap-3 sm:grid-cols-4">
-      <%= f.collection_check_boxes :taste_tag_ids, taste_tags, :id, :name, include_hidden: false do |tag_builder| %>
-        <% tag = tag_builder.object %>
-        <% color_hex = tag.color_hex.to_s.match?(/\A#[0-9a-fA-F]{6}\z/) ? tag.color_hex : "#D99A2B" %>
-        <% child_names = tag.children.select(&:is_active?).sort_by { |child| [child.display_order, child.name] }.map(&:name).first(4) %>
-        <% icon_file_name = icon_file_names.fetch(tag.name, "honey.png") %>
-        <% aria_label = child_names.any? ? "#{tag.name}（#{child_names.join("、")}）" : tag.name %>
-
-        <%= tag_builder.label class: "flavor-card relative cursor-pointer overflow-hidden rounded-2xl border bg-white p-1.5 transition-colors",
-                              style: "--flavor-color: #{color_hex};" do %>
-          <%= tag_builder.check_box class: "sr-only",
-                                    aria: { label: aria_label },
-                                    data: {
-                                      flavor_selector_target: "checkbox",
-                                      action: "change->flavor-selector#toggle"
-                                    } %>
-
-          <span class="sr-only"><%= aria_label %></span>
-          <span class="flavor-card-check absolute right-2 top-2 z-[1] flex h-6 w-6 shrink-0 items-center justify-center rounded-full border text-xs font-bold shadow-sm"
-                data-flavor-selector-target="orderBadge"
-                aria-hidden="true"></span>
-
-          <span class="flavor-card-image flex aspect-square items-center justify-center overflow-hidden rounded-xl">
-            <%= image_tag "flavor_tags/#{icon_file_name}",
-                          alt: "",
-                          class: "h-full w-full object-cover",
-                          loading: "lazy" %>
-          </span>
-        <% end %>
-      <% end %>
+  <div data-flavor-selector-target="imagePanel" class="<%= detail_mode_selected ? "hidden" : "" %> space-y-3">
+    <div>
+      <p class="text-sm font-semibold text-gray-800" aria-label="<%= t("views.drink_logs.form.taste_help") %>">
+        <%= t("views.drink_logs.form.taste_help_before_limit") %><span class="text-amber-700"><%= t("views.drink_logs.form.taste_limit") %></span><%= t("views.drink_logs.form.taste_help_after_limit") %>
+      </p>
+      <p class="mt-2 hidden text-xs font-semibold text-amber-700" data-flavor-selector-target="limitMessage"><%= t("views.drink_logs.form.taste_limit_message") %></p>
     </div>
-  <% else %>
-    <p class="w-full rounded-lg border border-gray-200 bg-white px-4 py-3 text-sm text-gray-500"><%= t("views.drink_logs.form.no_taste_tags") %></p>
-  <% end %>
+
+    <% if taste_tags.any? %>
+      <div class="grid grid-cols-3 gap-3 sm:grid-cols-4">
+        <%= f.collection_check_boxes :taste_tag_ids, taste_tags, :id, :name, include_hidden: false do |tag_builder| %>
+          <% tag = tag_builder.object %>
+          <% color_hex = tag.color_hex.to_s.match?(/\A#[0-9a-fA-F]{6}\z/) ? tag.color_hex : "#D99A2B" %>
+          <% child_names = tag.children.select(&:is_active?).sort_by { |child| [child.display_order, child.name] }.map(&:name).first(4) %>
+          <% icon_file_name = icon_file_names.fetch(tag.name, "honey.png") %>
+          <% aria_label = child_names.any? ? "#{tag.name}（#{child_names.join("、")}）" : tag.name %>
+
+          <%= tag_builder.label class: "flavor-card relative cursor-pointer overflow-hidden rounded-2xl border bg-white p-1.5 transition-colors",
+                                style: "--flavor-color: #{color_hex};" do %>
+            <%= tag_builder.check_box class: "sr-only",
+                                      checked: !detail_mode_selected && selected_taste_tag_ids.include?(tag.id),
+                                      aria: { label: aria_label },
+                                      data: {
+                                        flavor_selector_target: "checkbox",
+                                        action: "change->flavor-selector#toggle"
+                                      } %>
+
+            <span class="sr-only"><%= aria_label %></span>
+            <span class="flavor-card-check absolute right-2 top-2 z-[1] flex h-6 w-6 shrink-0 items-center justify-center rounded-full border text-xs font-bold shadow-sm"
+                  data-flavor-selector-target="orderBadge"
+                  aria-hidden="true"></span>
+
+            <span class="flavor-card-image flex aspect-square items-center justify-center overflow-hidden rounded-xl">
+              <%= image_tag "flavor_tags/#{icon_file_name}",
+                            alt: "",
+                            class: "h-full w-full object-cover",
+                            loading: "lazy" %>
+            </span>
+          <% end %>
+        <% end %>
+      </div>
+    <% else %>
+      <p class="w-full rounded-lg border border-gray-200 bg-white px-4 py-3 text-sm text-gray-500"><%= t("views.drink_logs.form.no_taste_tags") %></p>
+    <% end %>
+
+    <div class="flex justify-end text-xs"
+         aria-label="<%= t("views.drink_logs.form.taste_record_method") %>">
+      <button type="button"
+              data-flavor-selector-target="modeSwitchButton"
+              data-action="flavor-selector#toggleMode"
+              class="inline-flex cursor-pointer items-center gap-1 rounded-full border border-gray-200 bg-white px-3 py-1.5 text-xs font-semibold text-[#5a3318] shadow-sm transition-colors hover:border-amber-300 hover:bg-[#fffaf5] focus:outline-none focus:ring-2 focus:ring-amber-100"
+              aria-label="<%= t("views.drink_logs.form.detailed_taste_button") %>">
+        <span data-flavor-selector-target="modeSwitchLabel">
+          <%= t("views.drink_logs.form.detailed_taste_button") %>
+        </span>
+        <span class="text-amber-700" aria-hidden="true">→</span>
+      </button>
+    </div>
+  </div>
+
+  <%= render "detailed_taste_selector",
+             taste_tags: taste_tags,
+             selected_taste_tag_ids: selected_taste_tag_ids,
+             detail_mode_selected: detail_mode_selected %>
 </div>
