@@ -1,7 +1,17 @@
 <% color_hex = tag.color_hex.to_s.match?(/\A#[0-9a-fA-F]{6}\z/) ? tag.color_hex : "#D99A2B" %>
-<% size_class = local_assigns.fetch(:size, :sm).to_sym == :xs ? "px-2.5 py-1 text-xs" : "px-3 py-1.5 text-sm" %>
+<% parent_tag = tag.parent_id.nil? %>
+<% size = local_assigns.fetch(:size, :sm).to_sym %>
+<% size_class = if parent_tag
+                  size == :xs ? "px-2.5 py-1 text-xs" : "px-3 py-1.5 text-sm"
+                else
+                  size == :xs ? "px-2 py-0.5 text-[11px]" : "px-2.5 py-1 text-xs"
+                end %>
+<% border_class = parent_tag ? "border-2" : "border" %>
+<% border_mix = parent_tag ? 78 : 50 %>
+<% background_mix = parent_tag ? 24 : 14 %>
+<% color_mix = parent_tag ? 78 : 65 %>
 
-<span class="rounded-full border font-medium <%= size_class %>"
-      style="border-color: color-mix(in srgb, <%= color_hex %> 45%, #ffffff); background-color: color-mix(in srgb, <%= color_hex %> 14%, #ffffff); color: color-mix(in srgb, <%= color_hex %> 65%, #3f2a1d);">
+<span class="inline-flex items-center rounded-full <%= border_class %> font-medium <%= size_class %>"
+      style="border-color: color-mix(in srgb, <%= color_hex %> <%= border_mix %>%, #ffffff); background-color: color-mix(in srgb, <%= color_hex %> <%= background_mix %>%, #ffffff); color: color-mix(in srgb, <%= color_hex %> <%= color_mix %>%, #3f2a1d);">
   <%= tag.name %>
 </span>
