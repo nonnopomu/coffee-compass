@@ -112,6 +112,38 @@ RSpec.describe DrinkLog, type: :model do
     end
   end
 
+  describe "#aggregated_taste_tags" do
+    it "大項目タグはそのまま集計対象として返すこと" do
+      parent_tag = create_taste_tag(name: "花")
+      drink_log = create_drink_log(taste_tag: parent_tag)
+
+      expect(drink_log.aggregated_taste_tags).to contain_exactly(parent_tag)
+    end
+
+    it "同じ親を持つ小項目タグは親タグ1つにまとめること" do
+      parent_tag = create_taste_tag(name: "花")
+      jasmine_tag = create_taste_tag(name: "ジャスミン", parent: parent_tag)
+      chamomile_tag = create_taste_tag(name: "カモミール", parent: parent_tag)
+      drink_log = build_drink_log(taste_tag: jasmine_tag)
+      drink_log.drink_log_taste_tags.build(tag: chamomile_tag)
+      drink_log.save!
+
+      expect(drink_log.aggregated_taste_tags).to contain_exactly(parent_tag)
+    end
+
+    it "異なる親を持つ小項目タグはそれぞれの親タグを返すこと" do
+      floral_tag = create_taste_tag(name: "花")
+      berry_tag = create_taste_tag(name: "ベリー")
+      jasmine_tag = create_taste_tag(name: "ジャスミン", parent: floral_tag)
+      strawberry_tag = create_taste_tag(name: "ストロベリー", parent: berry_tag)
+      drink_log = build_drink_log(taste_tag: jasmine_tag)
+      drink_log.drink_log_taste_tags.build(tag: strawberry_tag)
+      drink_log.save!
+
+      expect(drink_log.aggregated_taste_tags).to contain_exactly(floral_tag, berry_tag)
+    end
+  end
+
   describe "関連付け" do
     it "ユーザーとカフェに紐づくこと" do
       user = create_user
