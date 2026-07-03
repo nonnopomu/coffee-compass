@@ -37,10 +37,10 @@ module ModelTestHelpers
     build_cafe(**attributes).tap(&:save!)
   end
 
-  def create_tag(category:, name: "#{category}-#{unique_suffix}", display_order: nil, is_active: true)
+  def create_tag(category:, name: "#{category}-#{unique_suffix}", display_order: nil, is_active: true, **attributes)
     display_order ||= Tag.where(category:, is_active: true).maximum(:display_order).to_i + 1
 
-    Tag.create!(category:, name:, display_order:, is_active:)
+    Tag.create!(category:, name:, display_order:, is_active:, **attributes)
   end
 
   def create_roast_level_tag(**attributes)

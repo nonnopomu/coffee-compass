@@ -63,6 +63,21 @@ RSpec.describe "Public pages", type: :request do
       expect(html.at_css('img[alt="画像付きログ"]')).to be_present
     end
 
+    it "カフェ詳細の味わい傾向は小項目タグを大項目タグに寄せて表示すること" do
+      cafe = create_cafe(status: :published)
+      floral_tag = create_taste_tag(name: "花")
+      jasmine_tag = create_taste_tag(name: "ジャスミン", parent: floral_tag)
+      chamomile_tag = create_taste_tag(name: "カモミール", parent: floral_tag)
+      drink_log = build_drink_log(cafe:, taste_tag: jasmine_tag)
+      drink_log.drink_log_taste_tags.build(tag: chamomile_tag)
+      drink_log.save!
+
+      get cafe_path(cafe)
+
+      expect(response).to have_http_status(:ok)
+      expect(response.body).to include("花")
+    end
+
     it "飲んだログ詳細を閲覧できること" do
       drink_log = create_drink_log(cafe: create_cafe(status: :published))
 

@@ -88,6 +88,21 @@ RSpec.describe Tag, type: :model do
     end
   end
 
+  describe "#aggregation_target" do
+    it "親タグがない場合は自分自身を返すこと" do
+      parent_tag = create_taste_tag(name: "花")
+
+      expect(parent_tag.aggregation_target).to eq(parent_tag)
+    end
+
+    it "親タグがある場合は親タグを返すこと" do
+      parent_tag = create_taste_tag(name: "花")
+      child_tag = create_taste_tag(name: "ジャスミン", parent: parent_tag)
+
+      expect(child_tag.aggregation_target).to eq(parent_tag)
+    end
+  end
+
   describe "関連付け" do
     it "親タグを持たない大項目タグを作成できること" do
       tag = Tag.new(
