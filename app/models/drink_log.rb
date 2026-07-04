@@ -1,5 +1,6 @@
 class DrinkLog < ApplicationRecord
   include ImageAttachmentValidatable
+  before_validation :clear_cafe_when_brewed_at_home
 
   enum :status, { published: 0, hidden: 1 }
 
@@ -12,13 +13,15 @@ class DrinkLog < ApplicationRecord
   }
 
   belongs_to :user
-  belongs_to :cafe
+  belongs_to :cafe, optional: true
   belongs_to :roast_level_tag, class_name: "Tag"
   has_many :drink_log_taste_tags, dependent: :destroy
   has_many :taste_tags, through: :drink_log_taste_tags, source: :tag
   has_one_attached :image
 
   validates_image_attachment :image
+
+  validates :cafe, presence: true, unless: :brewed_at_home?
 
   validates :menu_name, presence: true, length: { maximum: 100 }
   validates :drank_on, presence: true
@@ -41,5 +44,9 @@ class DrinkLog < ApplicationRecord
 
   def must_have_at_least_one_taste_tag
     errors.add(:base, :taste_tags_required) if drink_log_taste_tags.empty?
+  end
+
+  def clear_cafe_when_brewed_at_home
+    self.cafe = nil if brewed_at_home?
   end
 end

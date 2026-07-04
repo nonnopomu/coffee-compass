@@ -3,31 +3,54 @@
 <% content_for :page_bg, "bg-white sm:bg-amber-50" %>
 
 <div class="flex flex-1 flex-col bg-white sm:items-center sm:bg-amber-50 sm:px-5 sm:pt-6 sm:pb-8">
-  <div class="w-full bg-white px-4 py-5 sm:max-w-md sm:rounded-3xl sm:border sm:border-amber-100 sm:px-5 sm:py-6 sm:shadow-[0_4px_18px_rgba(90,51,24,0.08)]">
-    <div class="border-b border-gray-200 pb-5">
-    <% if @cafe.present? %>
-      <div class="flex items-center gap-3">
-        <% if @cafe.image.attached? %>
-          <%= image_tag @cafe.image,
-                        alt: @cafe.name,
-                        class: "h-14 w-14 rounded-2xl border border-amber-100 object-cover" %>
-        <% else %>
-          <%= image_tag "cafe_placeholder.png",
-                        alt: "",
-                        class: "h-14 w-14 rounded-2xl border border-amber-100 object-cover" %>
-        <% end %>
+  <div class="w-full overflow-hidden bg-white px-4 py-5 sm:max-w-md sm:rounded-3xl sm:border sm:border-amber-100 sm:px-5 sm:py-6 sm:shadow-[0_4px_18px_rgba(90,51,24,0.08)]">
+    <%= form_with model: @drink_log, url: drink_logs_path, method: :post, data: (@cafe.present? ? {} : { controller: "home-brew-toggle" }), class: "space-y-6" do |f| %>
+      <% if @cafe.present? %>
+        <div class="border-b border-gray-200 pb-5">
+          <div class="flex items-center gap-3">
+            <% if @cafe.image.attached? %>
+              <%= image_tag @cafe.image,
+                            alt: @cafe.name,
+                            class: "h-14 w-14 rounded-2xl border border-amber-100 object-cover" %>
+            <% else %>
+              <%= image_tag "cafe_placeholder.png",
+                            alt: "",
+                            class: "h-14 w-14 rounded-2xl border border-amber-100 object-cover" %>
+            <% end %>
 
-        <div class="min-w-0">
-          <h1 class="break-words text-lg font-bold text-gray-900"><%= @cafe.name %></h1>
-          <p class="mt-1 break-words text-sm text-gray-600"><%= @cafe.address %></p>
+            <div class="min-w-0">
+              <h1 class="break-words text-lg font-bold text-gray-900"><%= @cafe.name %></h1>
+              <p class="mt-1 break-words text-sm text-gray-600"><%= @cafe.address %></p>
+            </div>
+          </div>
         </div>
-      </div>
-    <% else %>
-      <h1 class="mt-1 text-lg font-bold text-gray-900"><%= t("views.drink_logs.new.title") %></h1>
-    <% end %>
-    </div>
+      <% else %>
+        <div class="-mx-4 -mt-5 border-b border-gray-200 sm:-mx-5 sm:-mt-6">
+          <div class="grid grid-cols-2 bg-gray-50">
+            <label class="cursor-pointer">
+              <%= f.radio_button :brewed_at_home,
+                                 "0",
+                                 checked: !@drink_log.brewed_at_home?,
+                                 data: { home_brew_toggle_target: "mode", action: "home-brew-toggle#toggle" },
+                                 class: "peer sr-only" %>
+              <span class="flex min-h-14 items-center justify-center border-b-2 border-transparent px-3 text-center text-sm font-semibold text-gray-500 transition-colors peer-checked:border-amber-600 peer-checked:bg-white peer-checked:text-amber-800 peer-checked:shadow-sm">
+                <%= t("views.drink_logs.new.cafe_mode_label") %>
+              </span>
+            </label>
+            <label class="cursor-pointer">
+              <%= f.radio_button :brewed_at_home,
+                                 "1",
+                                 checked: @drink_log.brewed_at_home?,
+                                 data: { home_brew_toggle_target: "mode", action: "home-brew-toggle#toggle" },
+                                 class: "peer sr-only" %>
+              <span class="flex min-h-14 items-center justify-center border-b-2 border-transparent px-3 text-center text-sm font-semibold text-gray-500 transition-colors peer-checked:border-amber-600 peer-checked:bg-white peer-checked:text-amber-800 peer-checked:shadow-sm">
+                <%= t("views.drink_logs.new.home_brew_mode_label") %>
+              </span>
+            </label>
+          </div>
+        </div>
+      <% end %>
 
-    <%= form_with model: @drink_log, url: drink_logs_path, method: :post, class: "space-y-6" do |f| %>
       <%= hidden_field_tag :return_to, params[:return_to] if params[:return_to].present? %>
 
       <div class="space-y-6 pt-5">
@@ -67,7 +90,12 @@
                   class="mt-3 hidden text-sm font-semibold text-red-600">
             <%= t("views.drink_logs.form.remove_image") %>
           </button>
-          <p class="mt-2 text-xs leading-5 text-gray-500"><%= t("views.drink_logs.form.image_help") %></p>
+          <% if @cafe.present? %>
+            <p class="mt-2 text-xs leading-5 text-gray-500"><%= t("views.drink_logs.form.image_help") %></p>
+          <% else %>
+            <p data-home-brew-toggle-target="cafeImageHelp" class="mt-2 text-xs leading-5 text-gray-500"><%= t("views.drink_logs.form.image_help") %></p>
+            <p data-home-brew-toggle-target="homeImageHelp" class="mt-2 hidden text-xs leading-5 text-gray-500"><%= t("views.drink_logs.form.home_brew_image_help") %></p>
+          <% end %>
         </div>
       </section>
 
@@ -80,50 +108,55 @@
           <%= f.hidden_field :cafe_id, value: @drink_log.cafe_id || @cafe.id %>
         <% else %>
           <div data-controller="cafe-selection"
+               class="space-y-3"
                data-cafe-selection-no-results-message-value="<%= t("views.common.no_matching_cafes") %>">
-            <%= f.hidden_field :cafe_id, data: { cafe_selection_target: "value" } %>
+            <div data-home-brew-toggle-target="cafeFields">
+              <%= f.hidden_field :cafe_id, data: { cafe_selection_target: "value", home_brew_toggle_target: "cafeValue" } %>
 
-            <label for="drink_log_cafe_search" class="mb-1 flex items-center gap-2 text-sm font-medium text-gray-700">
-              <%= t("views.drink_logs.new.cafe_label") %>
-              <span class="text-sm font-semibold text-amber-700" aria-label="<%= t("views.common.required") %>">*</span>
-            </label>
-            <input id="drink_log_cafe_search"
-                   type="search"
-                   autocomplete="off"
-                   data-cafe-selection-target="query"
-                   data-action="input->cafe-selection#filter"
-                   class="w-full rounded-xl border border-gray-200 bg-white px-3 py-3 text-sm text-gray-900 focus:border-amber-600 focus:outline-none focus:ring-2 focus:ring-amber-100"
-                   placeholder="<%= t("views.drink_logs.new.cafe_search_placeholder") %>">
+              <label for="drink_log_cafe_search" class="mb-1 flex items-center gap-2 text-sm font-medium text-gray-700">
+                <%= t("views.drink_logs.new.cafe_label") %>
+                <span class="text-sm font-semibold text-amber-700" aria-label="<%= t("views.common.required") %>">*</span>
+              </label>
+              <input id="drink_log_cafe_search"
+                     type="search"
+                     autocomplete="off"
+                     data-cafe-selection-target="query"
+                     data-home-brew-toggle-target="query"
+                     data-action="input->cafe-selection#filter"
+                     class="w-full rounded-xl border border-gray-200 bg-white px-3 py-3 text-sm text-gray-900 focus:border-amber-600 focus:outline-none focus:ring-2 focus:ring-amber-100"
+                     placeholder="<%= t("views.drink_logs.new.cafe_search_placeholder") %>">
 
-            <div data-cafe-selection-target="selected" class="mt-3 hidden rounded-2xl border border-gray-200 bg-amber-50 px-4 py-3">
-              <p class="text-xs font-semibold text-amber-700"><%= t("views.drink_logs.new.selected_cafe") %></p>
-              <div class="mt-2 flex items-center gap-3">
-                <img data-cafe-selection-target="selectedImage"
-                     alt=""
-                     class="h-14 w-14 rounded-2xl border border-gray-200 object-cover">
-                <div class="min-w-0">
-                  <p data-cafe-selection-target="selectedName" class="break-words text-sm font-bold text-gray-900"></p>
-                  <p data-cafe-selection-target="selectedAddress" class="mt-1 break-words text-xs text-gray-600"></p>
+              <div data-cafe-selection-target="selected" data-home-brew-toggle-target="selected" class="mt-3 hidden rounded-2xl border border-gray-200 bg-amber-50 px-4 py-3">
+                <p class="text-xs font-semibold text-amber-700"><%= t("views.drink_logs.new.selected_cafe") %></p>
+                <div class="mt-2 flex items-center gap-3">
+                  <img data-cafe-selection-target="selectedImage"
+                       alt=""
+                       class="h-14 w-14 rounded-2xl border border-gray-200 object-cover">
+                  <div class="min-w-0">
+                    <p data-cafe-selection-target="selectedName" class="break-words text-sm font-bold text-gray-900"></p>
+                    <p data-cafe-selection-target="selectedAddress" class="mt-1 break-words text-xs text-gray-600"></p>
+                  </div>
                 </div>
               </div>
-            </div>
 
-            <div data-cafe-selection-target="results" class="mt-2 hidden overflow-hidden rounded-2xl border border-gray-200 bg-white shadow-sm">
-              <p data-cafe-selection-target="message" class="px-4 py-3 text-sm text-gray-500"></p>
-              <% @cafes.each do |cafe| %>
-                <button type="button"
-                        data-cafe-selection-target="option"
-                        data-action="click->cafe-selection#select"
-                        data-cafe-id="<%= cafe.id %>"
-                        data-cafe-name="<%= cafe.name %>"
-                        data-cafe-address="<%= cafe.address %>"
-                        data-cafe-image-url="<%= cafe.image.attached? ? url_for(cafe.image) : asset_path("cafe_placeholder.png") %>"
-                        data-search="<%= cafe.name.downcase %>"
-                        class="hidden w-full border-t border-gray-100 px-4 py-3 text-left">
-                  <span class="block text-sm font-semibold text-gray-900"><%= cafe.name %></span>
-                  <span class="mt-1 block text-xs text-gray-500"><%= cafe.prefecture %> / <%= cafe.address %></span>
-                </button>
-              <% end %>
+              <div data-cafe-selection-target="results" data-home-brew-toggle-target="results" class="mt-2 hidden overflow-hidden rounded-2xl border border-gray-200 bg-white shadow-sm">
+                <p data-cafe-selection-target="message" data-home-brew-toggle-target="message" class="px-4 py-3 text-sm text-gray-500"></p>
+                <% @cafes.each do |cafe| %>
+                  <button type="button"
+                          data-cafe-selection-target="option"
+                          data-home-brew-toggle-target="option"
+                          data-action="click->cafe-selection#select"
+                          data-cafe-id="<%= cafe.id %>"
+                          data-cafe-name="<%= cafe.name %>"
+                          data-cafe-address="<%= cafe.address %>"
+                          data-cafe-image-url="<%= cafe.image.attached? ? url_for(cafe.image) : asset_path("cafe_placeholder.png") %>"
+                          data-search="<%= cafe.name.downcase %>"
+                          class="hidden w-full border-t border-gray-100 px-4 py-3 text-left">
+                    <span class="block text-sm font-semibold text-gray-900"><%= cafe.name %></span>
+                    <span class="mt-1 block text-xs text-gray-500"><%= cafe.prefecture %> / <%= cafe.address %></span>
+                  </button>
+                <% end %>
+              </div>
             </div>
           </div>
         <% end %>

@@ -17,6 +17,13 @@ RSpec.describe "Drink logs", type: :request do
     Rack::Test::UploadedFile.new(Rails.root.join("spec/fixtures/files/avatar.png"), "image/png")
   end
 
+  def create_home_brew_drink_log(**attributes)
+    build_drink_log(cafe: nil, **attributes).tap do |drink_log|
+      drink_log.brewed_at_home = true
+      drink_log.save!
+    end
+  end
+
   describe "GET /drink_logs/new" do
     it "ログインユーザーは画像選択UIを確認できること" do
       user = create_user
@@ -26,10 +33,17 @@ RSpec.describe "Drink logs", type: :request do
 
       html = Nokogiri::HTML(response.body)
       image_field = html.at_css('input[name="drink_log[image]"]')
+      cafe_mode_radio = html.at_css('input[type="radio"][name="drink_log[brewed_at_home]"][value="0"]')
+      home_brew_mode_radio = html.at_css('input[type="radio"][name="drink_log[brewed_at_home]"][value="1"]')
 
       expect(response).to have_http_status(:ok)
       expect(image_field["accept"]).to eq("image/jpeg,image/png,image/webp")
+      expect(cafe_mode_radio).to be_present
+      expect(home_brew_mode_radio).to be_present
+      expect(response.body).to include(I18n.t("views.drink_logs.new.cafe_mode_label"))
+      expect(response.body).to include(I18n.t("views.drink_logs.new.home_brew_mode_label"))
       expect(response.body).to include(I18n.t("views.drink_logs.form.image_preview_placeholder"))
+      expect(response.body).to include(I18n.t("views.drink_logs.form.home_brew_image_help"))
     end
 
     it "return_toをフォーム送信まで引き継ぐこと" do
@@ -116,6 +130,32 @@ RSpec.describe "Drink logs", type: :request do
       }.to change(user.drink_logs, :count).by(1)
 
       expect(response).to redirect_to(cafe_path(cafe, tab: "logs"))
+    end
+
+    it "ログインユーザーは自宅記録を投稿でき、マイページへ遷移すること" do
+      user = create_user
+      roast_level_tag = create_roast_level_tag
+      taste_tag = create_taste_tag
+
+      sign_in user
+
+      expect {
+        post drink_logs_path, params: {
+          drink_log: {
+            brewed_at_home: "1",
+            menu_name: "ハンドドリップ",
+            drank_on: Date.current,
+            roast_level_tag_id: roast_level_tag.id,
+            memo: "家でゆっくり淹れた",
+            taste_tag_ids: [ taste_tag.id ]
+          }
+        }
+      }.to change(user.drink_logs, :count).by(1)
+
+      drink_log = user.drink_logs.last
+      expect(response).to redirect_to(mypage_path)
+      expect(drink_log).to be_brewed_at_home
+      expect(drink_log.cafe).to be_nil
     end
 
     it "ログインユーザーは詳細味わいタグの小項目を選んで投稿できること" do
@@ -315,6 +355,17 @@ RSpec.describe "Drink logs", type: :request do
       expect(response.body).to include("詳細確認ログ")
     end
 
+    it "自宅記録の詳細を閲覧できること" do
+      drink_log = create_home_brew_drink_log(menu_name: "自宅詳細ログ")
+
+      get drink_log_path(drink_log)
+
+      expect(response).to have_http_status(:ok)
+      expect(response.body).to include("自宅詳細ログ")
+      expect(response.body).to include(I18n.t("views.drink_logs.home_brewed_place"))
+      expect(response.body).not_to include("マイページへ戻る")
+    end
+
     it "飲んだログ画像がある場合は詳細に表示されること" do
       drink_log = create_drink_log(menu_name: "画像付き詳細ログ")
       attach_valid_image(drink_log, :image, filename: "drink_log.png")
@@ -327,15 +378,15 @@ RSpec.describe "Drink logs", type: :request do
       expect(html.at_css('img[alt="画像付き詳細ログ"]')).to be_present
     end
 
-    it "投稿者本人には編集・削除の導線が表示されること" do
+    it "投稿者本人にも編集・削除の導線が表示されないこと" do
       user = create_user
       drink_log = create_drink_log(user:)
 
       sign_in user
       get drink_log_path(drink_log)
 
-      expect(response.body).to include("編集する")
-      expect(response.body).to include("削除する")
+      expect(response.body).not_to include("編集する")
+      expect(response.body).not_to include("削除する")
     end
 
     it "投稿者本人以外には編集・削除の導線が表示されないこと" do
@@ -368,6 +419,17 @@ RSpec.describe "Drink logs", type: :request do
       get edit_drink_log_path(drink_log)
 
       expect(response).to have_http_status(:ok)
+    end
+
+    it "投稿者本人は自宅記録の編集画面を閲覧できること" do
+      user = create_user
+      drink_log = create_home_brew_drink_log(user:)
+
+      sign_in user
+      get edit_drink_log_path(drink_log)
+
+      expect(response).to have_http_status(:ok)
+      expect(response.body).to include(I18n.t("views.drink_logs.home_brewed_place"))
     end
 
     it "投稿者本人は画像選択UIを確認できること" do
@@ -614,6 +676,16 @@ RSpec.describe "Drink logs", type: :request do
       delete drink_log_path(drink_log)
 
       expect(response).to redirect_to(cafe_path(cafe, tab: "logs"))
+    end
+
+    it "自宅記録で戻り先がない場合はマイページへ遷移すること" do
+      user = create_user
+      drink_log = create_home_brew_drink_log(user:)
+
+      sign_in user
+      delete drink_log_path(drink_log)
+
+      expect(response).to redirect_to(mypage_path)
     end
 
     it "不正な戻り先URLが指定された場合は外部URLへ遷移しないこと" do

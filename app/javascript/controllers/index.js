@@ -28,6 +28,9 @@ application.register("flash", FlashController)
 import FlavorSelectorController from "./flavor_selector_controller"
 application.register("flavor-selector", FlavorSelectorController)
 
+import HomeBrewToggleController from "./home_brew_toggle_controller"
+application.register("home-brew-toggle", HomeBrewToggleController)
+
 import ImagePreviewController from "./image_preview_controller"
 application.register("image-preview", ImagePreviewController)
 

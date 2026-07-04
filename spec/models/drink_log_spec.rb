@@ -41,11 +41,25 @@ RSpec.describe DrinkLog, type: :model do
       expect(drink_log.errors[:user]).to be_present
     end
 
-    it "カフェが必須であること" do
+    it "自宅記録でない場合はカフェが必須であること" do
       drink_log = build_drink_log(cafe: nil)
 
       expect(drink_log).not_to be_valid
       expect(drink_log.errors[:cafe]).to be_present
+    end
+
+    it "自宅記録の場合はカフェなしで作成できること" do
+      drink_log = build_drink_log(cafe: nil)
+      drink_log.brewed_at_home = true
+
+      expect(drink_log).to be_valid
+    end
+
+    it "自宅記録の場合は指定されたカフェが保存前に解除されること" do
+      drink_log = build_drink_log
+      drink_log.brewed_at_home = true
+
+      expect { drink_log.valid? }.to change(drink_log, :cafe).to(nil)
     end
 
     it "焙煎度タグが必須であること" do

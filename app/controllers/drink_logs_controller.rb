@@ -15,7 +15,7 @@ class DrinkLogsController < ApplicationController
     @drink_log = current_user.drink_logs.build(drink_log_create_params)
 
     if @drink_log.save
-      redirect_to safe_return_path(cafe_path(@drink_log.cafe, tab: "logs")), notice: t("flash.drink_logs.create")
+      redirect_to drink_log_create_redirect_path, notice: t("flash.drink_logs.create")
     else
       set_form_options
       render :new, status: :unprocessable_entity
@@ -23,7 +23,7 @@ class DrinkLogsController < ApplicationController
   end
 
   def show
-    @safe_back_path = safe_return_path(cafe_path(@drink_log.cafe, tab: "logs"))
+    @safe_back_path = safe_return_path(drink_log_fallback_path)
   end
 
   def edit
@@ -43,7 +43,7 @@ class DrinkLogsController < ApplicationController
   end
 
   def destroy
-    redirect_path = safe_return_path(cafe_path(@drink_log.cafe, tab: "logs"))
+    redirect_path = safe_return_path(drink_log_fallback_path)
     @drink_log.destroy!
     redirect_to redirect_path, notice: t("flash.drink_logs.destroy")
   end
@@ -58,6 +58,7 @@ class DrinkLogsController < ApplicationController
       :roast_level_tag_id,
       :memo,
       :image,
+      :brewed_at_home,
       taste_tag_ids: []
     )
   end
@@ -97,5 +98,17 @@ class DrinkLogsController < ApplicationController
 
   def authorize_owner!
     redirect_to drink_log_path(@drink_log), alert: t("flash.drink_logs.owner_required") unless @drink_log.user == current_user
+  end
+
+  def drink_log_create_redirect_path
+    return mypage_path if @drink_log.brewed_at_home?
+
+    safe_return_path(cafe_path(@drink_log.cafe, tab: "logs"))
+  end
+
+  def drink_log_fallback_path
+    return mypage_path if @drink_log.brewed_at_home?
+
+    cafe_path(@drink_log.cafe, tab: "logs")
   end
 end
