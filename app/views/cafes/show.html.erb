@@ -9,13 +9,19 @@
 <%# 店舗写真エリア %>
 <div class="relative flex aspect-video items-center justify-center bg-amber-50">
   <% if @cafe.image.attached? %>
-    <%= image_tag @cafe.image,
+    <%= image_tag @cafe.image.variant(resize_to_fill: [ 960, 540 ]),
                   alt: @cafe.name,
-                  class: "h-full w-full object-cover" %>
+                  class: "h-full w-full object-cover",
+                  decoding: "async",
+                  width: 960,
+                  height: 540 %>
   <% else %>
-    <%= image_tag "cafe_placeholder.png",
+    <%= image_tag "cafe_placeholder.webp",
                   alt: "",
-                  class: "h-full w-full object-cover" %>
+                  class: "h-full w-full object-cover",
+                  decoding: "async",
+                  width: 960,
+                  height: 540 %>
   <% end %>
 
   <%# 店舗名・エリア：写真の上にオーバーレイで表示 %>

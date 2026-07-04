@@ -6,7 +6,12 @@
 <div class="flex flex-1 flex-col items-center bg-amber-50 px-5 pt-8 pb-8">
   <div class="flex min-h-[760px] w-full max-w-md flex-col items-center rounded-3xl border border-amber-100 bg-white px-5 py-8 shadow-[0_4px_18px_rgba(90,51,24,0.08)]">
     <div class="mb-5 h-16 w-16 rounded-2xl border border-amber-100 bg-amber-50 p-1.5 shadow-sm">
-      <%= image_tag "coffee_compass_orbit_transparent.png", alt: t("app.name"), class: "h-full w-full object-contain" %>
+      <%= image_tag "coffee_compass_orbit_transparent.webp",
+                    alt: t("app.name"),
+                    class: "h-full w-full object-contain",
+                    decoding: "async",
+                    width: 512,
+                    height: 512 %>
     </div>
 
     <p class="brand-wordmark mb-7 text-2xl font-bold text-[#5a3318]"><%= t("app.name") %></p>
@@ -30,7 +35,12 @@
           data: { turbo: false },
           form_class: "w-full max-w-[340px]",
           class: "flex w-full items-center justify-center gap-3 rounded-2xl border border-amber-200 bg-white px-4 py-4 text-sm font-bold text-amber-900 shadow-sm transition-colors hover:bg-amber-50 cursor-pointer" do %>
-        <%= image_tag "google_logo_g_logo_icon.webp", alt: "", class: "h-5 w-5 object-contain" %>
+        <%= image_tag "google_logo_g_logo_icon.webp",
+                      alt: "",
+                      class: "h-5 w-5 object-contain",
+                      decoding: "async",
+                      width: 20,
+                      height: 20 %>
         <span><%= t("views.devise.omniauth.google_sign_up") %></span>
       <% end %>
       <p class="mt-2 max-w-[320px] text-center text-xs font-medium leading-relaxed text-amber-700"><%= t("views.devise.omniauth.google_help") %></p>

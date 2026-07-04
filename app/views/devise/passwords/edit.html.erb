@@ -6,7 +6,12 @@
 <div class="flex flex-1 flex-col items-center bg-amber-50 px-5 pt-8 pb-8">
   <div class="flex min-h-[680px] w-full max-w-md flex-col items-center rounded-3xl border border-amber-100 bg-white px-5 py-8 shadow-[0_4px_18px_rgba(90,51,24,0.08)]">
     <div class="mb-5 h-16 w-16 rounded-2xl border border-amber-100 bg-amber-50 p-1.5 shadow-sm">
-      <%= image_tag "coffee_compass_orbit_transparent.png", alt: t("app.name"), class: "h-full w-full object-contain" %>
+      <%= image_tag "coffee_compass_orbit_transparent.webp",
+                    alt: t("app.name"),
+                    class: "h-full w-full object-contain",
+                    decoding: "async",
+                    width: 512,
+                    height: 512 %>
     </div>
 
     <p class="brand-wordmark mb-7 text-2xl font-bold text-[#5a3318]"><%= t("app.name") %></p>

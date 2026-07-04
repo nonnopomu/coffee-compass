@@ -26,7 +26,12 @@
       <div class="hidden min-w-0 items-center gap-4 sm:flex">
         <%= link_to root_path, class: "flex min-w-0 items-center gap-2 text-[#5a3318]" do %>
           <div class="h-9 w-9 flex-shrink-0 p-0.5">
-            <%= image_tag "coffee_compass_orbit_transparent.png", alt: t("app.name"), class: "h-full w-full scale-125 object-contain" %>
+            <%= image_tag "coffee_compass_orbit_transparent.webp",
+                          alt: t("app.name"),
+                          class: "h-full w-full scale-125 object-contain",
+                          decoding: "async",
+                          width: 512,
+                          height: 512 %>
           </div>
           <span class="brand-wordmark truncate text-lg font-bold"><%= t("app.name") %></span>
         <% end %>
@@ -56,9 +61,12 @@
                   data-user-menu-target="button"
                   data-action="click->user-menu#toggle">
             <% if current_user.avatar.attached? %>
-              <%= image_tag current_user.avatar,
+              <%= image_tag current_user.avatar.variant(resize_to_fill: [ 96, 96 ]),
                             alt: t("views.users.show.avatar_alt", name: current_user.name),
-                            class: "h-9 w-9 rounded-full object-cover" %>
+                            class: "h-9 w-9 rounded-full object-cover",
+                            decoding: "async",
+                            width: 96,
+                            height: 96 %>
             <% else %>
               <span class="flex h-9 w-9 items-center justify-center rounded-full bg-amber-600 text-sm font-medium text-white"><%= current_user.name[0] %></span>
             <% end %>

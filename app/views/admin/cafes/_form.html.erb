@@ -26,17 +26,23 @@
                            class: "sr-only" %>
           <%= f.label :image, class: "block cursor-pointer overflow-hidden rounded-lg border border-dashed border-amber-200 bg-amber-50/40 transition-colors hover:bg-amber-50" do %>
             <% if cafe.image.attached? %>
-              <%= image_tag cafe.image,
+              <%= image_tag cafe.image.variant(resize_to_fill: [ 640, 360 ]),
                             alt: t("views.admin.cafes.form.image_preview_alt"),
                             data: { image_preview_target: "image" },
-                            class: "h-48 w-full object-cover" %>
+                            class: "h-48 w-full object-cover",
+                            decoding: "async",
+                            width: 640,
+                            height: 360 %>
               <div data-image-preview-target="placeholder" class="hidden h-48 items-center justify-center px-4 text-center text-sm font-semibold text-amber-700">
                 <%= t("views.admin.cafes.form.image_preview_placeholder") %>
               </div>
             <% else %>
               <img data-image-preview-target="image"
                    alt="<%= t("views.admin.cafes.form.image_preview_alt") %>"
-                   class="hidden h-48 w-full object-cover">
+                   class="hidden h-48 w-full object-cover"
+                   decoding="async"
+                   width="640"
+                   height="360">
               <div data-image-preview-target="placeholder" class="flex h-48 items-center justify-center px-4 text-center text-sm font-semibold text-amber-700">
                 <%= t("views.admin.cafes.form.image_preview_placeholder") %>
               </div>

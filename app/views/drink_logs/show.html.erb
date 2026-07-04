@@ -23,9 +23,12 @@
           <h2 class="text-sm font-semibold text-[#5a3318]"><%= DrinkLog.human_attribute_name(:image) %></h2>
         </div>
 
-        <%= image_tag @drink_log.image,
+        <%= image_tag @drink_log.image.variant(resize_to_fill: [ 960, 540 ]),
                       alt: @drink_log.menu_name,
-                      class: "aspect-video w-full rounded-2xl border border-gray-200 object-cover" %>
+                      class: "aspect-video w-full rounded-2xl border border-gray-200 object-cover",
+                      decoding: "async",
+                      width: 960,
+                      height: 540 %>
       </section>
     <% end %>
 
