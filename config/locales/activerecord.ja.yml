@@ -30,7 +30,7 @@ ja:
       drink_log:
         cafe: カフェ
         user: ユーザー
-        menu_name: メニュー名
+        menu_name: 飲んだコーヒー
         drank_on: 飲んだ日
         roast_level_tag: 焙煎度
         roast_level_tag_id: 焙煎度

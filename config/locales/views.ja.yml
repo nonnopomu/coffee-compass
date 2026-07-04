@@ -98,15 +98,18 @@ ja:
         empty: まだログ投稿はありません。
         record_this_cafe_log: このカフェのログを記録する
     drink_logs:
+      home_brewed_place: 自分で淹れたコーヒー
       new:
         page_title: ログ作成
         selected_cafe_label: 記録するカフェ
         record_label: ログを記録
-        title: カフェを選択して記録する
+        title: ログを記録
         description: 登録済みのカフェから、ログを残す店舗を選んでください。
         cafe_label: カフェ
         cafe_search_placeholder: カフェ名で検索
         selected_cafe: 選択中のカフェ
+        cafe_mode_label: カフェの記録
+        home_brew_mode_label: 自宅の記録
       edit:
         page_title: ログ編集
         selected_cafe_label: 記録したカフェ
@@ -116,8 +119,8 @@ ja:
         author_label: 投稿者
         record_heading: コーヒーの記録
         cafe: カフェ
+        place: 記録場所
         no_memo: メモはありません。
-        back_to_cafe: カフェ詳細へ戻る
       form:
         basic_info: 基本情報
         menu_name_placeholder: "例: エチオピア イルガチェフェ ウォッシュド"
@@ -141,7 +144,8 @@ ja:
         memo: 感想メモ
         memo_placeholder: 味の印象やまた飲みたい理由など
         image: 写真
-        image_help: コーヒーやお店の雰囲気が伝わる写真を1枚添付できます。
+        image_help: コーヒーやお店の雰囲気が伝わる写真を1枚添付できます
+        home_brew_image_help: 自宅で淹れたコーヒーや豆の写真を1枚添付できます
         image_update_help: 新しい写真を選ぶと、登録済みの写真を差し替えます。
         image_preview_alt: 選択した写真のプレビュー
         image_preview_placeholder: 写真を選択

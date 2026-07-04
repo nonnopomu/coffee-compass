@@ -24,6 +24,20 @@ RSpec.describe "Mypage", type: :request do
       expect(response.body).not_to include(other_log.menu_name)
     end
 
+    it "自宅記録がカフェなしで表示されること" do
+      user = create_user
+      drink_log = build_drink_log(user:, cafe: nil, menu_name: "家で淹れたログ")
+      drink_log.brewed_at_home = true
+      drink_log.save!
+
+      sign_in user
+      get mypage_path
+
+      expect(response).to have_http_status(:ok)
+      expect(response.body).to include(drink_log.menu_name)
+      expect(response.body).to include(I18n.t("views.drink_logs.home_brewed_place"))
+    end
+
     it "自分の飲んだログ画像が表示されること" do
       user = create_user
       drink_log = create_drink_log(user:, menu_name: "画像付き自分ログ")

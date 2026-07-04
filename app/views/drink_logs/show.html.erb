@@ -5,7 +5,7 @@
 <div class="flex flex-1 flex-col bg-white sm:items-center sm:bg-amber-50 sm:px-5 sm:pt-6 sm:pb-8">
   <div class="w-full bg-white px-4 py-5 sm:max-w-md sm:rounded-3xl sm:border sm:border-amber-100 sm:px-5 sm:py-6 sm:shadow-[0_4px_18px_rgba(90,51,24,0.08)]">
     <div class="border-b border-gray-200 pb-5">
-    <p class="text-xs font-medium text-amber-600"><%= @drink_log.cafe.name %></p>
+    <p class="text-xs font-medium text-amber-600"><%= @drink_log.brewed_at_home? ? t("views.drink_logs.home_brewed_place") : @drink_log.cafe.name %></p>
     <h1 class="mt-2 text-xl font-bold text-[#5a3318]"><%= @drink_log.menu_name %></h1>
     <div class="mt-3 flex flex-wrap items-center gap-x-3 gap-y-1 text-xs text-gray-500">
       <span><%= l(@drink_log.drank_on, format: :long) %></span>
@@ -36,8 +36,12 @@
 
       <div class="divide-y divide-gray-100 rounded-2xl border border-gray-200 bg-white">
         <div class="flex items-start justify-between gap-4 px-4 py-3">
-          <p class="text-sm text-gray-500"><%= t("views.drink_logs.show.cafe") %></p>
-          <%= link_to @drink_log.cafe.name, @safe_back_path, class: "text-right text-sm font-semibold text-amber-700" %>
+          <p class="text-sm text-gray-500"><%= t("views.drink_logs.show.place") %></p>
+          <% if @drink_log.brewed_at_home? %>
+            <p class="text-right text-sm font-semibold text-gray-900"><%= t("views.drink_logs.home_brewed_place") %></p>
+          <% else %>
+            <%= link_to @drink_log.cafe.name, @safe_back_path, class: "text-right text-sm font-semibold text-amber-700" %>
+          <% end %>
         </div>
 
         <div class="flex items-start justify-between gap-4 px-4 py-3">
@@ -84,19 +88,6 @@
       </div>
     </section>
 
-    <% if user_signed_in? && @drink_log.user == current_user %>
-      <section class="space-y-3">
-        <%= link_to t("views.common.edit_action"), edit_drink_log_path(@drink_log), class: "block w-full rounded-2xl border border-amber-200 bg-white px-4 py-3 text-center text-sm font-semibold text-amber-800 transition-colors hover:bg-amber-50" %>
-        <%= link_to t("views.common.delete_action"),
-                    drink_log_path(@drink_log, return_to: @safe_back_path),
-                    data: { turbo_method: :delete, turbo_confirm: t("views.common.delete_log_confirm") },
-                    class: "block w-full rounded-2xl border border-red-200 bg-white px-4 py-3 text-center text-sm font-semibold text-red-600 transition-colors hover:bg-red-50" %>
-      </section>
-    <% end %>
-
-    <div>
-      <%= link_to t("views.drink_logs.show.back_to_cafe"), @safe_back_path, class: "block w-full rounded-2xl bg-amber-600 px-4 py-3 text-center text-sm font-semibold text-white shadow-sm transition-colors hover:bg-amber-700" %>
-    </div>
     </div>
   </div>
 </div>
