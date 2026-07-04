@@ -6,9 +6,12 @@
     <div class="border-b border-gray-200 pb-5">
     <div class="flex items-center gap-4">
       <% if current_user.avatar.attached? %>
-        <%= image_tag current_user.avatar,
+        <%= image_tag current_user.avatar.variant(resize_to_fill: [ 160, 160 ]),
                       alt: t("views.users.show.avatar_alt", name: current_user.name),
-                      class: "h-16 w-16 rounded-full border border-gray-200 object-cover shadow-sm" %>
+                      class: "h-16 w-16 rounded-full border border-gray-200 object-cover shadow-sm",
+                      decoding: "async",
+                      width: 160,
+                      height: 160 %>
       <% else %>
         <div class="flex h-16 w-16 shrink-0 items-center justify-center rounded-full border border-gray-200 bg-white shadow-sm" aria-label="<%= t("views.users.show.avatar_placeholder", name: current_user.name) %>">
           <span class="text-xl font-bold text-gray-700"><%= current_user.name.first %></span>
@@ -77,9 +80,13 @@
                 </div>
 
                 <% if drink_log.image.attached? %>
-                  <%= image_tag drink_log.image,
+                  <%= image_tag drink_log.image.variant(resize_to_fill: [ 640, 360 ]),
                                 alt: drink_log.menu_name,
-                                class: "mt-3 aspect-video w-full rounded-lg border border-gray-100 object-cover" %>
+                                class: "mt-3 aspect-video w-full rounded-lg border border-gray-100 object-cover",
+                                loading: "lazy",
+                                decoding: "async",
+                                width: 640,
+                                height: 360 %>
                 <% end %>
 
                 <% if drink_log.memo.present? %>

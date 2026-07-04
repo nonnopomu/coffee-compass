@@ -19,15 +19,23 @@
       <section data-controller="avatar-preview" class="rounded-2xl border border-gray-200 bg-white px-4 py-5">
         <div class="flex items-center gap-4">
           <% if @user.avatar.attached? %>
-            <%= image_tag @user.avatar,
+            <%= image_tag @user.avatar.variant(resize_to_fill: [ 160, 160 ]),
                           alt: t("views.users.show.avatar_alt", name: @user.name),
                           data: { avatar_preview_target: "image" },
-                          class: "h-20 w-20 shrink-0 rounded-full border border-gray-200 object-cover shadow-sm" %>
+                          class: "h-20 w-20 shrink-0 rounded-full border border-gray-200 object-cover shadow-sm",
+                          decoding: "async",
+                          width: 160,
+                          height: 160 %>
             <div data-avatar-preview-target="placeholder" class="hidden h-20 w-20 shrink-0 items-center justify-center rounded-full border border-gray-200 bg-white shadow-sm" aria-label="<%= t("views.users.show.avatar_placeholder", name: @user.name) %>">
               <span class="text-2xl font-bold text-gray-700"><%= @user.name.first %></span>
             </div>
           <% else %>
-            <img data-avatar-preview-target="image" alt="<%= t("views.users.show.avatar_alt", name: @user.name) %>" class="hidden h-20 w-20 shrink-0 rounded-full border border-gray-200 object-cover shadow-sm">
+            <img data-avatar-preview-target="image"
+                 alt="<%= t("views.users.show.avatar_alt", name: @user.name) %>"
+                 class="hidden h-20 w-20 shrink-0 rounded-full border border-gray-200 object-cover shadow-sm"
+                 decoding="async"
+                 width="160"
+                 height="160">
             <div data-avatar-preview-target="placeholder" class="flex h-20 w-20 shrink-0 items-center justify-center rounded-full border border-gray-200 bg-white shadow-sm" aria-label="<%= t("views.users.show.avatar_placeholder", name: @user.name) %>">
               <span class="text-2xl font-bold text-gray-700"><%= @user.name.first %></span>
             </div>

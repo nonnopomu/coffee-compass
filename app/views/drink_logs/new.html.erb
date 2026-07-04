@@ -9,13 +9,19 @@
         <div class="border-b border-gray-200 pb-5">
           <div class="flex items-center gap-3">
             <% if @cafe.image.attached? %>
-              <%= image_tag @cafe.image,
+              <%= image_tag @cafe.image.variant(resize_to_fill: [ 160, 160 ]),
                             alt: @cafe.name,
-                            class: "h-14 w-14 rounded-2xl border border-amber-100 object-cover" %>
+                            class: "h-14 w-14 rounded-2xl border border-amber-100 object-cover",
+                            decoding: "async",
+                            width: 160,
+                            height: 160 %>
             <% else %>
-              <%= image_tag "cafe_placeholder.png",
+              <%= image_tag "cafe_placeholder.webp",
                             alt: "",
-                            class: "h-14 w-14 rounded-2xl border border-amber-100 object-cover" %>
+                            class: "h-14 w-14 rounded-2xl border border-amber-100 object-cover",
+                            decoding: "async",
+                            width: 160,
+                            height: 160 %>
             <% end %>
 
             <div class="min-w-0">
@@ -79,7 +85,10 @@
           <%= f.label :image, class: "block cursor-pointer overflow-hidden rounded-2xl border border-dashed border-gray-200 bg-gray-50/70" do %>
             <img data-image-preview-target="image"
                  alt="<%= t("views.drink_logs.form.image_preview_alt") %>"
-                 class="hidden h-48 w-full object-cover">
+                 class="hidden h-48 w-full object-cover"
+                 decoding="async"
+                 width="640"
+                 height="360">
             <div data-image-preview-target="placeholder" class="flex h-48 items-center justify-center px-4 text-center text-sm font-semibold text-[#5a3318]">
               <%= t("views.drink_logs.form.image_preview_placeholder") %>
             </div>
@@ -131,7 +140,10 @@
                 <div class="mt-2 flex items-center gap-3">
                   <img data-cafe-selection-target="selectedImage"
                        alt=""
-                       class="h-14 w-14 rounded-2xl border border-gray-200 object-cover">
+                       class="h-14 w-14 rounded-2xl border border-gray-200 object-cover"
+                       decoding="async"
+                       width="160"
+                       height="160">
                   <div class="min-w-0">
                     <p data-cafe-selection-target="selectedName" class="break-words text-sm font-bold text-gray-900"></p>
                     <p data-cafe-selection-target="selectedAddress" class="mt-1 break-words text-xs text-gray-600"></p>
@@ -149,7 +161,7 @@
                           data-cafe-id="<%= cafe.id %>"
                           data-cafe-name="<%= cafe.name %>"
                           data-cafe-address="<%= cafe.address %>"
-                          data-cafe-image-url="<%= cafe.image.attached? ? url_for(cafe.image) : asset_path("cafe_placeholder.png") %>"
+                          data-cafe-image-url="<%= cafe.image.attached? ? url_for(cafe.image.variant(resize_to_fill: [ 160, 160 ])) : asset_path("cafe_placeholder.webp") %>"
                           data-search="<%= cafe.name.downcase %>"
                           class="hidden w-full border-t border-gray-100 px-4 py-3 text-left">
                     <span class="block text-sm font-semibold text-gray-900"><%= cafe.name %></span>

@@ -4,8 +4,8 @@ class DrinkLogsController < ApplicationController
   before_action :authorize_owner!, only: [ :edit, :update, :destroy ]
 
   def new
-    @cafe = Cafe.find(params[:cafe_id]) if params[:cafe_id].present?
-    @cafes = Cafe.published.order(:prefecture, :name) unless @cafe
+    @cafe = Cafe.with_attached_image.find(params[:cafe_id]) if params[:cafe_id].present?
+    @cafes = Cafe.published.with_attached_image.order(:prefecture, :name) unless @cafe
     @drink_log = DrinkLog.new(cafe: @cafe)
     @roast_level_tags = Tag.where(category: :roast_level, is_active: true).order(:display_order)
     @taste_tags = beginner_taste_tags
@@ -80,7 +80,7 @@ class DrinkLogsController < ApplicationController
 
   def set_form_options
     @cafe = @drink_log.cafe if @drink_log.cafe.present?
-    @cafes = Cafe.published.order(:prefecture, :name) unless @cafe
+    @cafes = Cafe.published.with_attached_image.order(:prefecture, :name) unless @cafe
     @roast_level_tags = Tag.where(category: :roast_level, is_active: true).order(:display_order)
     @taste_tags = beginner_taste_tags
   end
