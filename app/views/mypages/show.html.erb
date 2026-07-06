@@ -80,7 +80,7 @@
                 </div>
 
                 <% if drink_log.image.attached? %>
-                  <%= image_tag drink_log.image.variant(resize_to_fill: [ 640, 360 ]),
+                  <%= image_tag drink_log.image,
                                 alt: drink_log.menu_name,
                                 class: "mt-3 aspect-video w-full rounded-lg border border-gray-100 object-cover",
                                 loading: "lazy",

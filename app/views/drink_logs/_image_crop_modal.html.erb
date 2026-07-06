@@ -1,0 +1,46 @@
+<div data-image-crop-target="modal"
+     class="fixed inset-0 z-50 hidden items-center justify-center bg-black/70 px-4 py-6"
+     role="dialog"
+     aria-modal="true"
+     aria-labelledby="<%= title_id %>">
+  <div class="flex max-h-full w-full max-w-md flex-col rounded-2xl bg-white p-4 shadow-xl">
+    <div class="flex items-center justify-between gap-3">
+      <h3 id="<%= title_id %>" class="text-base font-bold text-[#5a3318]"><%= t("views.drink_logs.form.crop_title") %></h3>
+      <button type="button"
+              data-action="image-crop#cancel"
+              class="rounded-xl border border-gray-200 bg-white px-3 py-2 text-sm font-semibold text-gray-700">
+        <%= t("views.common.cancel") %>
+      </button>
+    </div>
+
+    <p data-image-crop-target="error"
+       class="mt-3 hidden rounded-lg border border-red-200 bg-red-50 px-3 py-2 text-sm text-red-700"></p>
+
+    <div data-image-crop-target="frame"
+         class="relative mt-4 h-72 w-full overflow-hidden rounded-2xl bg-gray-950 sm:h-80">
+      <img data-image-crop-target="sourceImage"
+           alt=""
+           draggable="false"
+           class="pointer-events-none absolute max-w-none select-none">
+      <div data-image-crop-target="cropBox"
+           data-action="pointerdown->image-crop#startDrag pointermove->image-crop#drag pointerup->image-crop#endDrag pointercancel->image-crop#endDrag"
+           class="absolute cursor-move touch-none border-2 border-sky-400 shadow-[0_0_0_9999px_rgba(0,0,0,0.55)]">
+        <div class="pointer-events-none absolute inset-0 border border-white/80"></div>
+      </div>
+    </div>
+
+    <div class="mt-4 grid grid-cols-2 gap-3">
+      <button type="button"
+              data-action="image-crop#cancel"
+              class="rounded-2xl border border-gray-200 bg-white px-4 py-3 text-center text-sm font-semibold text-gray-700">
+        <%= t("views.common.cancel") %>
+      </button>
+      <button type="button"
+              data-image-crop-target="applyButton"
+              data-action="image-crop#apply"
+              class="rounded-2xl bg-amber-600 px-4 py-3 text-center text-sm font-semibold text-white shadow-sm disabled:cursor-wait disabled:opacity-60">
+        <%= t("views.drink_logs.form.crop_apply") %>
+      </button>
+    </div>
+  </div>
+</div>
