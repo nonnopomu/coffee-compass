@@ -150,6 +150,10 @@ ja:
         image_preview_alt: 選択した写真のプレビュー
         image_preview_placeholder: 写真を選択
         remove_image: 写真を削除
+        crop_title: 写真を調整
+        crop_apply: 適用
+        crop_load_error: 写真を読み込めませんでした。JPEG、PNG、WebPの画像を選択してください。
+        crop_process_error: 写真の調整に失敗しました。別の写真でお試しください。
     mypages:
       show:
         page_title: マイページ

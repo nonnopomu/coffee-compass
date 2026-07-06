@@ -44,7 +44,13 @@
           </div>
         <% end %>
 
-        <section class="space-y-4" data-controller="image-preview">
+        <section class="space-y-4"
+                 data-controller="image-crop"
+                 data-image-crop-output-width-value="1280"
+                 data-image-crop-output-height-value="720"
+                 data-image-crop-quality-value="0.82"
+                 data-image-crop-load-error-value="<%= t("views.drink_logs.form.crop_load_error") %>"
+                 data-image-crop-process-error-value="<%= t("views.drink_logs.form.crop_process_error") %>">
           <div class="flex items-center gap-2 border-l-4 border-amber-600 pl-3">
             <h2 class="text-sm font-semibold text-[#5a3318]"><%= t("views.drink_logs.form.image") %></h2>
           </div>
@@ -52,41 +58,44 @@
           <div class="rounded-2xl border border-gray-200 bg-white px-4 py-4">
             <%= f.file_field :image,
                              accept: "image/jpeg,image/png,image/webp",
-                             data: { image_preview_target: "input", action: "change->image-preview#show" },
+                             data: { image_crop_target: "input", action: "change->image-crop#select" },
                              class: "sr-only" %>
-            <%= hidden_field_tag "drink_log[remove_image]", "0", data: { image_preview_target: "removeField" } %>
+            <%= hidden_field_tag "drink_log[remove_image]", "0", data: { image_crop_target: "removeField" } %>
             <%= f.label :image, class: "block cursor-pointer overflow-hidden rounded-2xl border border-dashed border-gray-200 bg-gray-50/70" do %>
               <% if @drink_log.image.attached? %>
-                <%= image_tag @drink_log.image.variant(resize_to_fill: [ 640, 360 ]),
+                <%= image_tag @drink_log.image,
                               alt: t("views.drink_logs.form.image_preview_alt"),
-                              data: { image_preview_target: "image" },
+                              data: { image_crop_target: "image" },
                               class: "h-48 w-full object-cover",
                               decoding: "async",
                               width: 640,
                               height: 360 %>
-                <div data-image-preview-target="placeholder" class="hidden h-48 items-center justify-center px-4 text-center text-sm font-semibold text-[#5a3318]">
+                <div data-image-crop-target="placeholder" class="hidden h-48 items-center justify-center px-4 text-center text-sm font-semibold text-[#5a3318]">
                   <%= t("views.drink_logs.form.image_preview_placeholder") %>
                 </div>
               <% else %>
-                <img data-image-preview-target="image"
+                <img data-image-crop-target="image"
                      alt="<%= t("views.drink_logs.form.image_preview_alt") %>"
                      class="hidden h-48 w-full object-cover"
                      decoding="async"
                      width="640"
                      height="360">
-                <div data-image-preview-target="placeholder" class="flex h-48 items-center justify-center px-4 text-center text-sm font-semibold text-[#5a3318]">
+                <div data-image-crop-target="placeholder" class="flex h-48 items-center justify-center px-4 text-center text-sm font-semibold text-[#5a3318]">
                   <%= t("views.drink_logs.form.image_preview_placeholder") %>
                 </div>
               <% end %>
             <% end %>
             <button type="button"
-                    data-image-preview-target="removeButton"
-                    data-action="image-preview#remove"
+                    data-image-crop-target="removeButton"
+                    data-action="image-crop#remove"
                     class="mt-3 <%= "hidden" unless @drink_log.image.attached? %> text-sm font-semibold text-red-600">
               <%= t("views.drink_logs.form.remove_image") %>
             </button>
             <p class="mt-2 text-xs leading-5 text-gray-500"><%= t("views.drink_logs.form.image_update_help") %></p>
           </div>
+
+          <%= render "drink_logs/image_crop_modal",
+                     title_id: "drink-log-image-crop-title-edit" %>
         </section>
 
         <section class="space-y-4">

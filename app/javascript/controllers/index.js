@@ -31,6 +31,9 @@ application.register("flavor-selector", FlavorSelectorController)
 import HomeBrewToggleController from "./home_brew_toggle_controller"
 application.register("home-brew-toggle", HomeBrewToggleController)
 
+import ImageCropController from "./image_crop_controller"
+application.register("image-crop", ImageCropController)
+
 import ImagePreviewController from "./image_preview_controller"
 application.register("image-preview", ImagePreviewController)
 
