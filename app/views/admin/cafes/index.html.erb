@@ -36,7 +36,7 @@
           <div class="flex items-start gap-3">
             <div class="flex h-16 w-20 shrink-0 items-center justify-center overflow-hidden rounded-lg bg-gray-100">
               <% if cafe.image.attached? %>
-                <%= image_tag cafe.image.variant(resize_to_fill: [ 320, 256 ]),
+                <%= image_tag cafe.image,
                               alt: cafe.name,
                               class: "h-full w-full object-cover",
                               loading: "lazy",

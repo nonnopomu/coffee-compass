@@ -61,7 +61,7 @@
                   data-user-menu-target="button"
                   data-action="click->user-menu#toggle">
             <% if current_user.avatar.attached? %>
-              <%= image_tag current_user.avatar.variant(resize_to_fill: [ 96, 96 ]),
+              <%= image_tag current_user.avatar,
                             alt: t("views.users.show.avatar_alt", name: current_user.name),
                             class: "h-9 w-9 rounded-full object-cover",
                             decoding: "async",

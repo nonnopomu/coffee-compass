@@ -6,7 +6,7 @@
     <div class="border-b border-gray-200 pb-5">
     <div class="flex items-center gap-4">
       <% if current_user.avatar.attached? %>
-        <%= image_tag current_user.avatar.variant(resize_to_fill: [ 160, 160 ]),
+        <%= image_tag current_user.avatar,
                       alt: t("views.users.show.avatar_alt", name: current_user.name),
                       class: "h-16 w-16 rounded-full border border-gray-200 object-cover shadow-sm",
                       decoding: "async",
