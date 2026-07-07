@@ -1,3 +1,6 @@
+<% title = local_assigns.fetch(:title, t("views.shared.image_crop.title")) %>
+<% apply_label = local_assigns.fetch(:apply_label, t("views.shared.image_crop.apply")) %>
+
 <div data-image-crop-target="modal"
      class="fixed inset-0 z-50 hidden items-center justify-center bg-black/70 px-4 py-6"
      role="dialog"
@@ -5,7 +8,7 @@
      aria-labelledby="<%= title_id %>">
   <div class="flex max-h-full w-full max-w-md flex-col rounded-2xl bg-white p-4 shadow-xl">
     <div class="flex items-center justify-between gap-3">
-      <h3 id="<%= title_id %>" class="text-base font-bold text-[#5a3318]"><%= t("views.drink_logs.form.crop_title") %></h3>
+      <h3 id="<%= title_id %>" class="text-base font-bold text-[#5a3318]"><%= title %></h3>
       <button type="button"
               data-action="image-crop#cancel"
               class="rounded-xl border border-gray-200 bg-white px-3 py-2 text-sm font-semibold text-gray-700">
@@ -39,7 +42,7 @@
               data-image-crop-target="applyButton"
               data-action="image-crop#apply"
               class="rounded-2xl bg-amber-600 px-4 py-3 text-center text-sm font-semibold text-white shadow-sm disabled:cursor-wait disabled:opacity-60">
-        <%= t("views.drink_logs.form.crop_apply") %>
+        <%= apply_label %>
       </button>
     </div>
   </div>

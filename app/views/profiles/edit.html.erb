@@ -16,27 +16,34 @@
         </div>
       <% end %>
 
-      <section data-controller="avatar-preview" class="rounded-2xl border border-gray-200 bg-white px-4 py-5">
+      <section class="rounded-2xl border border-gray-200 bg-white px-4 py-5"
+               data-controller="image-crop"
+               data-image-crop-output-width-value="512"
+               data-image-crop-output-height-value="512"
+               data-image-crop-quality-value="0.82"
+               data-image-crop-file-name-value="avatar_image"
+               data-image-crop-load-error-value="<%= t("views.shared.image_crop.load_error") %>"
+               data-image-crop-process-error-value="<%= t("views.shared.image_crop.process_error") %>">
         <div class="flex items-center gap-4">
           <% if @user.avatar.attached? %>
-            <%= image_tag @user.avatar.variant(resize_to_fill: [ 160, 160 ]),
+            <%= image_tag @user.avatar,
                           alt: t("views.users.show.avatar_alt", name: @user.name),
-                          data: { avatar_preview_target: "image" },
+                          data: { image_crop_target: "image" },
                           class: "h-20 w-20 shrink-0 rounded-full border border-gray-200 object-cover shadow-sm",
                           decoding: "async",
                           width: 160,
                           height: 160 %>
-            <div data-avatar-preview-target="placeholder" class="hidden h-20 w-20 shrink-0 items-center justify-center rounded-full border border-gray-200 bg-white shadow-sm" aria-label="<%= t("views.users.show.avatar_placeholder", name: @user.name) %>">
+            <div data-image-crop-target="placeholder" class="hidden h-20 w-20 shrink-0 items-center justify-center rounded-full border border-gray-200 bg-white shadow-sm" aria-label="<%= t("views.users.show.avatar_placeholder", name: @user.name) %>">
               <span class="text-2xl font-bold text-gray-700"><%= @user.name.first %></span>
             </div>
           <% else %>
-            <img data-avatar-preview-target="image"
+            <img data-image-crop-target="image"
                  alt="<%= t("views.users.show.avatar_alt", name: @user.name) %>"
                  class="hidden h-20 w-20 shrink-0 rounded-full border border-gray-200 object-cover shadow-sm"
                  decoding="async"
                  width="160"
                  height="160">
-            <div data-avatar-preview-target="placeholder" class="flex h-20 w-20 shrink-0 items-center justify-center rounded-full border border-gray-200 bg-white shadow-sm" aria-label="<%= t("views.users.show.avatar_placeholder", name: @user.name) %>">
+            <div data-image-crop-target="placeholder" class="flex h-20 w-20 shrink-0 items-center justify-center rounded-full border border-gray-200 bg-white shadow-sm" aria-label="<%= t("views.users.show.avatar_placeholder", name: @user.name) %>">
               <span class="text-2xl font-bold text-gray-700"><%= @user.name.first %></span>
             </div>
           <% end %>
@@ -46,7 +53,7 @@
             <div class="flex min-w-0 flex-col gap-2 sm:flex-row sm:items-center">
               <%= f.file_field :avatar,
                                accept: "image/jpeg,image/png,image/webp",
-                               data: { avatar_preview_target: "input", action: "change->avatar-preview#show" },
+                               data: { image_crop_target: "input", action: "change->image-crop#select" },
                                class: "sr-only" %>
               <%= f.label :avatar,
                           t("views.profiles.edit.choose_avatar"),
@@ -54,6 +61,10 @@
             </div>
           </div>
         </div>
+
+        <%= render "shared/image_crop_modal",
+                   title_id: "avatar-image-crop-title",
+                   title: t("views.shared.image_crop.title") %>
       </section>
 
       <section class="rounded-2xl border border-gray-200 bg-white px-4 py-5">

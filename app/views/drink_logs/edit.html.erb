@@ -7,7 +7,7 @@
     <div class="border-b border-gray-200 pb-5">
       <div class="flex items-center gap-3">
         <% if @drink_log.cafe&.image&.attached? %>
-          <%= image_tag @drink_log.cafe.image.variant(resize_to_fill: [ 160, 160 ]),
+          <%= image_tag @drink_log.cafe.image,
                         alt: @drink_log.cafe.name,
                         class: "h-14 w-14 rounded-2xl border border-amber-100 object-cover",
                         decoding: "async",
@@ -49,8 +49,9 @@
                  data-image-crop-output-width-value="1280"
                  data-image-crop-output-height-value="720"
                  data-image-crop-quality-value="0.82"
-                 data-image-crop-load-error-value="<%= t("views.drink_logs.form.crop_load_error") %>"
-                 data-image-crop-process-error-value="<%= t("views.drink_logs.form.crop_process_error") %>">
+                 data-image-crop-file-name-value="drink_log_image"
+                 data-image-crop-load-error-value="<%= t("views.shared.image_crop.load_error") %>"
+                 data-image-crop-process-error-value="<%= t("views.shared.image_crop.process_error") %>">
           <div class="flex items-center gap-2 border-l-4 border-amber-600 pl-3">
             <h2 class="text-sm font-semibold text-[#5a3318]"><%= t("views.drink_logs.form.image") %></h2>
           </div>
@@ -94,8 +95,9 @@
             <p class="mt-2 text-xs leading-5 text-gray-500"><%= t("views.drink_logs.form.image_update_help") %></p>
           </div>
 
-          <%= render "drink_logs/image_crop_modal",
-                     title_id: "drink-log-image-crop-title-edit" %>
+          <%= render "shared/image_crop_modal",
+                     title_id: "drink-log-image-crop-title-edit",
+                     title: t("views.shared.image_crop.title") %>
         </section>
 
         <section class="space-y-4">

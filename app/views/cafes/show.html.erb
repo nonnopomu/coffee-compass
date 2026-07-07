@@ -9,7 +9,7 @@
 <%# 店舗写真エリア %>
 <div class="relative flex aspect-video items-center justify-center bg-amber-50">
   <% if @cafe.image.attached? %>
-    <%= image_tag @cafe.image.variant(resize_to_fill: [ 960, 540 ]),
+    <%= image_tag @cafe.image,
                   alt: @cafe.name,
                   class: "h-full w-full object-cover",
                   decoding: "async",

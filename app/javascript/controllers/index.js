@@ -10,9 +10,6 @@ application.register("admin-tag-form", AdminTagFormController)
 import AreaSelectionController from "./area_selection_controller"
 application.register("area-selection", AreaSelectionController)
 
-import AvatarPreviewController from "./avatar_preview_controller"
-application.register("avatar-preview", AvatarPreviewController)
-
 import CafeSelectionController from "./cafe_selection_controller"
 application.register("cafe-selection", CafeSelectionController)
 
@@ -33,9 +30,6 @@ application.register("home-brew-toggle", HomeBrewToggleController)
 
 import ImageCropController from "./image_crop_controller"
 application.register("image-crop", ImageCropController)
-
-import ImagePreviewController from "./image_preview_controller"
-application.register("image-preview", ImagePreviewController)
 
 import ModalController from "./modal_controller"
 application.register("modal", ModalController)

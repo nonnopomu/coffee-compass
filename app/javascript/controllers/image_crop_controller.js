@@ -22,6 +22,7 @@ export default class extends Controller {
     outputWidth: { type: Number, default: 1280 },
     outputHeight: { type: Number, default: 720 },
     quality: { type: Number, default: 0.82 },
+    fileName: { type: String, default: "cropped_image" },
     loadError: String,
     processError: String
   }
@@ -299,7 +300,7 @@ export default class extends Controller {
   }
 
   croppedFileName() {
-    const baseName = (this.pendingFileName || "drink_log_image").replace(/\.[^.]+$/, "")
+    const baseName = (this.pendingFileName || this.fileNameValue).replace(/\.[^.]+$/, "")
     return `${baseName}.${FILE_EXTENSION}`
   }
 

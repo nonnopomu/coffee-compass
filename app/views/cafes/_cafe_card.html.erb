@@ -4,7 +4,7 @@
   <%# 店舗写真エリア %>
   <div class="relative rounded-2xl overflow-hidden mb-4 bg-amber-50 aspect-video flex items-center justify-center">
     <% if cafe.image.attached? %>
-      <%= image_tag cafe.image.variant(resize_to_fill: [ 640, 360 ]),
+      <%= image_tag cafe.image,
                     alt: cafe.name,
                     class: "h-full w-full object-cover",
                     loading: "lazy",
