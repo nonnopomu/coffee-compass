@@ -12,7 +12,15 @@
   "チョコレート" => "chocolate.webp",
   "トースト" => "toast.webp"
 } %>
-<% selected_taste_tag_ids = f.object.taste_tag_ids.map(&:to_i) %>
+<% selected_taste_tag_records = f.object.drink_log_taste_tags.to_a %>
+<% selected_taste_tag_ids =
+     if selected_taste_tag_records.any?
+       selected_taste_tag_records
+         .sort_by { |record| [ record.position || 10_000, record.id || 10_000 ] }
+         .map { |record| record.tag_id.to_i }
+     else
+       f.object.taste_tag_ids.map(&:to_i)
+     end %>
 <% active_child_tag_ids = taste_tags.flat_map { |tag| tag.children.select(&:is_active?).map(&:id) } %>
 <% detail_mode_selected = (selected_taste_tag_ids & active_child_tag_ids).any? %>
 
@@ -22,6 +30,9 @@
      data-flavor-selector-image-mode-label-value="<%= t("views.drink_logs.form.image_taste_mode") %>"
      data-flavor-selector-detail-mode-label-value="<%= t("views.drink_logs.form.detailed_taste_button") %>">
   <%= f.hidden_field :taste_tag_ids, multiple: true, value: "" %>
+  <%= hidden_field_tag "drink_log[ordered_taste_tag_ids]",
+                       selected_taste_tag_ids.join(","),
+                       data: { flavor_selector_target: "orderedIds" } %>
 
   <div data-flavor-selector-target="imagePanel" class="<%= detail_mode_selected ? "hidden" : "" %> space-y-3">
     <div>

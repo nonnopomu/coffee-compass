@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_07_04_090000) do
+ActiveRecord::Schema[8.1].define(version: 2026_07_07_105315) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -74,8 +74,10 @@ ActiveRecord::Schema[8.1].define(version: 2026_07_04_090000) do
   create_table "drink_log_taste_tags", force: :cascade do |t|
     t.datetime "created_at", null: false
     t.bigint "drink_log_id", null: false
+    t.integer "position", null: false
     t.bigint "tag_id", null: false
     t.datetime "updated_at", null: false
+    t.index ["drink_log_id", "position"], name: "index_drink_log_taste_tags_on_drink_log_id_and_position", unique: true
     t.index ["drink_log_id", "tag_id"], name: "index_drink_log_taste_tags_on_drink_log_id_and_tag_id", unique: true
     t.index ["drink_log_id"], name: "index_drink_log_taste_tags_on_drink_log_id"
     t.index ["tag_id"], name: "index_drink_log_taste_tags_on_tag_id"

@@ -139,7 +139,7 @@ RSpec.describe DrinkLog, type: :model do
       jasmine_tag = create_taste_tag(name: "ジャスミン", parent: parent_tag)
       chamomile_tag = create_taste_tag(name: "カモミール", parent: parent_tag)
       drink_log = build_drink_log(taste_tag: jasmine_tag)
-      drink_log.drink_log_taste_tags.build(tag: chamomile_tag)
+      drink_log.drink_log_taste_tags.build(tag: chamomile_tag, position: 2)
       drink_log.save!
 
       expect(drink_log.aggregated_taste_tags).to contain_exactly(parent_tag)
@@ -151,10 +151,22 @@ RSpec.describe DrinkLog, type: :model do
       jasmine_tag = create_taste_tag(name: "ジャスミン", parent: floral_tag)
       strawberry_tag = create_taste_tag(name: "ストロベリー", parent: berry_tag)
       drink_log = build_drink_log(taste_tag: jasmine_tag)
-      drink_log.drink_log_taste_tags.build(tag: strawberry_tag)
+      drink_log.drink_log_taste_tags.build(tag: strawberry_tag, position: 2)
       drink_log.save!
 
       expect(drink_log.aggregated_taste_tags).to contain_exactly(floral_tag, berry_tag)
+    end
+  end
+
+  describe "#ordered_taste_tags" do
+    it "味わいタグをposition順に返すこと" do
+      first_taste_tag = create_taste_tag(name: "ベリー")
+      second_taste_tag = create_taste_tag(name: "チョコレート")
+      drink_log = build_drink_log(taste_tag: second_taste_tag)
+      drink_log.drink_log_taste_tags.build(tag: first_taste_tag, position: 2)
+      drink_log.save!
+
+      expect(drink_log.ordered_taste_tags).to eq([ second_taste_tag, first_taste_tag ])
     end
   end
 
@@ -179,7 +191,7 @@ RSpec.describe DrinkLog, type: :model do
       first_taste_tag = create_taste_tag(name: "フルーティー")
       second_taste_tag = create_taste_tag(name: "甘い")
       drink_log = build_drink_log(taste_tag: first_taste_tag)
-      drink_log.drink_log_taste_tags.build(tag: second_taste_tag)
+      drink_log.drink_log_taste_tags.build(tag: second_taste_tag, position: 2)
       drink_log.save!
 
       expect(drink_log.taste_tags).to contain_exactly(first_taste_tag, second_taste_tag)

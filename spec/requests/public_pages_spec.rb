@@ -69,7 +69,7 @@ RSpec.describe "Public pages", type: :request do
       jasmine_tag = create_taste_tag(name: "ジャスミン", parent: floral_tag)
       chamomile_tag = create_taste_tag(name: "カモミール", parent: floral_tag)
       drink_log = build_drink_log(cafe:, taste_tag: jasmine_tag)
-      drink_log.drink_log_taste_tags.build(tag: chamomile_tag)
+      drink_log.drink_log_taste_tags.build(tag: chamomile_tag, position: 2)
       drink_log.save!
 
       get cafe_path(cafe)

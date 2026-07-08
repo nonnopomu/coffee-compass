@@ -11,6 +11,7 @@ export default class extends Controller {
     "detailPanel",
     "modeSwitchButton",
     "modeSwitchLabel",
+    "orderedIds",
     "detailSelectedCount",
     "detailChildren",
     "detailAccordionButton",
@@ -23,9 +24,10 @@ export default class extends Controller {
   }
 
   connect() {
-    this.selectedIds = this.checkboxTargets
-      .filter((checkbox) => checkbox.checked)
-      .map((checkbox) => checkbox.value)
+    const orderedIds = this.initialOrderedIds
+
+    this.selectedIds = this.selectedIdsFromTargets(this.checkboxTargets, orderedIds)
+    this.detailSelectedIds = this.selectedIdsFromTargets(this.detailCheckboxTargets, orderedIds)
 
     this.currentMode = this.selectedDetailGroupIds.length > 0 ? "detail" : "image"
     this.expandedDetailGroupIds = [...this.selectedDetailGroupIds]
@@ -33,6 +35,7 @@ export default class extends Controller {
     this.update()
     this.updateMode()
     this.updateDetailAvailability()
+    this.updateOrderedIds()
   }
 
   toggle(event) {
@@ -47,13 +50,14 @@ export default class extends Controller {
 
     if (checkbox.checked) {
       this.clearDetailSelections()
-      this.selectedIds.push(checkbox.value)
+      this.selectedIds = this.appendSelectedId(this.selectedIds, checkbox.value)
     } else {
       this.selectedIds = this.selectedIds.filter((id) => id !== checkbox.value)
     }
 
     this.hideLimitMessage()
     this.update()
+    this.updateOrderedIds()
   }
 
   toggleDetail(event) {
@@ -68,11 +72,16 @@ export default class extends Controller {
         this.updateDetailAvailability()
         return
       }
+
+      this.detailSelectedIds = this.appendSelectedId(this.detailSelectedIds, checkbox.value)
+    } else {
+      this.detailSelectedIds = this.detailSelectedIds.filter((id) => id !== checkbox.value)
     }
 
     this.hideLimitMessage()
     this.hideDetailLimitMessage()
     this.updateDetailAvailability()
+    this.updateOrderedIds()
   }
 
   selectImageMode() {
@@ -81,12 +90,14 @@ export default class extends Controller {
     this.expandedDetailGroupIds = []
     this.updateMode()
     this.updateDetailAccordions()
+    this.updateOrderedIds()
   }
 
   selectDetailMode() {
     this.currentMode = "detail"
     this.clearBeginnerSelections()
     this.updateMode()
+    this.updateOrderedIds()
   }
 
   toggleMode() {
@@ -147,6 +158,7 @@ export default class extends Controller {
 
     this.selectedIds = []
     this.update()
+    this.updateOrderedIds()
   }
 
   clearDetailSelections() {
@@ -157,8 +169,10 @@ export default class extends Controller {
       checkbox.disabled = false
     })
 
+    this.detailSelectedIds = []
     this.hideDetailLimitMessage()
     this.updateDetailAvailability()
+    this.updateOrderedIds()
   }
 
   updateDetailAvailability() {
@@ -265,5 +279,42 @@ export default class extends Controller {
     this.modeSwitchButtonTargets.forEach((button) => {
       button.setAttribute("aria-label", nextModeLabel)
     })
+  }
+
+  appendSelectedId(selectedIds, id) {
+    return selectedIds.includes(id) ? selectedIds : [...selectedIds, id]
+  }
+
+  updateOrderedIds() {
+    if (!this.hasOrderedIdsTarget) return
+
+    const activeIds = this.currentMode === "detail"
+      ? this.activeSelectedIds(this.detailSelectedIds, this.detailCheckboxTargets)
+      : this.activeSelectedIds(this.selectedIds, this.checkboxTargets)
+
+    this.orderedIdsTarget.value = activeIds.join(",")
+  }
+
+  activeSelectedIds(selectedIds, checkboxes) {
+    return selectedIds.filter((id) => {
+      return checkboxes.some((checkbox) => checkbox.value === id && checkbox.checked)
+    })
+  }
+
+  selectedIdsFromTargets(checkboxes, orderedIds) {
+    const checkedIds = checkboxes
+      .filter((checkbox) => checkbox.checked)
+      .map((checkbox) => checkbox.value)
+
+    return [
+      ...orderedIds.filter((id) => checkedIds.includes(id)),
+      ...checkedIds.filter((id) => !orderedIds.includes(id))
+    ]
+  }
+
+  get initialOrderedIds() {
+    if (!this.hasOrderedIdsTarget) return []
+
+    return this.orderedIdsTarget.value.split(",").filter(Boolean)
   }
 }
