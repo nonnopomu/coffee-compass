@@ -5,7 +5,7 @@ class DrinkLog < ApplicationRecord
   enum :status, { published: 0, hidden: 1 }
 
   scope :with_display_associations, -> {
-    includes(:user, :cafe, :roast_level_tag, taste_tags: :parent)
+    includes(:user, :cafe, :roast_level_tag, drink_log_taste_tags: { tag: :parent })
   }
 
   scope :recent_first, -> {
@@ -30,8 +30,19 @@ class DrinkLog < ApplicationRecord
   validate :roast_level_tag_must_be_roast_level
   validate :must_have_at_least_one_taste_tag
 
+  def ordered_taste_tags
+    records =
+      if drink_log_taste_tags.loaded?
+        drink_log_taste_tags.sort_by { |record| [ record.position, record.id || 0 ] }
+      else
+        drink_log_taste_tags.includes(tag: :parent).order(:position, :id)
+      end
+
+    records.map(&:tag)
+  end
+
   def aggregated_taste_tags
-    taste_tags.map(&:aggregation_target).uniq(&:id)
+    ordered_taste_tags.map(&:aggregation_target).uniq(&:id)
   end
 
   private

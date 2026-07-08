@@ -76,7 +76,7 @@ module ModelTestHelpers
     )
 
     # DrinkLogは味わいタグが必須なので、保存前に中間レコードを組み立てる。
-    drink_log.drink_log_taste_tags.build(tag: taste_tag) if taste_tag
+    drink_log.drink_log_taste_tags.build(tag: taste_tag, position: 1) if taste_tag
 
     drink_log
   end

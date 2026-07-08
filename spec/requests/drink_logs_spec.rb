@@ -2,14 +2,14 @@ require "rails_helper"
 
 RSpec.describe "Drink logs", type: :request do
   def drink_log_params(cafe:, roast_level_tag:, taste_tags:, **overrides)
-    # フォームのhidden fieldから送るcafe_idと、選択式のタグIDをまとめて再現する。
+    # フォームのhidden fieldから送るcafe_idと、選択順つきのタグIDをまとめて再現する。
     {
       cafe_id: cafe.id,
       menu_name: "本日のコーヒー",
       drank_on: Date.current,
       roast_level_tag_id: roast_level_tag.id,
       memo: "香りがよかった",
-      taste_tag_ids: taste_tags.map(&:id)
+      ordered_taste_tag_ids: taste_tags.map(&:id).join(",")
     }.merge(overrides)
   end
 
@@ -147,7 +147,7 @@ RSpec.describe "Drink logs", type: :request do
             drank_on: Date.current,
             roast_level_tag_id: roast_level_tag.id,
             memo: "家でゆっくり淹れた",
-            taste_tag_ids: [ taste_tag.id ]
+            ordered_taste_tag_ids: taste_tag.id.to_s
           }
         }
       }.to change(user.drink_logs, :count).by(1)
@@ -193,6 +193,34 @@ RSpec.describe "Drink logs", type: :request do
 
       expect(response).to redirect_to(cafe_path(cafe, tab: "logs"))
       expect(DrinkLog.last.taste_tags).to include(child_tag)
+    end
+
+    it "選択された味わいタグの順番をpositionとして保存できること" do
+      user = create_user
+      cafe = create_cafe(status: :published)
+      roast_level_tag = create_roast_level_tag
+      first_taste_tag = create_taste_tag(name: "ベリー")
+      second_taste_tag = create_taste_tag(name: "シトラス")
+      third_taste_tag = create_taste_tag(name: "チョコレート")
+
+      sign_in user
+
+      post drink_logs_path, params: {
+        drink_log: drink_log_params(
+          cafe:,
+          roast_level_tag:,
+          taste_tags: [ second_taste_tag, first_taste_tag, third_taste_tag ]
+        )
+      }
+
+      taste_tag_positions = DrinkLog.last.drink_log_taste_tags.order(:position).pluck(:tag_id, :position)
+
+      expect(response).to redirect_to(cafe_path(cafe, tab: "logs"))
+      expect(taste_tag_positions).to eq([
+        [ second_taste_tag.id, 1 ],
+        [ first_taste_tag.id, 2 ],
+        [ third_taste_tag.id, 3 ]
+      ])
     end
 
     it "ログインユーザーは画像を添付して飲んだログを投稿できること" do
@@ -503,6 +531,32 @@ RSpec.describe "Drink logs", type: :request do
 
       expect(response).to redirect_to(drink_log_path(drink_log))
       expect(drink_log.reload.menu_name).to eq("更新後のログ")
+    end
+
+    it "投稿者本人は味わいタグの順番を更新できること" do
+      user = create_user
+      drink_log = create_drink_log(user:)
+      roast_level_tag = create_roast_level_tag
+      first_taste_tag = create_taste_tag(name: "花")
+      second_taste_tag = create_taste_tag(name: "ナッツ")
+
+      sign_in user
+      patch drink_log_path(drink_log), params: {
+        drink_log: drink_log_params(
+          cafe: drink_log.cafe,
+          roast_level_tag:,
+          taste_tags: [ second_taste_tag, first_taste_tag ],
+          menu_name: "更新後のログ"
+        )
+      }
+
+      taste_tag_positions = drink_log.reload.drink_log_taste_tags.order(:position).pluck(:tag_id, :position)
+
+      expect(response).to redirect_to(drink_log_path(drink_log))
+      expect(taste_tag_positions).to eq([
+        [ second_taste_tag.id, 1 ],
+        [ first_taste_tag.id, 2 ]
+      ])
     end
 
     it "投稿者本人は画像を添付して飲んだログを更新できること" do
