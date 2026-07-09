@@ -28,8 +28,20 @@ class CafesController < ApplicationController
                                      .transform_values(&:count)
                                      .sort_by { |tag, count| [ -count, tag.display_order, tag.name ] }
 
-    @taste_tag_trends = @drink_logs.flat_map(&:aggregated_taste_tags)
-                                     .tally
-                                     .sort_by { |tag, count| [ -count, tag.display_order, tag.name ] }
+    @taste_tag_trends = weighted_taste_tag_trends
+  end
+
+  def weighted_taste_tag_trends
+    taste_tag_scores = Hash.new(0)
+
+    @drink_logs.each do |drink_log|
+      drink_log.weighted_taste_tag_scores.each do |tag, score|
+        taste_tag_scores[tag] += score
+      end
+    end
+
+    taste_tag_scores.sort_by do |tag, score|
+      [ -score, tag.display_order, tag.name ]
+    end
   end
 end

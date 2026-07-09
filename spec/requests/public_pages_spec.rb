@@ -78,6 +78,52 @@ RSpec.describe "Public pages", type: :request do
       expect(response.body).to include("花")
     end
 
+    it "カフェ詳細の味わい傾向は選択順の重みづけスコア順に表示すること" do
+      cafe = create_cafe(status: :published)
+      floral_tag = create_taste_tag(name: "花", display_order: 1)
+      berry_tag = create_taste_tag(name: "ベリー", display_order: 2)
+
+      first_drink_log = build_drink_log(cafe:, taste_tag: berry_tag)
+      first_drink_log.drink_log_taste_tags.build(tag: floral_tag, position: 2)
+      first_drink_log.save!
+
+      second_drink_log = build_drink_log(cafe:, taste_tag: berry_tag)
+      second_drink_log.drink_log_taste_tags.build(tag: floral_tag, position: 2)
+      second_drink_log.save!
+
+      get cafe_path(cafe)
+
+      html = Nokogiri::HTML(response.body)
+      displayed_taste_tag_names = html.css("span")
+                                      .map { |span| span.text.strip }
+                                      .select { |name| [ berry_tag.name, floral_tag.name ].include?(name) }
+
+      expect(response).to have_http_status(:ok)
+      expect(displayed_taste_tag_names.first(2)).to eq([ berry_tag.name, floral_tag.name ])
+    end
+
+    it "カフェ詳細の味わい傾向は上位5件まで表示すること" do
+      cafe = create_cafe(status: :published)
+      taste_tags = Array.new(6) do |index|
+        create_taste_tag(name: "味わい#{index + 1}", display_order: index + 1)
+      end
+      drink_log = build_drink_log(cafe:, taste_tag: taste_tags.first)
+      taste_tags.drop(1).each.with_index(2) do |taste_tag, position|
+        drink_log.drink_log_taste_tags.build(tag: taste_tag, position:)
+      end
+      drink_log.save!
+
+      get cafe_path(cafe)
+
+      html = Nokogiri::HTML(response.body)
+      trend_list = html.at_css('[data-testid="taste-tag-trend-list"]')
+      displayed_taste_tag_names = trend_list.css("span").map { |span| span.text.strip }
+
+      expect(response).to have_http_status(:ok)
+      expect(displayed_taste_tag_names).to eq(taste_tags.first(5).map(&:name))
+      expect(displayed_taste_tag_names).not_to include(taste_tags.last.name)
+    end
+
     it "飲んだログ詳細を閲覧できること" do
       drink_log = create_drink_log(cafe: create_cafe(status: :published))
 

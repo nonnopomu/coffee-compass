@@ -45,6 +45,22 @@ class DrinkLog < ApplicationRecord
     ordered_taste_tags.map(&:aggregation_target).uniq(&:id)
   end
 
+  def weighted_taste_tag_scores
+    scores = {}
+
+    ordered_taste_tags.each_with_index do |tag, index|
+      aggregation_target = tag.aggregation_target
+      score = taste_tag_score_for(index)
+      current_score = scores[aggregation_target]
+
+      if current_score.nil? || score > current_score
+        scores[aggregation_target] = score
+      end
+    end
+
+    scores
+  end
+
   private
 
   def roast_level_tag_must_be_roast_level
@@ -59,5 +75,16 @@ class DrinkLog < ApplicationRecord
 
   def clear_cafe_when_brewed_at_home
     self.cafe = nil if brewed_at_home?
+  end
+
+  def taste_tag_score_for(index)
+    case index
+    when 0
+      3
+    when 1
+      2
+    else
+      1
+    end
   end
 end
