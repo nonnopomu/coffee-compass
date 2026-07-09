@@ -58,7 +58,8 @@
                                       aria: { label: aria_label },
                                       data: {
                                         flavor_selector_target: "checkbox",
-                                        action: "change->flavor-selector#toggle"
+                                        action: "change->flavor-selector#toggle",
+                                        flavor_tag_name: tag.name
                                       } %>
 
             <span class="sr-only"><%= aria_label %></span>
@@ -101,4 +102,13 @@
              taste_tags: taste_tags,
              selected_taste_tag_ids: selected_taste_tag_ids,
              detail_mode_selected: detail_mode_selected %>
+
+  <div class="hidden rounded-2xl border border-amber-100 bg-[#fffdf8] px-3.5 py-3 shadow-[0_8px_24px_rgba(120,72,20,0.06)]"
+       data-flavor-selector-target="selectedNames">
+    <div class="flex items-center gap-2">
+      <span class="h-1.5 w-1.5 rounded-full bg-amber-500" aria-hidden="true"></span>
+      <p class="text-xs font-semibold text-[#6b3f1d]"><%= t("views.drink_logs.form.selected_taste_tags") %></p>
+    </div>
+    <div class="mt-2 flex flex-wrap gap-2" data-flavor-selector-target="selectedNameList"></div>
+  </div>
 </div>

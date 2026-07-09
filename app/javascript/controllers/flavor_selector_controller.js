@@ -15,7 +15,9 @@ export default class extends Controller {
     "detailSelectedCount",
     "detailChildren",
     "detailAccordionButton",
-    "detailAccordionIcon"
+    "detailAccordionIcon",
+    "selectedNames",
+    "selectedNameList"
   ]
   static values = {
     max: Number,
@@ -286,13 +288,93 @@ export default class extends Controller {
   }
 
   updateOrderedIds() {
-    if (!this.hasOrderedIdsTarget) return
+    const activeIds = this.activeSelectedIdsForCurrentMode()
 
-    const activeIds = this.currentMode === "detail"
-      ? this.activeSelectedIds(this.detailSelectedIds, this.detailCheckboxTargets)
-      : this.activeSelectedIds(this.selectedIds, this.checkboxTargets)
+    if (this.hasOrderedIdsTarget) {
+      this.orderedIdsTarget.value = activeIds.join(",")
+    }
 
-    this.orderedIdsTarget.value = activeIds.join(",")
+    this.updateSelectedNames(activeIds)
+  }
+
+  activeSelectedIdsForCurrentMode() {
+    if (this.currentMode === "detail") {
+      return this.activeSelectedIds(this.detailSelectedIds, this.detailCheckboxTargets)
+    }
+
+    return this.activeSelectedIds(this.selectedIds, this.checkboxTargets)
+  }
+
+  updateSelectedNames(activeIds = this.activeSelectedIdsForCurrentMode()) {
+    if (!this.hasSelectedNamesTarget || !this.hasSelectedNameListTarget) return
+
+    const selectedItems = this.selectedItemsForCurrentMode(activeIds)
+
+    this.selectedNamesTarget.classList.toggle("hidden", selectedItems.length === 0)
+    this.selectedNameListTarget.replaceChildren(
+      ...selectedItems.map((item, index) => this.buildSelectedNameChip(item, index))
+    )
+  }
+
+  selectedItemsForCurrentMode(activeIds) {
+    const checkboxes = this.currentMode === "detail" ? this.detailCheckboxTargets : this.checkboxTargets
+
+    return activeIds
+      .map((id) => checkboxes.find((checkbox) => checkbox.value === id && checkbox.checked))
+      .filter(Boolean)
+      .map((checkbox) => ({ id: checkbox.value, name: checkbox.dataset.flavorTagName }))
+      .filter((item) => item.name)
+  }
+
+  buildSelectedNameChip(item, index) {
+    const chip = document.createElement("span")
+    chip.className = "inline-flex items-center gap-1.5 rounded-full border border-amber-200 bg-white px-2 py-1 text-xs font-semibold text-[#6b3f1d] shadow-sm"
+
+    const order = document.createElement("span")
+    order.className = "font-bold text-amber-700"
+    order.textContent = `${index + 1}.`
+
+    const name = document.createElement("span")
+    name.textContent = item.name
+
+    const removeButton = document.createElement("button")
+    removeButton.type = "button"
+    removeButton.className = "inline-flex h-5 w-5 cursor-pointer items-center justify-center rounded-full text-amber-700 transition-colors hover:bg-amber-100 focus:outline-none focus:ring-2 focus:ring-amber-200"
+    removeButton.setAttribute("aria-label", `${item.name}を選択から外す`)
+    removeButton.textContent = "×"
+    removeButton.addEventListener("click", () => this.removeSelection(item.id))
+
+    chip.append(order, name, removeButton)
+
+    return chip
+  }
+
+  removeSelection(id) {
+    if (this.currentMode === "detail") {
+      this.removeDetailSelection(id)
+    } else {
+      this.removeImageSelection(id)
+    }
+  }
+
+  removeImageSelection(id) {
+    const checkbox = this.checkboxTargets.find((target) => target.value === id)
+    if (checkbox) checkbox.checked = false
+
+    this.selectedIds = this.selectedIds.filter((selectedId) => selectedId !== id)
+    this.hideLimitMessage()
+    this.update()
+    this.updateOrderedIds()
+  }
+
+  removeDetailSelection(id) {
+    const checkbox = this.detailCheckboxTargets.find((target) => target.value === id)
+    if (checkbox) checkbox.checked = false
+
+    this.detailSelectedIds = this.detailSelectedIds.filter((selectedId) => selectedId !== id)
+    this.hideDetailLimitMessage()
+    this.updateDetailAvailability()
+    this.updateOrderedIds()
   }
 
   activeSelectedIds(selectedIds, checkboxes) {

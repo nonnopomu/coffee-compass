@@ -158,6 +158,43 @@ RSpec.describe DrinkLog, type: :model do
     end
   end
 
+  describe "#weighted_taste_tag_scores" do
+    it "味わいタグを選択順に応じたスコアで返すこと" do
+      floral_tag = create_taste_tag(name: "花")
+      berry_tag = create_taste_tag(name: "ベリー")
+      chocolate_tag = create_taste_tag(name: "チョコレート")
+      drink_log = build_drink_log(taste_tag: floral_tag)
+      drink_log.drink_log_taste_tags.build(tag: berry_tag, position: 2)
+      drink_log.drink_log_taste_tags.build(tag: chocolate_tag, position: 3)
+      drink_log.save!
+
+      expect(drink_log.weighted_taste_tag_scores).to eq(
+        floral_tag => 3,
+        berry_tag => 2,
+        chocolate_tag => 1
+      )
+    end
+
+    it "小項目タグは親タグのスコアとして返すこと" do
+      floral_tag = create_taste_tag(name: "花")
+      jasmine_tag = create_taste_tag(name: "ジャスミン", parent: floral_tag)
+      drink_log = create_drink_log(taste_tag: jasmine_tag)
+
+      expect(drink_log.weighted_taste_tag_scores).to eq(floral_tag => 3)
+    end
+
+    it "同じ親を持つ小項目タグは1ログ内で最も高いスコアだけを返すこと" do
+      floral_tag = create_taste_tag(name: "花")
+      jasmine_tag = create_taste_tag(name: "ジャスミン", parent: floral_tag)
+      chamomile_tag = create_taste_tag(name: "カモミール", parent: floral_tag)
+      drink_log = build_drink_log(taste_tag: jasmine_tag)
+      drink_log.drink_log_taste_tags.build(tag: chamomile_tag, position: 2)
+      drink_log.save!
+
+      expect(drink_log.weighted_taste_tag_scores).to eq(floral_tag => 3)
+    end
+  end
+
   describe "#ordered_taste_tags" do
     it "味わいタグをposition順に返すこと" do
       first_taste_tag = create_taste_tag(name: "ベリー")

@@ -72,7 +72,8 @@
                                   data: {
                                     flavor_selector_target: "detailCheckbox",
                                     action: "change->flavor-selector#toggleDetail",
-                                    flavor_group_id: parent_tag.id
+                                    flavor_group_id: parent_tag.id,
+                                    flavor_tag_name: child_tag.name
                                   } %>
                 <span class="h-2 w-2 rounded-full" style="background-color: <%= child_color_hex %>;"></span>
                 <span><%= child_tag.name %></span>
