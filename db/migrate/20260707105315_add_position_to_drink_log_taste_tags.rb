@@ -20,7 +20,7 @@ class AddPositionToDrinkLogTasteTags < ActiveRecord::Migration[8.1]
     change_column_null :drink_log_taste_tags, :position, false
 
     add_index :drink_log_taste_tags,
-              [:drink_log_id, :position],
+              [ :drink_log_id, :position ],
               unique: true,
               name: "index_drink_log_taste_tags_on_drink_log_id_and_position"
   end
