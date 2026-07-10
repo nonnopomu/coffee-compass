@@ -273,7 +273,8 @@ ja:
         easy_sign_up: かんたん登録
         email_login: メールアドレスでログイン
         email_sign_up: メールアドレスで登録
-        google_help: Googleアカウントで安全に利用できます
+        google_login_help: ログイン状態が一定期間保持されます
+        google_sign_up_help: 登録後もログイン状態が一定期間保持されます
       sessions:
         new:
           page_title: ログイン
@@ -281,6 +282,7 @@ ja:
           forgot_password: パスワードをお忘れの方
           first_time: 初めてご利用の方
           sign_up: 新規会員登録
+          remember_me: ログイン状態を保持する
       registrations:
         new:
           page_title: 新規登録

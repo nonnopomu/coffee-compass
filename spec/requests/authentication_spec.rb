@@ -1,6 +1,10 @@
 require "rails_helper"
 
 RSpec.describe "Authentication", type: :request do
+  def set_cookie_header
+    Array(response.headers["Set-Cookie"]).join("\n")
+  end
+
   describe "GET /users/sign_in" do
     it "ログインフォームに必須入力とパスワード最小文字数の入力補助があること" do
       get new_user_session_path
@@ -8,10 +12,13 @@ RSpec.describe "Authentication", type: :request do
       html = Nokogiri::HTML(response.body)
       email_field = html.at_css('input[name="user[email]"]')
       password_field = html.at_css('input[name="user[password]"]')
+      remember_me_field = html.at_css('input[type="checkbox"][name="user[remember_me]"]')
 
       expect(email_field["required"]).to eq("required")
       expect(password_field["required"]).to eq("required")
       expect(password_field["minlength"]).to eq(Devise.password_length.min.to_s)
+      expect(remember_me_field["type"]).to eq("checkbox")
+      expect(response.body).to include(I18n.t("views.devise.sessions.new.remember_me"))
     end
   end
 
@@ -241,6 +248,38 @@ RSpec.describe "Authentication", type: :request do
 
       expect(response).to redirect_to(root_path)
     end
+
+    it "ログイン状態を保持する場合はRemember me cookieを発行すること" do
+      user = create_user(email: "remember-login@example.com", password: "password")
+
+      post user_session_path, params: {
+        user: {
+          email: user.email,
+          password: "password",
+          remember_me: "1"
+        }
+      }
+
+      expect(response).to redirect_to(root_path)
+      expect(set_cookie_header).to include("remember_user_token")
+      expect(user.reload.remember_created_at).to be_present
+    end
+
+    it "ログイン状態を保持しない場合はRemember me cookieを発行しないこと" do
+      user = create_user(email: "session-only-login@example.com", password: "password")
+
+      post user_session_path, params: {
+        user: {
+          email: user.email,
+          password: "password",
+          remember_me: "0"
+        }
+      }
+
+      expect(response).to redirect_to(root_path)
+      expect(set_cookie_header).not_to include("remember_user_token")
+      expect(user.reload.remember_created_at).to be_nil
+    end
   end
 
   describe "POST /users/auth/google_oauth2" do
@@ -322,6 +361,16 @@ RSpec.describe "Authentication", type: :request do
       expect(response).to redirect_to(root_path)
     end
 
+    it "Googleログイン後にRemember me cookieを発行すること" do
+      post user_google_oauth2_omniauth_authorize_path
+      follow_redirect!
+
+      user = User.find_by!(email: "oauth-user@example.com")
+
+      expect(set_cookie_header).to include("remember_user_token")
+      expect(user.remember_created_at).to be_present
+    end
+
     it "Google認証情報を保存できない場合はログイン画面へ戻ること" do
       OmniAuth.config.mock_auth[:google_oauth2] = OmniAuth::AuthHash.new(
         provider: "google_oauth2",
@@ -377,6 +426,25 @@ RSpec.describe "Authentication", type: :request do
       delete destroy_user_session_path
 
       expect(response).to redirect_to(root_path)
+    end
+
+    it "ログアウト時にRemember me cookieを削除すること" do
+      user = create_user(email: "remember-sign-out@example.com", password: "password")
+
+      post user_session_path, params: {
+        user: {
+          email: user.email,
+          password: "password",
+          remember_me: "1"
+        }
+      }
+
+      expect(set_cookie_header).to include("remember_user_token")
+
+      delete destroy_user_session_path
+
+      expect(response).to redirect_to(root_path)
+      expect(set_cookie_header).to include("remember_user_token=;")
     end
   end
 end
