@@ -78,8 +78,13 @@ ja:
     cafes:
       index:
         page_title: カフェ一覧
+        result_count: "検索結果 %{count}件"
+        selected_conditions: 選択中の検索条件
+        prefecture_condition: "エリア: %{value}"
+        tag_condition: "タグ: %{value}"
+        keyword_condition: "キーワード: %{value}"
+        clear_conditions: 条件をクリア
         no_search_results: 条件に合うカフェが見つかりませんでした
-        change_conditions: 条件を変えて検索
         no_cafes: 現在表示できるカフェがありません
       show:
         page_title: カフェ詳細
