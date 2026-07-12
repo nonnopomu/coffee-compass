@@ -8,6 +8,9 @@ class CafesController < ApplicationController
     @cafes = @cafes.by_prefectures(params[:prefectures]) if params[:prefectures].present?
     @cafes = @cafes.by_tag_ids(params[:tag_ids])         if params[:tag_ids].present?
     @cafes = @cafes.by_keyword(params[:keyword])          if params[:keyword].present?
+    @selected_prefectures = Array(params[:prefectures]).reject(&:blank?)
+    @selected_tags = Tag.where(id: params[:tag_ids]).order(:display_order)
+    @selected_keyword = params[:keyword].presence
   end
 
   def show

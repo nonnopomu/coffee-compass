@@ -66,5 +66,61 @@ RSpec.describe "Cafe search", type: :request do
       expect(response.body).to include(address_matched.name)
       expect(response.body).not_to include(unmatched.name)
     end
+
+    it "複数条件で絞り込み、選択中の条件と件数を表示できること" do
+      quiet_tag = create_cafe_feature_tag(name: "静かな空間")
+      wifi_tag = create_cafe_feature_tag(name: "Wi-Fiあり")
+      matched_cafe = create_cafe(
+        name: "札幌の静かなカフェ",
+        prefecture: "北海道",
+        address: "北海道札幌市中央区",
+        status: :published
+      )
+      tag_unmatched_cafe = create_cafe(
+        name: "札幌の作業カフェ",
+        prefecture: "北海道",
+        address: "北海道札幌市北区",
+        status: :published
+      )
+      prefecture_unmatched_cafe = create_cafe(
+        name: "東京の静かなカフェ",
+        prefecture: "東京都",
+        address: "東京都渋谷区",
+        status: :published
+      )
+      CafeTag.create!(cafe: matched_cafe, tag: quiet_tag)
+      CafeTag.create!(cafe: tag_unmatched_cafe, tag: wifi_tag)
+      CafeTag.create!(cafe: prefecture_unmatched_cafe, tag: quiet_tag)
+
+      get cafes_path, params: {
+        prefectures: [ "北海道" ],
+        tag_ids: [ quiet_tag.id ],
+        keyword: "札幌"
+      }
+
+      html = Nokogiri::HTML(response.body)
+
+      expect(response.body).to include(matched_cafe.name)
+      expect(response.body).not_to include(tag_unmatched_cafe.name)
+      expect(response.body).not_to include(prefecture_unmatched_cafe.name)
+      expect(response.body).to include("検索結果 1件")
+      expect(response.body).to include("エリア: 北海道")
+      expect(response.body).to include("タグ: 静かな空間")
+      expect(response.body).to include("キーワード: 札幌")
+      expect(html.at_css('a[href="/cafes"]')&.text).to include("条件をクリア")
+    end
+
+    it "検索結果が0件のとき条件クリア導線を表示すること" do
+      create_cafe(name: "青山ロースター", status: :published)
+
+      get cafes_path, params: { keyword: "存在しないカフェ" }
+
+      html = Nokogiri::HTML(response.body)
+
+      expect(response.body).to include("条件に合うカフェが見つかりませんでした")
+      expect(response.body).to include("検索結果 0件")
+      expect(response.body).to include("キーワード: 存在しないカフェ")
+      expect(html.at_css('a[href="/cafes"]')&.text).to include("条件をクリア")
+    end
   end
 end

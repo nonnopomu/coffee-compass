@@ -4,6 +4,48 @@
 
 <div class="flex flex-1 flex-col bg-white sm:items-center sm:bg-amber-50 sm:px-5 sm:pt-6 sm:pb-8">
   <div class="w-full bg-white px-4 py-5 sm:max-w-4xl sm:rounded-3xl sm:border sm:border-amber-100 sm:px-8 sm:py-8 sm:shadow-[0_4px_18px_rgba(90,51,24,0.08)]">
+  <% has_search_conditions = @selected_prefectures.any? || @selected_tags.any? || @selected_keyword.present? %>
+
+  <div class="mb-5 border-b border-gray-100 pb-4">
+    <div class="flex items-center justify-between gap-3">
+      <div>
+        <h1 class="text-lg font-bold text-gray-900"><%= t("views.cafes.index.page_title") %></h1>
+        <p class="mt-1 text-xs text-gray-500"><%= t("views.cafes.index.result_count", count: @cafes.size) %></p>
+      </div>
+
+      <% if has_search_conditions %>
+        <%= link_to t("views.cafes.index.clear_conditions"),
+                    cafes_path,
+                    class: "shrink-0 text-sm font-semibold text-amber-700 hover:text-amber-800" %>
+      <% end %>
+    </div>
+
+    <% if has_search_conditions %>
+      <div class="mt-4">
+        <p class="mb-2 text-xs font-semibold text-gray-500"><%= t("views.cafes.index.selected_conditions") %></p>
+        <div class="flex flex-wrap gap-2">
+          <% @selected_prefectures.each do |prefecture| %>
+            <span class="rounded-full border border-gray-200 bg-white px-3 py-1 text-xs font-semibold text-gray-700">
+              <%= t("views.cafes.index.prefecture_condition", value: prefecture) %>
+            </span>
+          <% end %>
+
+          <% @selected_tags.each do |tag| %>
+            <span class="rounded-full border border-gray-200 bg-white px-3 py-1 text-xs font-semibold text-gray-700">
+              <%= t("views.cafes.index.tag_condition", value: tag.name) %>
+            </span>
+          <% end %>
+
+          <% if @selected_keyword.present? %>
+            <span class="rounded-full border border-gray-200 bg-white px-3 py-1 text-xs font-semibold text-gray-700">
+              <%= t("views.cafes.index.keyword_condition", value: @selected_keyword) %>
+            </span>
+          <% end %>
+        </div>
+      </div>
+    <% end %>
+  </div>
+
   <% if @cafes.empty? %>
     <div class="flex flex-col items-center justify-center rounded-3xl border border-amber-100 bg-white px-8 py-24 text-center shadow-[0_4px_18px_rgba(90,51,24,0.08)]">
       <svg xmlns="http://www.w3.org/2000/svg" class="h-12 w-12 text-gray-300 mb-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -12,7 +54,7 @@
       </svg>
       <% if params[:prefectures].present? || params[:tag_ids].present? || params[:keyword].present? %>
         <p class="text-gray-400 text-sm"><%= t("views.cafes.index.no_search_results") %></p>
-        <%= link_to t("views.cafes.index.change_conditions"), root_path, class: "mt-3 text-sm text-amber-600 font-medium" %>
+        <%= link_to t("views.cafes.index.clear_conditions"), cafes_path, class: "mt-3 text-sm text-amber-600 font-medium" %>
       <% else %>
         <p class="text-gray-400 text-sm"><%= t("views.cafes.index.no_cafes") %></p>
       <% end %>

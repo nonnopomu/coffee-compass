@@ -26,6 +26,6 @@ class Cafe < ApplicationRecord
 
   scope :by_keyword, ->(keyword) {
     k = "%#{keyword}%"
-    where("name LIKE ? OR address LIKE ? OR description LIKE ?", k, k, k)
+    where("cafes.name LIKE ? OR cafes.address LIKE ? OR cafes.description LIKE ?", k, k, k)
   }
 end
