@@ -84,6 +84,20 @@ ja:
         tag_condition: "タグ: %{value}"
         keyword_condition: "キーワード: %{value}"
         clear_conditions: 条件をクリア
+        search_conditions: 検索条件
+        keyword_label: キーワード
+        keyword_placeholder: カフェ名・住所・紹介文など
+        area_label: エリア
+        feature_label: 特徴
+        choose_condition: 選択する
+        add_area_condition: エリアを追加
+        add_tag_condition: 特徴タグを追加
+        apply_search_conditions: この条件で再検索
+        selected_conditions_empty: 条件はまだ選択されていません
+        remove_condition: "%{label}を条件から外す"
+        area_modal_title: エリアを追加
+        tag_modal_title: 特徴タグを追加
+        modal_done: 選択を反映
         no_search_results: 条件に合うカフェが見つかりませんでした
         no_cafes: 現在表示できるカフェがありません
       show:

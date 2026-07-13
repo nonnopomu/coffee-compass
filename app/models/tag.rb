@@ -16,6 +16,10 @@ class Tag < ApplicationRecord
             uniqueness: { scope: :category, conditions: -> { where(is_active: true) } },
             if: :validate_active_display_order_uniqueness?
 
+  scope :active_cafe_features, -> {
+    where(category: :cafe_feature, is_active: true).order(:display_order)
+  }
+
   def aggregation_target
     parent || self
   end

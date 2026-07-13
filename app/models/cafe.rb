@@ -28,4 +28,8 @@ class Cafe < ApplicationRecord
     k = "%#{keyword}%"
     where("cafes.name LIKE ? OR cafes.address LIKE ? OR cafes.description LIKE ?", k, k, k)
   }
+
+  def self.available_prefectures
+    published.distinct.order(:prefecture).pluck(:prefecture)
+  end
 end
