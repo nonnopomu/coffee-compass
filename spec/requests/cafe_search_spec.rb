@@ -110,6 +110,52 @@ RSpec.describe "Cafe search", type: :request do
       expect(html.at_css('a[href="/cafes"]')&.text).to include("条件をクリア")
     end
 
+    it "一覧ページで検索条件を変更するフォームを表示できること" do
+      create_cafe(name: "北海道カフェ", prefecture: "北海道", status: :published)
+      create_cafe_feature_tag(name: "静かな空間")
+
+      get cafes_path
+
+      html = Nokogiri::HTML(response.body)
+
+      expect(response.body).to include("検索条件")
+      expect(response.body).to include("エリア")
+      expect(response.body).to include("特徴")
+      expect(response.body).to include("選択する")
+      expect(response.body).to include("この条件で再検索")
+      expect(html.at_css('form[action="/cafes"][method="get"]')).to be_present
+      expect(html.at_css('input[name="keyword"]')).to be_present
+      expect(html.at_css('input[name="prefectures[]"][value="北海道"]')).to be_present
+      expect(html.at_css('input[name="tag_ids[]"]')).to be_present
+    end
+
+    it "一覧ページの検索条件フォームに現在の検索条件を初期値として反映すること" do
+      quiet_tag = create_cafe_feature_tag(name: "静かな空間")
+      cafe = create_cafe(
+        name: "札幌の静かなカフェ",
+        prefecture: "北海道",
+        address: "北海道札幌市中央区",
+        status: :published
+      )
+      CafeTag.create!(cafe: cafe, tag: quiet_tag)
+
+      get cafes_path, params: {
+        prefectures: [ "北海道" ],
+        tag_ids: [ quiet_tag.id ],
+        keyword: "札幌"
+      }
+
+      html = Nokogiri::HTML(response.body)
+
+      prefecture_checkbox = html.at_css('input[name="prefectures[]"][value="北海道"]')
+      tag_checkbox = html.at_css(%(input[name="tag_ids[]"][value="#{quiet_tag.id}"]))
+      keyword_input = html.at_css('input[name="keyword"]')
+
+      expect(prefecture_checkbox["checked"]).to eq("checked")
+      expect(tag_checkbox["checked"]).to eq("checked")
+      expect(keyword_input["value"]).to eq("札幌")
+    end
+
     it "検索結果が0件のとき条件クリア導線を表示すること" do
       create_cafe(name: "青山ロースター", status: :published)
 

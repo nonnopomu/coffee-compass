@@ -13,6 +13,9 @@ application.register("area-selection", AreaSelectionController)
 import CafeSelectionController from "./cafe_selection_controller"
 application.register("cafe-selection", CafeSelectionController)
 
+import CafeSearchConditionsController from "./cafe_search_conditions_controller"
+application.register("cafe-search-conditions", CafeSearchConditionsController)
+
 import DatePickerController from "./date_picker_controller"
 application.register("date-picker", DatePickerController)
 

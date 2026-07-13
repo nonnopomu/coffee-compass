@@ -5,6 +5,7 @@
 <div class="flex flex-1 flex-col bg-white sm:items-center sm:bg-amber-50 sm:px-5 sm:pt-6 sm:pb-8">
   <div class="w-full bg-white px-4 py-5 sm:max-w-4xl sm:rounded-3xl sm:border sm:border-amber-100 sm:px-8 sm:py-8 sm:shadow-[0_4px_18px_rgba(90,51,24,0.08)]">
   <% has_search_conditions = @selected_prefectures.any? || @selected_tags.any? || @selected_keyword.present? %>
+  <% selected_tag_ids = @selected_tags.map(&:id) %>
 
   <div class="mb-5 border-b border-gray-100 pb-4">
     <div class="flex items-center justify-between gap-3">
@@ -20,25 +21,209 @@
       <% end %>
     </div>
 
-    <% if has_search_conditions %>
+    <%= form_with url: cafes_path,
+                  method: :get,
+                  data: {
+                    turbo: false,
+                    controller: "cafe-search-conditions",
+                    cafe_search_conditions_keyword_label_prefix_value: t("views.cafes.index.keyword_label")
+                  },
+                  class: "mt-5 rounded-2xl bg-[#f7f3ea] p-4 sm:p-5" do |f| %>
+      <div class="grid grid-cols-2 gap-2.5 sm:gap-3">
+        <div data-controller="modal">
+          <button type="button"
+                  data-action="click->modal#open"
+                  class="flex min-h-12 w-full cursor-pointer items-center justify-between rounded-lg border border-gray-200 bg-white px-3 text-left shadow-[0_1px_3px_rgba(90,51,24,0.05)] transition-colors hover:border-amber-200 hover:bg-amber-50/40">
+            <span class="flex min-w-0 items-center gap-2">
+              <span class="text-xs font-bold text-amber-700 sm:text-sm"><%= t("views.cafes.index.area_label") %></span>
+              <span class="truncate text-sm font-semibold text-gray-700"><%= t("views.cafes.index.choose_condition") %></span>
+            </span>
+            <span class="ml-2 flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-amber-600 text-base font-bold leading-none text-white">+</span>
+          </button>
+
+          <div data-modal-target="panel"
+               data-modal-display-class="flex"
+               data-action="click->modal#closeOnBackdrop"
+               class="hidden fixed inset-0 z-50 items-center justify-center bg-black/55 px-4 py-6">
+            <div class="flex max-h-[86vh] w-full max-w-5xl flex-col overflow-hidden rounded-2xl bg-white text-left shadow-2xl">
+              <div class="flex items-center justify-between border-b border-gray-100 px-5 py-4">
+                <div>
+                  <p class="text-base font-bold text-gray-900"><%= t("views.cafes.index.area_modal_title") %></p>
+                  <p class="mt-1 text-xs text-gray-400"><%= t("views.searches.area.modal_description") %></p>
+                </div>
+                <button type="button"
+                        data-action="click->modal#close"
+                        class="flex h-10 w-10 cursor-pointer items-center justify-center rounded-full text-2xl leading-none text-gray-500 hover:bg-gray-100">
+                  &times;
+                </button>
+              </div>
+
+              <div class="overflow-y-auto px-5 py-2">
+                <% SearchesHelper::PREFECTURES_BY_REGION.each do |region, prefectures| %>
+                  <div class="grid gap-3 border-b border-gray-100 py-4 sm:grid-cols-[9rem_1fr]">
+                    <p class="text-sm font-bold text-gray-900"><%= region %></p>
+                    <div class="grid grid-cols-2 gap-x-5 gap-y-4 sm:grid-cols-3 lg:grid-cols-5">
+                      <% prefectures.each do |prefecture| %>
+                        <% selected = @selected_prefectures.include?(prefecture) %>
+                        <% available = @available_prefectures.include?(prefecture) || selected %>
+                        <label class="flex items-center gap-2 <%= available ? 'cursor-pointer' : 'cursor-not-allowed opacity-40' %>">
+                          <%= f.check_box :prefectures,
+                              { multiple: true,
+                                checked: selected,
+                                disabled: !available,
+                                data: available ? {
+                                  cafe_search_conditions_target: "checkbox",
+                                  action: "change->cafe-search-conditions#update",
+                                  condition_type: "prefecture",
+                                  condition_label: t("views.cafes.index.prefecture_condition", value: prefecture)
+                                } : {},
+                                class: "h-5 w-5 rounded-md border-gray-300 text-amber-600 focus:ring-amber-500" },
+                              prefecture, nil %>
+                          <span class="text-sm font-medium <%= available ? 'text-gray-800' : 'text-gray-400' %>"><%= prefecture %></span>
+                        </label>
+                      <% end %>
+                    </div>
+                  </div>
+                <% end %>
+              </div>
+
+              <div class="border-t border-gray-100 bg-white px-5 py-4">
+                <button type="button"
+                        data-action="click->modal#close"
+                        class="w-full cursor-pointer rounded-xl bg-amber-600 py-3 text-sm font-semibold text-white hover:bg-amber-700">
+                  <%= t("views.cafes.index.modal_done") %>
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div data-controller="modal">
+          <button type="button"
+                  data-action="click->modal#open"
+                  class="flex min-h-12 w-full cursor-pointer items-center justify-between rounded-lg border border-gray-200 bg-white px-3 text-left shadow-[0_1px_3px_rgba(90,51,24,0.05)] transition-colors hover:border-amber-200 hover:bg-amber-50/40">
+            <span class="flex min-w-0 items-center gap-2">
+              <span class="text-xs font-bold text-amber-700 sm:text-sm"><%= t("views.cafes.index.feature_label") %></span>
+              <span class="truncate text-sm font-semibold text-gray-700"><%= t("views.cafes.index.choose_condition") %></span>
+            </span>
+            <span class="ml-2 flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-amber-600 text-base font-bold leading-none text-white">+</span>
+          </button>
+
+          <div data-modal-target="panel"
+               data-modal-display-class="flex"
+               data-action="click->modal#closeOnBackdrop"
+               class="hidden fixed inset-0 z-50 items-center justify-center bg-black/55 px-4 py-6">
+            <div class="flex max-h-[86vh] w-full max-w-3xl flex-col overflow-hidden rounded-2xl bg-white text-left shadow-2xl">
+              <div class="flex items-center justify-between border-b border-gray-100 px-5 py-4">
+                <div>
+                  <p class="text-base font-bold text-gray-900"><%= t("views.cafes.index.tag_modal_title") %></p>
+                  <p class="mt-1 text-xs text-gray-400"><%= t("views.searches.tag.feature_description") %></p>
+                </div>
+                <button type="button"
+                        data-action="click->modal#close"
+                        class="flex h-10 w-10 cursor-pointer items-center justify-center rounded-full text-2xl leading-none text-gray-500 hover:bg-gray-100">
+                  &times;
+                </button>
+              </div>
+
+              <div class="overflow-y-auto px-5 py-5">
+                <div class="flex flex-wrap gap-2">
+                  <% @feature_tags.each do |tag| %>
+                    <label class="inline-flex cursor-pointer items-center gap-2 rounded-full border border-gray-200 bg-white px-4 py-2 text-sm font-semibold text-gray-700 transition-colors hover:border-amber-300 hover:text-amber-700">
+                      <%= f.check_box :tag_ids,
+                          { multiple: true,
+                            checked: selected_tag_ids.include?(tag.id),
+                            data: {
+                              cafe_search_conditions_target: "checkbox",
+                              action: "change->cafe-search-conditions#update",
+                              condition_type: "tag",
+                              condition_label: t("views.cafes.index.tag_condition", value: tag.name)
+                            },
+                            class: "h-4 w-4 rounded border-gray-300 text-amber-600 focus:ring-amber-500" },
+                          tag.id, nil %>
+                      <span><%= tag.name %></span>
+                    </label>
+                  <% end %>
+                </div>
+              </div>
+
+              <div class="border-t border-gray-100 bg-white px-5 py-4">
+                <button type="button"
+                        data-action="click->modal#close"
+                        class="w-full cursor-pointer rounded-xl bg-amber-600 py-3 text-sm font-semibold text-white hover:bg-amber-700">
+                  <%= t("views.cafes.index.modal_done") %>
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
       <div class="mt-4">
-        <p class="mb-2 text-xs font-semibold text-gray-500"><%= t("views.cafes.index.selected_conditions") %></p>
-        <div class="flex flex-wrap gap-2">
+        <label for="cafe-search-keyword" class="sr-only"><%= t("views.cafes.index.keyword_label") %></label>
+        <div class="flex min-h-12 items-center rounded-lg border border-gray-200 bg-white px-3 shadow-[0_1px_3px_rgba(90,51,24,0.05)] focus-within:border-amber-300 focus-within:ring-2 focus-within:ring-amber-100">
+          <span class="mr-3 shrink-0 text-sm font-bold text-amber-700"><%= t("views.cafes.index.keyword_label") %></span>
+          <%= f.text_field :keyword,
+                           id: "cafe-search-keyword",
+                           value: @selected_keyword,
+                           placeholder: t("views.cafes.index.keyword_placeholder"),
+                           data: {
+                             cafe_search_conditions_target: "keyword",
+                             action: "input->cafe-search-conditions#update"
+                           },
+                           class: "min-w-0 flex-1 border-0 bg-transparent p-0 text-sm font-semibold text-gray-700 placeholder:text-gray-400 focus:outline-none focus:ring-0" %>
+        </div>
+      </div>
+
+      <%= f.submit t("views.cafes.index.apply_search_conditions"),
+                   class: "mt-5 w-full cursor-pointer rounded-lg bg-amber-600 px-4 py-3 text-sm font-bold text-white transition-colors hover:bg-amber-700" %>
+
+      <div class="mt-4">
+        <p class="sr-only"><%= t("views.cafes.index.selected_conditions") %></p>
+        <p data-cafe-search-conditions-target="empty"
+           class="text-xs text-gray-400 <%= 'hidden' if has_search_conditions %>">
+          <%= t("views.cafes.index.selected_conditions_empty") %>
+        </p>
+        <div data-cafe-search-conditions-target="chips" class="flex flex-wrap gap-2">
           <% @selected_prefectures.each do |prefecture| %>
-            <span class="rounded-full border border-gray-200 bg-white px-3 py-1 text-xs font-semibold text-gray-700">
-              <%= t("views.cafes.index.prefecture_condition", value: prefecture) %>
+            <span class="inline-flex items-center gap-1.5 rounded-full border border-gray-200 bg-white px-3 py-1 text-xs font-semibold text-gray-700 shadow-sm">
+              <span><%= t("views.cafes.index.prefecture_condition", value: prefecture) %></span>
+              <button type="button"
+                      data-action="click->cafe-search-conditions#remove"
+                      data-condition-type="prefecture"
+                      data-condition-value="<%= prefecture %>"
+                      aria-label="<%= t("views.cafes.index.remove_condition", label: prefecture) %>"
+                      class="cursor-pointer text-gray-400 transition-colors hover:text-amber-700">
+                &times;
+              </button>
             </span>
           <% end %>
 
           <% @selected_tags.each do |tag| %>
-            <span class="rounded-full border border-gray-200 bg-white px-3 py-1 text-xs font-semibold text-gray-700">
-              <%= t("views.cafes.index.tag_condition", value: tag.name) %>
+            <span class="inline-flex items-center gap-1.5 rounded-full border border-gray-200 bg-white px-3 py-1 text-xs font-semibold text-gray-700 shadow-sm">
+              <span><%= t("views.cafes.index.tag_condition", value: tag.name) %></span>
+              <button type="button"
+                      data-action="click->cafe-search-conditions#remove"
+                      data-condition-type="tag"
+                      data-condition-value="<%= tag.id %>"
+                      aria-label="<%= t("views.cafes.index.remove_condition", label: tag.name) %>"
+                      class="cursor-pointer text-gray-400 transition-colors hover:text-amber-700">
+                &times;
+              </button>
             </span>
           <% end %>
 
           <% if @selected_keyword.present? %>
-            <span class="rounded-full border border-gray-200 bg-white px-3 py-1 text-xs font-semibold text-gray-700">
-              <%= t("views.cafes.index.keyword_condition", value: @selected_keyword) %>
+            <span class="inline-flex items-center gap-1.5 rounded-full border border-gray-200 bg-white px-3 py-1 text-xs font-semibold text-gray-700 shadow-sm">
+              <span><%= t("views.cafes.index.keyword_condition", value: @selected_keyword) %></span>
+              <button type="button"
+                      data-action="click->cafe-search-conditions#remove"
+                      data-condition-type="keyword"
+                      data-condition-value="<%= @selected_keyword %>"
+                      aria-label="<%= t("views.cafes.index.remove_condition", label: @selected_keyword) %>"
+                      class="cursor-pointer text-gray-400 transition-colors hover:text-amber-700">
+                &times;
+              </button>
             </span>
           <% end %>
         </div>

@@ -11,6 +11,8 @@ class CafesController < ApplicationController
     @selected_prefectures = Array(params[:prefectures]).reject(&:blank?)
     @selected_tags = Tag.where(id: params[:tag_ids]).order(:display_order)
     @selected_keyword = params[:keyword].presence
+    @available_prefectures = Cafe.available_prefectures
+    @feature_tags = Tag.active_cafe_features
   end
 
   def show

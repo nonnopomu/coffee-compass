@@ -2,11 +2,8 @@ class PagesController < ApplicationController
   skip_before_action :authenticate_user!
 
   def top
-    @available_prefectures = Cafe.published
-                                 .distinct
-                                 .order(:prefecture)
-                                 .pluck(:prefecture)
-    @feature_tags = Tag.where(category: :cafe_feature, is_active: true).order(:display_order)
+    @available_prefectures = Cafe.available_prefectures
+    @feature_tags = Tag.active_cafe_features
   end
 
   def terms
