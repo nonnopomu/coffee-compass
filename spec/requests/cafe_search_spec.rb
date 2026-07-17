@@ -50,20 +50,15 @@ RSpec.describe "Cafe search", type: :request do
       expect(response.body).not_to include(wifi_cafe.name)
     end
 
-    it "キーワードで絞り込めること" do
+    it "カフェ名で絞り込めること" do
       name_matched = create_cafe(name: "青山ロースター", status: :published)
-      address_matched = create_cafe(name: "住所一致カフェ", address: "東京都新宿区1-1-1", status: :published)
+      address_matched = create_cafe(name: "住所一致カフェ", address: "東京都青山区1-1-1", status: :published)
       unmatched = create_cafe(name: "別のカフェ", address: "北海道札幌市1-1-1", status: :published)
 
       get cafes_path, params: { keyword: "青山" }
 
       expect(response.body).to include(name_matched.name)
       expect(response.body).not_to include(address_matched.name)
-      expect(response.body).not_to include(unmatched.name)
-
-      get cafes_path, params: { keyword: "新宿" }
-
-      expect(response.body).to include(address_matched.name)
       expect(response.body).not_to include(unmatched.name)
     end
 
@@ -106,7 +101,7 @@ RSpec.describe "Cafe search", type: :request do
       expect(response.body).to include("検索結果 1件")
       expect(response.body).to include("エリア: 北海道")
       expect(response.body).to include("タグ: 静かな空間")
-      expect(response.body).to include("キーワード: 札幌")
+      expect(response.body).to include("カフェ名: 札幌")
       expect(html.at_css('a[href="/cafes"]')&.text).to include("条件をクリア")
     end
 
@@ -165,7 +160,7 @@ RSpec.describe "Cafe search", type: :request do
 
       expect(response.body).to include("条件に合うカフェが見つかりませんでした")
       expect(response.body).to include("検索結果 0件")
-      expect(response.body).to include("キーワード: 存在しないカフェ")
+      expect(response.body).to include("カフェ名: 存在しないカフェ")
       expect(html.at_css('a[href="/cafes"]')&.text).to include("条件をクリア")
     end
   end

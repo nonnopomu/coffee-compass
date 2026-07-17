@@ -26,10 +26,25 @@ class Cafe < ApplicationRecord
 
   scope :by_keyword, ->(keyword) {
     k = "%#{keyword}%"
-    where("cafes.name LIKE ? OR cafes.address LIKE ? OR cafes.description LIKE ?", k, k, k)
+    where("cafes.name LIKE ?", k)
   }
 
   def self.available_prefectures
     published.distinct.order(:prefecture).pluck(:prefecture)
+  end
+
+  def self.search_suggestions(keyword, limit: 10)
+    keyword_pattern = "%#{sanitize_sql_like(keyword)}%"
+
+    published
+      .where("cafes.name LIKE ?", keyword_pattern)
+      .limit(limit)
+      .map do |cafe|
+        {
+          type: "cafe",
+          label: cafe.name,
+          keyword: cafe.name
+        }
+      end
   end
 end

@@ -156,7 +156,7 @@
         </div>
       </div>
 
-      <%# 検索バー：カフェ一覧ページにキーワードをGETパラメーターとして送信する %>
+      <%# 検索バー：カフェ一覧ページにカフェ名をGETパラメーターとして送信する %>
       <%= form_with url: cafes_path, method: :get, data: { turbo: false }, class: "mt-4" do |f| %>
         <div class="flex overflow-hidden rounded-xl border border-gray-200 bg-white shadow-sm">
           <%= f.text_field :keyword,
