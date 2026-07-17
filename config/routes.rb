@@ -1,5 +1,9 @@
 Rails.application.routes.draw do
   resources :cafes, only: [ :index, :show ] do
+    collection do
+      get :search_suggestions, to: "cafe_search_suggestions#index"
+    end
+
     resources :drink_logs, only: [ :new ]
   end
 

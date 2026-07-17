@@ -171,16 +171,18 @@ RSpec.describe Cafe, type: :model do
       expect(result).not_to include(wifi_cafe)
     end
 
-    it "キーワードで店舗名・住所・説明文を検索できること" do
+    it "カフェ名だけを検索できること" do
       name_matched = create_cafe(name: "青山コーヒー")
-      address_matched = create_cafe(address: "東京都新宿区テスト2-2-2")
-      description_matched = create_cafe(description: "浅煎りが人気のお店")
+      address_matched = create_cafe(name: "住所一致カフェ", address: "東京都青山区テスト2-2-2")
+      description_matched = create_cafe(name: "紹介文一致カフェ", description: "青山で浅煎りが人気のお店")
       unmatched = create_cafe(name: "別のカフェ", address: "北海道札幌市1-1-1", description: "深煎り中心")
 
-      expect(described_class.by_keyword("青山")).to include(name_matched)
-      expect(described_class.by_keyword("新宿")).to include(address_matched)
-      expect(described_class.by_keyword("浅煎り")).to include(description_matched)
-      expect(described_class.by_keyword("浅煎り")).not_to include(unmatched)
+      result = described_class.by_keyword("青山")
+
+      expect(result).to include(name_matched)
+      expect(result).not_to include(address_matched)
+      expect(result).not_to include(description_matched)
+      expect(result).not_to include(unmatched)
     end
   end
 end
