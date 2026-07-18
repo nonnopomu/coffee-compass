@@ -1,10 +1,15 @@
 import { Controller } from "@hotwired/stimulus"
 
 export default class extends Controller {
-  static targets = ["checkbox", "keyword", "chips", "empty"]
-  static values = { keywordLabelPrefix: String }
+  static targets = ["checkbox", "keyword", "chips", "empty", "suggestions", "suggestionsList"]
+  static values = {
+    keywordLabelPrefix: String,
+    searchSuggestionsUrl: String
+  }
 
   connect() {
+    this.appliedKeyword = this.keywordTarget.value.trim()
+    this.abortController = null
     this.update()
   }
 
@@ -19,12 +24,30 @@ export default class extends Controller {
     }
   }
 
+  keywordChanged() {
+    this.fetchSuggestions()
+  }
+
+  showSuggestions() {
+    if (this.keywordTarget.value.trim().length > 0) {
+      this.fetchSuggestions()
+    }
+  }
+
+  closeSuggestionsOnOutside(event) {
+    if (this.hasSuggestionsTarget && !this.element.contains(event.target)) {
+      this.hideSuggestions()
+    }
+  }
+
   remove(event) {
     const conditionType = event.currentTarget.dataset.conditionType
     const conditionValue = event.currentTarget.dataset.conditionValue
 
     if (conditionType === "keyword") {
+      this.appliedKeyword = ""
       this.keywordTarget.value = ""
+      this.hideSuggestions()
       this.update()
       return
     }
@@ -51,8 +74,7 @@ export default class extends Controller {
         }
       })
 
-    const keyword = this.keywordTarget.value.trim()
-    if (keyword.length === 0) {
+    if (this.appliedKeyword.length === 0) {
       return checkboxConditions
     }
 
@@ -60,8 +82,8 @@ export default class extends Controller {
       ...checkboxConditions,
       {
         type: "keyword",
-        value: keyword,
-        label: `${this.keywordLabelPrefix}: ${keyword}`
+        value: this.appliedKeyword,
+        label: `${this.keywordLabelPrefixValue}: ${this.appliedKeyword}`
       }
     ]
   }
@@ -84,5 +106,91 @@ export default class extends Controller {
     chip.appendChild(button)
 
     return chip
+  }
+
+  fetchSuggestions() {
+    if (!this.hasSearchSuggestionsUrlValue || !this.hasSuggestionsTarget || !this.hasSuggestionsListTarget) {
+      return
+    }
+
+    const keyword = this.keywordTarget.value.trim()
+
+    if (keyword.length === 0) {
+      this.hideSuggestions()
+      return
+    }
+
+    if (this.abortController) {
+      this.abortController.abort()
+    }
+
+    this.abortController = new AbortController()
+    const url = new URL(this.searchSuggestionsUrlValue, window.location.origin)
+    url.searchParams.set("keyword", keyword)
+
+    fetch(url, {
+      headers: { Accept: "application/json" },
+      signal: this.abortController.signal
+    })
+      .then(response => {
+        if (!response.ok) {
+          throw new Error(`Request failed: ${response.status}`)
+        }
+
+        return response.json()
+      })
+      .then(data => {
+        this.renderSuggestions(data.suggestions || [])
+      })
+      .catch(error => {
+        if (error.name !== "AbortError") {
+          this.hideSuggestions()
+        }
+      })
+  }
+
+  renderSuggestions(suggestions) {
+    this.suggestionsListTarget.replaceChildren()
+
+    if (suggestions.length === 0) {
+      this.hideSuggestions()
+      return
+    }
+
+    suggestions.forEach(suggestion => {
+      this.suggestionsListTarget.appendChild(this.buildSuggestionButton(suggestion))
+    })
+
+    this.suggestionsTarget.classList.remove("hidden")
+  }
+
+  buildSuggestionButton(suggestion) {
+    const button = document.createElement("button")
+    button.type = "button"
+    button.className = "flex w-full cursor-pointer flex-col px-4 py-2.5 text-left transition-colors hover:bg-amber-50 focus:bg-amber-50 focus:outline-none"
+    button.dataset.action = "click->cafe-search-conditions#selectSuggestion"
+    button.dataset.keyword = suggestion.keyword
+    button.setAttribute("role", "option")
+
+    const label = document.createElement("span")
+    label.className = "text-sm font-semibold text-gray-900"
+    label.textContent = suggestion.label
+    button.appendChild(label)
+
+    return button
+  }
+
+  selectSuggestion(event) {
+    this.keywordTarget.value = event.currentTarget.dataset.keyword || ""
+    this.hideSuggestions()
+  }
+
+  hideSuggestions() {
+    if (!this.hasSuggestionsTarget || !this.hasSuggestionsListTarget) {
+      return
+    }
+
+    this.suggestionsListTarget.replaceChildren()
+    this.suggestionsTarget.classList.add("hidden")
   }
 }

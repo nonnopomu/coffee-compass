@@ -87,6 +87,7 @@ ja:
         search_conditions: 検索条件
         keyword_label: カフェ名
         keyword_placeholder: カフェ名で検索
+        search_suggestions: カフェ名の検索候補
         area_label: エリア
         feature_label: 特徴
         choose_condition: 選択する

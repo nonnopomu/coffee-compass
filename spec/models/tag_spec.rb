@@ -103,6 +103,21 @@ RSpec.describe Tag, type: :model do
     end
   end
 
+  describe ".active_cafe_features" do
+    it "有効な店舗特徴タグを表示順で取得すること" do
+      second_tag = create_cafe_feature_tag(name: "Wi-Fiあり", display_order: 2)
+      inactive_tag = create_cafe_feature_tag(name: "古い特徴", display_order: 3, is_active: false)
+      taste_tag = create_taste_tag(name: "花", display_order: 4)
+      first_tag = create_cafe_feature_tag(name: "静かな空間", display_order: 1)
+
+      result = described_class.active_cafe_features
+
+      expect(result).to eq([ first_tag, second_tag ])
+      expect(result).not_to include(inactive_tag)
+      expect(result).not_to include(taste_tag)
+    end
+  end
+
   describe "関連付け" do
     it "親タグを持たない大項目タグを作成できること" do
       tag = Tag.new(

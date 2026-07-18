@@ -26,7 +26,9 @@
                   data: {
                     turbo: false,
                     controller: "cafe-search-conditions",
-                    cafe_search_conditions_keyword_label_prefix_value: t("views.cafes.index.keyword_label")
+                    cafe_search_conditions_keyword_label_prefix_value: t("views.cafes.index.keyword_label"),
+                    cafe_search_conditions_search_suggestions_url_value: search_suggestions_cafes_path,
+                    action: "click@window->cafe-search-conditions#closeSuggestionsOnOutside"
                   },
                   class: "mt-5 rounded-2xl bg-[#f7f3ea] p-4 sm:p-5" do |f| %>
       <div class="grid grid-cols-2 gap-2.5 sm:gap-3">
@@ -161,17 +163,28 @@
 
       <div class="mt-4">
         <label for="cafe-search-keyword" class="sr-only"><%= t("views.cafes.index.keyword_label") %></label>
-        <div class="flex min-h-12 items-center rounded-lg border border-gray-200 bg-white px-3 shadow-[0_1px_3px_rgba(90,51,24,0.05)] focus-within:border-amber-300 focus-within:ring-2 focus-within:ring-amber-100">
-          <span class="mr-4 shrink-0 border-r border-gray-100 pr-4 text-sm font-bold leading-6 text-amber-700"><%= t("views.cafes.index.keyword_label") %></span>
-          <%= f.text_field :keyword,
-                           id: "cafe-search-keyword",
-                           value: @selected_keyword,
-                           placeholder: t("views.cafes.index.keyword_placeholder"),
-                           data: {
-                             cafe_search_conditions_target: "keyword",
-                             action: "input->cafe-search-conditions#update"
-                           },
-                           class: "min-w-0 flex-1 border-0 bg-transparent p-0 text-sm font-semibold leading-6 text-gray-700 placeholder:text-gray-400 focus:outline-none focus:ring-0" %>
+        <div class="relative">
+          <div class="flex min-h-12 items-center rounded-lg border border-gray-200 bg-white px-3 shadow-[0_1px_3px_rgba(90,51,24,0.05)] focus-within:border-amber-300 focus-within:ring-2 focus-within:ring-amber-100">
+            <span class="mr-4 shrink-0 border-r border-gray-100 pr-4 text-sm font-bold leading-6 text-amber-700"><%= t("views.cafes.index.keyword_label") %></span>
+            <%= f.text_field :keyword,
+                             id: "cafe-search-keyword",
+                             value: @selected_keyword,
+                             placeholder: t("views.cafes.index.keyword_placeholder"),
+                             autocomplete: "off",
+                             data: {
+                               cafe_search_conditions_target: "keyword",
+                               action: "input->cafe-search-conditions#keywordChanged focus->cafe-search-conditions#showSuggestions"
+                             },
+                             class: "min-w-0 flex-1 border-0 bg-transparent p-0 text-sm font-semibold leading-6 text-gray-700 placeholder:text-gray-400 focus:outline-none focus:ring-0" %>
+          </div>
+
+          <div data-cafe-search-conditions-target="suggestions"
+               class="absolute left-0 right-0 top-full z-20 mt-2 hidden overflow-hidden rounded-2xl border border-gray-200 bg-white shadow-[0_8px_24px_rgba(90,51,24,0.12)]">
+            <div data-cafe-search-conditions-target="suggestionsList"
+                 class="max-h-64 overflow-y-auto py-2"
+                 role="listbox"
+                 aria-label="<%= t("views.cafes.index.search_suggestions") %>"></div>
+          </div>
         </div>
       </div>
 

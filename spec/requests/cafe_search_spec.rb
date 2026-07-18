@@ -124,6 +124,27 @@ RSpec.describe "Cafe search", type: :request do
       expect(html.at_css('input[name="tag_ids[]"]')).to be_present
     end
 
+    it "一覧ページのカフェ名入力欄を検索候補APIと接続できること" do
+      create_cafe(name: "候補カフェ", status: :published)
+
+      get cafes_path
+
+      html = Nokogiri::HTML(response.body)
+      form = html.at_css('form[data-controller~="cafe-search-conditions"]')
+      keyword_input = html.at_css("#cafe-search-keyword")
+      suggestions = html.at_css('[data-cafe-search-conditions-target="suggestions"]')
+      suggestions_list = html.at_css('[data-cafe-search-conditions-target="suggestionsList"]')
+      chips_text = html.css('[data-cafe-search-conditions-target="chips"] span').map(&:text).join
+
+      expect(form["data-cafe-search-conditions-search-suggestions-url-value"]).to eq(search_suggestions_cafes_path)
+      expect(keyword_input["autocomplete"]).to eq("off")
+      expect(keyword_input["data-action"]).to include("input->cafe-search-conditions#keywordChanged")
+      expect(keyword_input["data-action"]).to include("focus->cafe-search-conditions#showSuggestions")
+      expect(suggestions).to be_present
+      expect(suggestions_list["role"]).to eq("listbox")
+      expect(chips_text).not_to include("カフェ名:")
+    end
+
     it "一覧ページの検索条件フォームに現在の検索条件を初期値として反映すること" do
       quiet_tag = create_cafe_feature_tag(name: "静かな空間")
       cafe = create_cafe(
