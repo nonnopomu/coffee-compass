@@ -29,6 +29,7 @@ ja:
       edit_profile: プロフィールを編集
       account_settings: アカウント設定
       required: 必須
+      submitting: 送信中...
     shared:
       image_crop:
         title: 画像を調整

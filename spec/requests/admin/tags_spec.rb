@@ -107,6 +107,23 @@ RSpec.describe "Admin::Tags", type: :request do
       expect(response).to have_http_status(:ok)
     end
 
+    it "タグ新規作成フォームに二重送信防止用のdata属性があること" do
+      admin = create_user(role: :admin)
+
+      sign_in admin
+      get new_admin_tag_path
+
+      html = Nokogiri::HTML(response.body)
+      tag_form = html.at_css('form[action="/admin/tags"]')
+      submit_button = tag_form.at_css('input[type="submit"]')
+
+      expect(response).to have_http_status(:ok)
+      expect(tag_form["data-controller"]).to include("admin-tag-form")
+      expect(tag_form["data-controller"]).to include("form-submit")
+      expect(tag_form["data-action"]).to include("form-submit#disable")
+      expect(submit_button["data-form-submit-target"]).to eq("submitButton")
+    end
+
     it "カテゴリごとの次の表示順が初期表示されること" do
       admin = create_user(role: :admin)
       Tag.create!(name: "浅煎り", category: :roast_level, display_order: 30, is_active: true)

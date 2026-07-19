@@ -25,6 +25,9 @@ application.register("destructive-confirmation", DestructiveConfirmationControll
 import FlashController from "./flash_controller"
 application.register("flash", FlashController)
 
+import FormSubmitController from "./form_submit_controller"
+application.register("form-submit", FormSubmitController)
+
 import FlavorSelectorController from "./flavor_selector_controller"
 application.register("flavor-selector", FlavorSelectorController)
 

@@ -1,7 +1,13 @@
 <% status_options = Cafe.statuses.keys.map { |status| [t("enums.cafe.status.#{status}"), status, t("enums.cafe.status_help.#{status}")] } %>
 
 <div class="bg-gray-50 min-h-full">
-  <%= form_with model: [:admin, cafe], class: "flex flex-col" do |f| %>
+  <%= form_with model: [:admin, cafe],
+                data: {
+                  controller: "form-submit",
+                  action: "turbo:submit-start->form-submit#disable",
+                  form_submit_disabled_text_value: t("views.common.submitting")
+                },
+                class: "flex flex-col" do |f| %>
     <div class="px-4 py-5 space-y-5">
       <% if cafe.errors.any? %>
         <div class="rounded-lg border border-red-200 bg-red-50 px-4 py-3">
@@ -176,7 +182,9 @@
     <div class="sticky bottom-0 border-t border-gray-200 bg-white px-4 py-3">
       <div class="mx-auto flex max-w-screen-sm gap-3">
         <%= link_to t("views.common.cancel"), cancel_path, class: "flex-1 rounded-lg border border-gray-200 bg-white px-4 py-3 text-center text-sm font-medium text-gray-700" %>
-        <%= f.submit submit_label, class: "flex-1 cursor-pointer rounded-lg bg-amber-600 px-4 py-3 text-sm font-semibold text-white hover:bg-amber-700" %>
+        <%= f.submit submit_label,
+                     data: { form_submit_target: "submitButton" },
+                     class: "flex-1 cursor-pointer rounded-lg bg-amber-600 px-4 py-3 text-sm font-semibold text-white hover:bg-amber-700 disabled:cursor-not-allowed disabled:opacity-70" %>
       </div>
     </div>
   <% end %>

@@ -35,11 +35,16 @@ RSpec.describe "Drink logs", type: :request do
       image_field = html.at_css('input[name="drink_log[image]"]')
       cafe_mode_radio = html.at_css('input[type="radio"][name="drink_log[brewed_at_home]"][value="0"]')
       home_brew_mode_radio = html.at_css('input[type="radio"][name="drink_log[brewed_at_home]"][value="1"]')
+      drink_log_form = html.at_css('form[action="/drink_logs"]')
+      submit_button = drink_log_form.at_css('button[type="submit"]')
 
       expect(response).to have_http_status(:ok)
       expect(image_field["accept"]).to eq("image/jpeg,image/png,image/webp")
       expect(cafe_mode_radio).to be_present
       expect(home_brew_mode_radio).to be_present
+      expect(drink_log_form["data-controller"]).to include("form-submit")
+      expect(drink_log_form["data-action"]).to include("form-submit#disable")
+      expect(submit_button["data-form-submit-target"]).to eq("submitButton")
       expect(response.body).to include(I18n.t("views.drink_logs.new.cafe_mode_label"))
       expect(response.body).to include(I18n.t("views.drink_logs.new.home_brew_mode_label"))
       expect(response.body).to include(I18n.t("views.drink_logs.form.image_preview_placeholder"))

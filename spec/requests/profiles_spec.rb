@@ -21,10 +21,15 @@ RSpec.describe "Profiles", type: :request do
       html = Nokogiri::HTML(response.body)
       name_field = html.at_css('input[name="user[name]"]')
       avatar_field = html.at_css('input[name="user[avatar]"]')
+      profile_form = html.at_css('form[action="/profile"]')
+      submit_button = profile_form.at_css('input[type="submit"]')
 
       expect(name_field["required"]).to eq("required")
       expect(name_field["maxlength"]).to eq("50")
       expect(avatar_field["accept"]).to eq("image/jpeg,image/png,image/webp")
+      expect(profile_form["data-controller"]).to include("form-submit")
+      expect(profile_form["data-action"]).to include("form-submit#disable")
+      expect(submit_button["data-form-submit-target"]).to eq("submitButton")
       expect(response.body).to include(I18n.t("views.profiles.edit.choose_avatar"))
       expect(response.body).not_to include("選択されていません")
     end

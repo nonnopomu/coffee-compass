@@ -20,7 +20,18 @@
       <h1 class="mb-3 text-xl font-bold text-gray-900"><%= t("views.devise.passwords.edit.title") %></h1>
     </div>
 
-    <%= form_for(resource, as: resource_name, url: password_path(resource_name), html: { method: :put, class: "w-full max-w-[340px]" }) do |f| %>
+    <%= form_for(resource,
+                 as: resource_name,
+                 url: password_path(resource_name),
+                 html: {
+                   method: :put,
+                   class: "w-full max-w-[340px]",
+                   data: {
+                     controller: "form-submit",
+                     action: "turbo:submit-start->form-submit#disable",
+                     form_submit_disabled_text_value: t("views.common.submitting")
+                   }
+                 }) do |f| %>
       <%= render "devise/shared/error_messages", resource: resource %>
       <%= f.hidden_field :reset_password_token %>
 
@@ -71,7 +82,8 @@
 
       <div class="mb-4 w-full">
         <%= f.submit t("views.common.update"),
-            class: "w-full cursor-pointer rounded-xl bg-amber-600 py-3 text-sm font-semibold text-white transition-colors hover:bg-amber-700" %>
+            data: { form_submit_target: "submitButton" },
+            class: "w-full cursor-pointer rounded-xl bg-amber-600 py-3 text-sm font-semibold text-white transition-colors hover:bg-amber-700 disabled:cursor-not-allowed disabled:opacity-70" %>
       </div>
     <% end %>
 

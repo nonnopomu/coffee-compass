@@ -32,9 +32,16 @@
 
       <%= button_to user_google_oauth2_omniauth_authorize_path(return_to: params[:return_to]),
           method: :post,
-          data: { turbo: false },
+          data: { turbo: false, form_submit_target: "submitButton" },
+          form: {
+            data: {
+              controller: "form-submit",
+              action: "submit->form-submit#disable",
+              form_submit_disabled_text_value: t("views.common.submitting")
+            }
+          },
           form_class: "w-full max-w-[340px]",
-          class: "flex w-full items-center justify-center gap-3 rounded-2xl border border-amber-200 bg-white px-4 py-4 text-sm font-bold text-amber-900 shadow-sm transition-colors hover:bg-amber-50 cursor-pointer" do %>
+          class: "flex w-full items-center justify-center gap-3 rounded-2xl border border-amber-200 bg-white px-4 py-4 text-sm font-bold text-amber-900 shadow-sm transition-colors hover:bg-amber-50 cursor-pointer disabled:cursor-not-allowed disabled:opacity-70" do %>
         <%= image_tag "google_logo_g_logo_icon.webp",
                       alt: "",
                       class: "h-5 w-5 object-contain",
@@ -52,7 +59,17 @@
       </div>
     </div>
 
-    <%= form_for(resource, as: resource_name, url: registration_path(resource_name), html: { class: "w-full max-w-[340px]" }) do |f| %>
+    <%= form_for(resource,
+                 as: resource_name,
+                 url: registration_path(resource_name),
+                 html: {
+                   class: "w-full max-w-[340px]",
+                   data: {
+                     controller: "form-submit",
+                     action: "turbo:submit-start->form-submit#disable",
+                     form_submit_disabled_text_value: t("views.common.submitting")
+                   }
+                 }) do |f| %>
       <%= render "devise/shared/error_messages", resource: resource %>
       <%= hidden_field_tag :return_to, params[:return_to] if params[:return_to].present? %>
 
@@ -110,7 +127,8 @@
 
       <div class="w-full">
         <%= f.submit t("views.devise.registrations.new.submit"),
-            class: "w-full rounded-xl bg-amber-600 py-3 text-sm font-semibold text-white transition-colors hover:bg-amber-700 cursor-pointer" %>
+            data: { form_submit_target: "submitButton" },
+            class: "w-full rounded-xl bg-amber-600 py-3 text-sm font-semibold text-white transition-colors hover:bg-amber-700 cursor-pointer disabled:cursor-not-allowed disabled:opacity-70" %>
       </div>
     <% end %>
 

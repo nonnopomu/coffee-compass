@@ -4,7 +4,15 @@
 
 <div class="flex flex-1 flex-col bg-white sm:items-center sm:bg-amber-50 sm:px-5 sm:pt-6 sm:pb-8">
   <div class="w-full bg-white px-4 py-5 sm:max-w-md sm:rounded-3xl sm:border sm:border-amber-100 sm:px-5 sm:py-6 sm:shadow-[0_4px_18px_rgba(90,51,24,0.08)]">
-    <%= form_with model: @user, url: profile_path, method: :patch, class: "space-y-6" do |f| %>
+    <%= form_with model: @user,
+                  url: profile_path,
+                  method: :patch,
+                  data: {
+                    controller: "form-submit",
+                    action: "turbo:submit-start->form-submit#disable",
+                    form_submit_disabled_text_value: t("views.common.submitting")
+                  },
+                  class: "space-y-6" do |f| %>
       <% if @user.errors.any? %>
         <div class="rounded-lg border border-red-200 bg-red-50 px-4 py-3">
           <p class="text-sm font-semibold text-red-700"><%= t("views.common.error_heading") %></p>
@@ -78,7 +86,9 @@
 
       <div class="grid grid-cols-2 gap-3 border-t border-gray-200 pt-4">
         <%= link_to t("views.common.cancel"), mypage_path, class: "rounded-2xl border border-amber-100 bg-white px-4 py-3 text-center text-sm font-semibold text-gray-700 transition-colors hover:bg-amber-50" %>
-        <%= f.submit t("views.common.update"), class: "rounded-2xl bg-amber-600 px-4 py-3 text-sm font-semibold text-white shadow-sm transition-colors hover:bg-amber-700" %>
+        <%= f.submit t("views.common.update"),
+                     data: { form_submit_target: "submitButton" },
+                     class: "rounded-2xl bg-amber-600 px-4 py-3 text-sm font-semibold text-white shadow-sm transition-colors hover:bg-amber-700 disabled:cursor-not-allowed disabled:opacity-70" %>
       </div>
     <% end %>
   </div>
