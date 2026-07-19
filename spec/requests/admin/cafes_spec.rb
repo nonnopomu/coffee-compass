@@ -72,8 +72,13 @@ RSpec.describe "Admin::Cafes", type: :request do
 
       html = Nokogiri::HTML(response.body)
       image_field = html.at_css('input[name="cafe[image]"]')
+      cafe_form = html.at_css('form[action="/admin/cafes"]')
+      submit_button = cafe_form.at_css('input[type="submit"]')
 
       expect(image_field["accept"]).to eq("image/jpeg,image/png,image/webp")
+      expect(cafe_form["data-controller"]).to include("form-submit")
+      expect(cafe_form["data-action"]).to include("form-submit#disable")
+      expect(submit_button["data-form-submit-target"]).to eq("submitButton")
       expect(response.body).to include(I18n.t("views.admin.cafes.form.image_preview_placeholder"))
     end
   end

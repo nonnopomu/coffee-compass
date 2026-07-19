@@ -13,11 +13,16 @@ RSpec.describe "Authentication", type: :request do
       email_field = html.at_css('input[name="user[email]"]')
       password_field = html.at_css('input[name="user[password]"]')
       remember_me_field = html.at_css('input[type="checkbox"][name="user[remember_me]"]')
+      login_form = html.at_css('form[action="/users/sign_in"]')
+      login_button = login_form.at_css('input[type="submit"]')
 
       expect(email_field["required"]).to eq("required")
       expect(password_field["required"]).to eq("required")
       expect(password_field["minlength"]).to eq(Devise.password_length.min.to_s)
       expect(remember_me_field["type"]).to eq("checkbox")
+      expect(login_form["data-controller"]).to include("form-submit")
+      expect(login_form["data-action"]).to include("form-submit#disable")
+      expect(login_button["data-form-submit-target"]).to eq("submitButton")
       expect(response.body).to include(I18n.t("views.devise.sessions.new.remember_me"))
     end
   end
@@ -31,6 +36,8 @@ RSpec.describe "Authentication", type: :request do
       email_field = html.at_css('input[name="user[email]"]')
       password_field = html.at_css('input[name="user[password]"]')
       password_confirmation_field = html.at_css('input[name="user[password_confirmation]"]')
+      sign_up_form = html.at_css('form[action="/users"]')
+      sign_up_button = sign_up_form.at_css('input[type="submit"]')
 
       expect(name_field["required"]).to eq("required")
       expect(email_field["required"]).to eq("required")
@@ -38,6 +45,9 @@ RSpec.describe "Authentication", type: :request do
       expect(password_field["minlength"]).to eq(Devise.password_length.min.to_s)
       expect(password_confirmation_field["required"]).to eq("required")
       expect(password_confirmation_field["minlength"]).to eq(Devise.password_length.min.to_s)
+      expect(sign_up_form["data-controller"]).to include("form-submit")
+      expect(sign_up_form["data-action"]).to include("form-submit#disable")
+      expect(sign_up_button["data-form-submit-target"]).to eq("submitButton")
     end
   end
 
@@ -47,8 +57,13 @@ RSpec.describe "Authentication", type: :request do
 
       html = Nokogiri::HTML(response.body)
       email_field = html.at_css('input[name="user[email]"]')
+      password_reset_form = html.at_css('form[action="/users/password"]')
+      password_reset_button = password_reset_form.at_css('input[type="submit"]')
 
       expect(email_field["required"]).to eq("required")
+      expect(password_reset_form["data-controller"]).to include("form-submit")
+      expect(password_reset_form["data-action"]).to include("form-submit#disable")
+      expect(password_reset_button["data-form-submit-target"]).to eq("submitButton")
     end
   end
 
@@ -62,6 +77,21 @@ RSpec.describe "Authentication", type: :request do
       expect(response).to have_http_status(:ok)
       expect(response.body).to include(I18n.t("views.devise.registrations.edit.page_title"))
       expect(response.body).to include(user.email)
+    end
+
+    it "アカウント更新フォームに二重送信防止用のdata属性があること" do
+      user = create_user
+
+      sign_in user
+      get edit_user_registration_path
+
+      html = Nokogiri::HTML(response.body)
+      account_form = html.at_css('form[action="/users"]')
+      update_button = account_form.at_css('input[type="submit"]')
+
+      expect(account_form["data-controller"]).to include("form-submit")
+      expect(account_form["data-action"]).to include("form-submit#disable")
+      expect(update_button["data-form-submit-target"]).to eq("submitButton")
     end
 
     it "通常ユーザーにはメールアドレス変更用の現在のパスワード入力が表示されること" do

@@ -4,7 +4,15 @@
 
 <div class="flex flex-1 flex-col bg-white sm:items-center sm:bg-amber-50 sm:px-5 sm:pt-6 sm:pb-8">
   <div class="w-full overflow-hidden bg-white px-4 py-5 sm:max-w-md sm:rounded-3xl sm:border sm:border-amber-100 sm:px-5 sm:py-6 sm:shadow-[0_4px_18px_rgba(90,51,24,0.08)]">
-    <%= form_with model: @drink_log, url: drink_logs_path, method: :post, data: (@cafe.present? ? {} : { controller: "home-brew-toggle" }), class: "space-y-6" do |f| %>
+    <%= form_with model: @drink_log,
+                  url: drink_logs_path,
+                  method: :post,
+                  data: {
+                    controller: [(@cafe.present? ? nil : "home-brew-toggle"), "form-submit"].compact.join(" "),
+                    action: "turbo:submit-start->form-submit#disable",
+                    form_submit_disabled_text_value: t("views.common.submitting")
+                  },
+                  class: "space-y-6" do |f| %>
       <% if @cafe.present? %>
         <div class="border-b border-gray-200 pb-5">
           <div class="flex items-center gap-3">
@@ -245,7 +253,10 @@
 
       <div class="grid grid-cols-2 gap-3 border-t border-gray-200 pt-4">
         <%= link_to t("views.common.cancel"), @cafe.present? ? cafe_path(@cafe) : root_path, class: "rounded-2xl border border-gray-200 bg-white px-4 py-3 text-center text-sm font-semibold text-gray-700 transition-colors hover:bg-amber-50" %>
-        <%= button_tag t("views.common.post"), type: "submit", class: "rounded-2xl bg-amber-600 px-4 py-3 text-sm font-semibold text-white transition-colors hover:bg-amber-700" %>
+        <%= button_tag t("views.common.post"),
+                       type: "submit",
+                       data: { form_submit_target: "submitButton" },
+                       class: "rounded-2xl bg-amber-600 px-4 py-3 text-sm font-semibold text-white transition-colors hover:bg-amber-700 disabled:cursor-not-allowed disabled:opacity-70" %>
       </div>
     <% end %>
   </div>
