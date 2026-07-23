@@ -6,12 +6,19 @@ class DrinkLogsController < ApplicationController
   def new
     @cafe = Cafe.with_attached_image.find(params[:cafe_id]) if params[:cafe_id].present?
     @cafes = Cafe.published.with_attached_image.order(:prefecture, :name) unless @cafe
-    @drink_log = DrinkLog.new(cafe: @cafe)
+    @drink_log = DrinkLog.new(cafe: @cafe, idempotency_key: SecureRandom.uuid)
     @roast_level_tags = Tag.where(category: :roast_level, is_active: true).order(:display_order)
     @taste_tags = beginner_taste_tags
   end
 
   def create
+    existing_drink_log = current_user.drink_logs.find_by(idempotency_key: drink_log_create_params[:idempotency_key])
+
+    if existing_drink_log.present?
+      redirect_to drink_log_create_redirect_path(existing_drink_log), notice: t("flash.drink_logs.already_created")
+      return
+    end
+
     @drink_log = current_user.drink_logs.build(drink_log_create_params)
     assign_taste_tags_with_positions(@drink_log)
 
@@ -69,7 +76,8 @@ class DrinkLogsController < ApplicationController
       :roast_level_tag_id,
       :memo,
       :image,
-      :brewed_at_home
+      :brewed_at_home,
+      :idempotency_key
     )
   end
 
@@ -129,10 +137,10 @@ class DrinkLogsController < ApplicationController
     redirect_to drink_log_path(@drink_log), alert: t("flash.drink_logs.owner_required") unless @drink_log.user == current_user
   end
 
-  def drink_log_create_redirect_path
-    return mypage_path if @drink_log.brewed_at_home?
+  def drink_log_create_redirect_path(drink_log = @drink_log)
+    return mypage_path if drink_log.brewed_at_home?
 
-    safe_return_path(cafe_path(@drink_log.cafe, tab: "logs"))
+    safe_return_path(cafe_path(drink_log.cafe, tab: "logs"))
   end
 
   def drink_log_fallback_path

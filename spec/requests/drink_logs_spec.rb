@@ -1,4 +1,5 @@
 require "rails_helper"
+require "securerandom"
 
 RSpec.describe "Drink logs", type: :request do
   def drink_log_params(cafe:, roast_level_tag:, taste_tags:, **overrides)
@@ -9,7 +10,8 @@ RSpec.describe "Drink logs", type: :request do
       drank_on: Date.current,
       roast_level_tag_id: roast_level_tag.id,
       memo: "香りがよかった",
-      ordered_taste_tag_ids: taste_tags.map(&:id).join(",")
+      ordered_taste_tag_ids: taste_tags.map(&:id).join(","),
+      idempotency_key: SecureRandom.uuid
     }.merge(overrides)
   end
 
@@ -37,6 +39,7 @@ RSpec.describe "Drink logs", type: :request do
       home_brew_mode_radio = html.at_css('input[type="radio"][name="drink_log[brewed_at_home]"][value="1"]')
       drink_log_form = html.at_css('form[action="/drink_logs"]')
       submit_button = drink_log_form.at_css('button[type="submit"]')
+      idempotency_key_field = html.at_css('input[type="hidden"][name="drink_log[idempotency_key]"]')
 
       expect(response).to have_http_status(:ok)
       expect(image_field["accept"]).to eq("image/jpeg,image/png,image/webp")
@@ -45,6 +48,7 @@ RSpec.describe "Drink logs", type: :request do
       expect(drink_log_form["data-controller"]).to include("form-submit")
       expect(drink_log_form["data-action"]).to include("form-submit#disable")
       expect(submit_button["data-form-submit-target"]).to eq("submitButton")
+      expect(idempotency_key_field["value"]).to be_present
       expect(response.body).to include(I18n.t("views.drink_logs.new.cafe_mode_label"))
       expect(response.body).to include(I18n.t("views.drink_logs.new.home_brew_mode_label"))
       expect(response.body).to include(I18n.t("views.drink_logs.form.image_preview_placeholder"))
@@ -121,6 +125,7 @@ RSpec.describe "Drink logs", type: :request do
       cafe = create_cafe(status: :published)
       roast_level_tag = create_roast_level_tag
       taste_tag = create_taste_tag
+      idempotency_key = SecureRandom.uuid
 
       sign_in user
 
@@ -129,12 +134,14 @@ RSpec.describe "Drink logs", type: :request do
           drink_log: drink_log_params(
             cafe:,
             roast_level_tag:,
-            taste_tags: [ taste_tag ]
+            taste_tags: [ taste_tag ],
+            idempotency_key:
           )
         }
       }.to change(user.drink_logs, :count).by(1)
 
       expect(response).to redirect_to(cafe_path(cafe, tab: "logs"))
+      expect(user.drink_logs.last.idempotency_key).to eq(idempotency_key)
     end
 
     it "ログインユーザーは自宅記録を投稿でき、マイページへ遷移すること" do
@@ -152,7 +159,8 @@ RSpec.describe "Drink logs", type: :request do
             drank_on: Date.current,
             roast_level_tag_id: roast_level_tag.id,
             memo: "家でゆっくり淹れた",
-            ordered_taste_tag_ids: taste_tag.id.to_s
+            ordered_taste_tag_ids: taste_tag.id.to_s,
+            idempotency_key: SecureRandom.uuid
           }
         }
       }.to change(user.drink_logs, :count).by(1)
@@ -161,6 +169,37 @@ RSpec.describe "Drink logs", type: :request do
       expect(response).to redirect_to(mypage_path)
       expect(drink_log).to be_brewed_at_home
       expect(drink_log.cafe).to be_nil
+    end
+
+    it "同じidempotency_keyで再送信された場合は新規保存しないこと" do
+      user = create_user
+      cafe = create_cafe(status: :published)
+      roast_level_tag = create_roast_level_tag
+      taste_tag = create_taste_tag
+      idempotency_key = SecureRandom.uuid
+      params = {
+        drink_log: drink_log_params(
+          cafe:,
+          roast_level_tag:,
+          taste_tags: [ taste_tag ],
+          idempotency_key:
+        )
+      }
+
+      sign_in user
+
+      expect {
+        post drink_logs_path, params:
+      }.to change(user.drink_logs, :count).by(1)
+
+      created_drink_log = user.drink_logs.last
+
+      expect {
+        post drink_logs_path, params:
+      }.not_to change(user.drink_logs, :count)
+
+      expect(response).to redirect_to(cafe_path(created_drink_log.cafe, tab: "logs"))
+      expect(flash[:notice]).to eq(I18n.t("flash.drink_logs.already_created"))
     end
 
     it "ログインユーザーは詳細味わいタグの小項目を選んで投稿できること" do
@@ -300,6 +339,7 @@ RSpec.describe "Drink logs", type: :request do
       cafe = create_cafe(status: :published)
       roast_level_tag = create_roast_level_tag
       taste_tag = create_taste_tag
+      idempotency_key = SecureRandom.uuid
 
       sign_in user
 
@@ -309,12 +349,17 @@ RSpec.describe "Drink logs", type: :request do
             cafe:,
             roast_level_tag:,
             taste_tags: [ taste_tag ],
-            menu_name: ""
+            menu_name: "",
+            idempotency_key:
           )
         }
       }.not_to change(DrinkLog, :count)
 
+      html = Nokogiri::HTML(response.body)
+      idempotency_key_field = html.at_css('input[type="hidden"][name="drink_log[idempotency_key]"]')
+
       expect(response).to have_http_status(:unprocessable_content)
+      expect(idempotency_key_field["value"]).to eq(idempotency_key)
     end
 
     it "入力値が不正な場合も初心者向け味わいタグを再表示すること" do

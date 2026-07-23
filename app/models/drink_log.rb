@@ -26,6 +26,7 @@ class DrinkLog < ApplicationRecord
   validates :menu_name, presence: true, length: { maximum: 100 }
   validates :drank_on, presence: true
   validates :memo, length: { maximum: 200 }
+  validates :idempotency_key, presence: true, uniqueness: { scope: :user_id }
 
   validate :roast_level_tag_must_be_roast_level
   validate :must_have_at_least_one_taste_tag
