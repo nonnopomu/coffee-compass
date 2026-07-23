@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_07_07_105315) do
+ActiveRecord::Schema[8.1].define(version: 2026_07_22_142135) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -88,6 +88,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_07_07_105315) do
     t.bigint "cafe_id"
     t.datetime "created_at", null: false
     t.date "drank_on", null: false
+    t.string "idempotency_key", null: false
     t.text "memo"
     t.string "menu_name", null: false
     t.bigint "roast_level_tag_id", null: false
@@ -100,6 +101,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_07_07_105315) do
     t.index ["drank_on"], name: "index_drink_logs_on_drank_on"
     t.index ["roast_level_tag_id"], name: "index_drink_logs_on_roast_level_tag_id"
     t.index ["status"], name: "index_drink_logs_on_status"
+    t.index ["user_id", "idempotency_key"], name: "index_drink_logs_on_user_id_and_idempotency_key", unique: true
     t.index ["user_id", "status", "drank_on"], name: "index_drink_logs_on_user_id_and_status_and_drank_on"
     t.index ["user_id"], name: "index_drink_logs_on_user_id"
   end

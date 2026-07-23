@@ -63,7 +63,8 @@ module ModelTestHelpers
     menu_name: "本日のコーヒー",
     drank_on: Date.current,
     memo: "香りがよかった",
-    status: :published
+    status: :published,
+    idempotency_key: SecureRandom.uuid
   )
     drink_log = DrinkLog.new(
       user:,
@@ -72,7 +73,8 @@ module ModelTestHelpers
       menu_name:,
       drank_on:,
       memo:,
-      status:
+      status:,
+      idempotency_key:
     )
 
     # DrinkLogは味わいタグが必須なので、保存前に中間レコードを組み立てる。
