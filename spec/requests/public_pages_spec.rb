@@ -94,6 +94,21 @@ RSpec.describe "Public pages", type: :request do
       expect(next_link["href"]).to include("page=2")
     end
 
+    it "カフェ詳細のみんなのログは1ページだけでもページ番号を表示すること" do
+      cafe = create_cafe(status: :published)
+      create_drink_log(cafe:, menu_name: "1ページだけのログ")
+
+      get cafe_path(cafe), params: { tab: "logs" }
+
+      html = Nokogiri::HTML(response.body)
+      current_page_link = html.at_css('nav[aria-label="ページ送り"] a[aria-current="page"]')
+
+      expect(response).to have_http_status(:ok)
+      expect(current_page_link.text.strip).to eq("1")
+      expect(current_page_link["href"]).to include("tab=logs")
+      expect(current_page_link["href"]).to include("page=1")
+    end
+
     it "カフェ詳細の味わい傾向は小項目タグを大項目タグに寄せて表示すること" do
       cafe = create_cafe(status: :published)
       floral_tag = create_taste_tag(name: "花")
