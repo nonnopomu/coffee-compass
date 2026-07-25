@@ -30,6 +30,14 @@ ja:
       account_settings: アカウント設定
       required: 必須
       submitting: 送信中...
+    pagination:
+      aria_label: ページ送り
+      first: 最初
+      last: 最後
+      previous: 前へ
+      next: 次へ
+      truncate: "..."
+      page: "%{page}ページへ"
     shared:
       image_crop:
         title: 画像を調整

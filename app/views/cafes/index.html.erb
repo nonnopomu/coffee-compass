@@ -11,7 +11,7 @@
     <div class="flex items-center justify-between gap-3">
       <div>
         <h1 class="text-lg font-bold text-gray-900"><%= t("views.cafes.index.page_title") %></h1>
-        <p class="mt-1 text-xs text-gray-500"><%= t("views.cafes.index.result_count", count: @cafes.size) %></p>
+        <p class="mt-1 text-xs text-gray-500"><%= t("views.cafes.index.result_count", count: @cafes.total_count) %></p>
       </div>
 
       <% if has_search_conditions %>
@@ -263,6 +263,7 @@
         <%= render "cafe_card", cafe: cafe %>
       <% end %>
     </div>
+    <%= paginate @cafes %>
   <% end %>
   </div>
 </div>

@@ -184,5 +184,41 @@ RSpec.describe "Cafe search", type: :request do
       expect(response.body).to include("カフェ名: 存在しないカフェ")
       expect(html.at_css('a[href="/cafes"]')&.text).to include("条件をクリア")
     end
+
+    it "検索結果を12件ずつページ分割して表示すること" do
+      13.times do |index|
+        create_cafe(name: "ページ分割カフェ#{format("%02d", index)}", status: :published)
+      end
+
+      get cafes_path
+
+      html = Nokogiri::HTML(response.body)
+
+      expect(response.body).to include("検索結果 13件")
+      expect(response.body).to include("ページ分割カフェ00")
+      expect(response.body).to include("ページ分割カフェ11")
+      expect(response.body).not_to include("ページ分割カフェ12")
+      expect(html.at_css('nav[aria-label="ページ送り"]')).to be_present
+      expect(html.at_css('a[href="/cafes?page=2"]')&.text).to include("2")
+    end
+
+    it "ページ移動リンクに検索条件を引き継ぐこと" do
+      13.times do |index|
+        create_cafe(name: "条件付きカフェ#{format("%02d", index)}", status: :published)
+      end
+      create_cafe(name: "条件外カフェ", status: :published)
+
+      get cafes_path, params: { keyword: "条件付き" }
+
+      html = Nokogiri::HTML(response.body)
+      next_page_link = html.at_css('a[rel="next"]')
+
+      expect(response.body).to include("検索結果 13件")
+      expect(response.body).to include("条件付きカフェ00")
+      expect(response.body).not_to include("条件付きカフェ12")
+      expect(response.body).not_to include("条件外カフェ")
+      expect(next_page_link["href"]).to include("keyword=%E6%9D%A1%E4%BB%B6%E4%BB%98%E3%81%8D")
+      expect(next_page_link["href"]).to include("page=2")
+    end
   end
 end
