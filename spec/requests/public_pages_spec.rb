@@ -63,6 +63,37 @@ RSpec.describe "Public pages", type: :request do
       expect(html.at_css('img[alt="画像付きログ"]')).to be_present
     end
 
+    it "カフェ詳細のみんなのログは10件ずつ表示され、ページ移動後もみんなのログタブを維持すること" do
+      user = create_user
+      cafe = create_cafe(status: :published)
+      roast_level_tag = create_roast_level_tag
+      taste_tag = create_taste_tag
+
+      11.times do |index|
+        log_number = index + 1
+        create_drink_log(
+          user:,
+          cafe:,
+          roast_level_tag:,
+          taste_tag:,
+          menu_name: "カフェ詳細ログ#{format('%02d', log_number)}",
+          drank_on: Date.current - index.days
+        )
+      end
+
+      get cafe_path(cafe), params: { tab: "logs" }
+
+      html = Nokogiri::HTML(response.body)
+      next_link = html.at_css('a[rel="next"]')
+
+      expect(response).to have_http_status(:ok)
+      expect(response.body).to include("カフェ詳細ログ01")
+      expect(response.body).to include("カフェ詳細ログ10")
+      expect(response.body).not_to include("カフェ詳細ログ11")
+      expect(next_link["href"]).to include("tab=logs")
+      expect(next_link["href"]).to include("page=2")
+    end
+
     it "カフェ詳細の味わい傾向は小項目タグを大項目タグに寄せて表示すること" do
       cafe = create_cafe(status: :published)
       floral_tag = create_taste_tag(name: "花")
