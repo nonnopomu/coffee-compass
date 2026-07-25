@@ -54,7 +54,7 @@
       <% end %>
     </div>
 
-    <%= paginate drink_logs, params: { tab: "logs" } %>
+    <%= app_paginate drink_logs, params: { tab: "logs" } %>
   <% else %>
     <div class="rounded-2xl border border-gray-200 bg-white px-4 py-12 text-center">
       <p class="text-sm text-gray-500"><%= t("views.cafes.drink_logs_tab.empty") %></p>

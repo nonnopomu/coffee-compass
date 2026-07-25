@@ -2,7 +2,9 @@ class Admin::CafesController < Admin::BaseController
   before_action :set_cafe, only: [ :edit, :update ]
 
   def index
-    @cafes = Cafe.with_attached_image.includes(:tags).order(created_at: :desc)
+    cafes = Cafe.with_attached_image.includes(:tags).order(created_at: :desc, id: :desc)
+    @cafes = cafes.page(params[:page]).per(12)
+    @cafes_count = cafes.count
   end
 
   def new

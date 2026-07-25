@@ -80,7 +80,7 @@
           <% end %>
         </div>
 
-        <%= paginate @drink_logs %>
+        <%= app_paginate @drink_logs %>
       <% else %>
         <div class="rounded-lg border border-gray-200 bg-white px-4 py-8 text-center">
           <p class="text-sm font-semibold text-gray-900"><%= t("views.users.show.no_logs_title") %></p>
