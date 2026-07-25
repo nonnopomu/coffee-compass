@@ -10,11 +10,11 @@ class AddIdempotencyKeyToDrinkLogs < ActiveRecord::Migration[8.1]
 
     change_column_null :drink_logs, :idempotency_key, false
 
-    add_index :drink_logs, [:user_id, :idempotency_key], unique: true
+    add_index :drink_logs, [ :user_id, :idempotency_key ], unique: true
   end
 
   def down
-    remove_index :drink_logs, column: [:user_id, :idempotency_key]
+    remove_index :drink_logs, column: [ :user_id, :idempotency_key ]
     remove_column :drink_logs, :idempotency_key
   end
 end
