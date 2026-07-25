@@ -18,29 +18,31 @@ class CafesController < ApplicationController
 
   def show
     @cafe = Cafe.with_attached_image.includes(:tags).find(params[:id])
-    @drink_logs = @cafe.drink_logs
+    drink_logs = @cafe.drink_logs
                        .published
                        .with_attached_image
                        .with_display_associations
                        .recent_first
 
-    set_log_trends
+    @drink_logs = drink_logs.page(params[:page]).per(10)
+
+    set_log_trends(drink_logs)
   end
 
   private
 
-  def set_log_trends
-    @roast_level_trends = @drink_logs.group_by(&:roast_level_tag)
+  def set_log_trends(drink_logs)
+    @roast_level_trends = drink_logs.group_by(&:roast_level_tag)
                                      .transform_values(&:count)
                                      .sort_by { |tag, count| [ -count, tag.display_order, tag.name ] }
 
-    @taste_tag_trends = weighted_taste_tag_trends
+    @taste_tag_trends = weighted_taste_tag_trends(drink_logs)
   end
 
-  def weighted_taste_tag_trends
+  def weighted_taste_tag_trends(drink_logs)
     taste_tag_scores = Hash.new(0)
 
-    @drink_logs.each do |drink_log|
+    drink_logs.each do |drink_log|
       drink_log.weighted_taste_tag_scores.each do |tag, score|
         taste_tag_scores[tag] += score
       end

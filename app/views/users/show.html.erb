@@ -28,12 +28,12 @@
     <div class="mt-6 grid grid-cols-2 gap-3">
       <div class="rounded-lg border border-gray-200 bg-gray-50 px-4 py-3">
         <p class="text-xs text-gray-500"><%= t("views.users.show.recorded_logs") %></p>
-        <p class="mt-1 text-xl font-bold text-gray-900"><%= @drink_logs.size %></p>
+        <p class="mt-1 text-xl font-bold text-gray-900"><%= @recorded_logs_count %></p>
       </div>
 
       <div class="rounded-lg border border-gray-200 bg-gray-50 px-4 py-3">
         <p class="text-xs text-gray-500"><%= t("views.users.show.visited_cafes") %></p>
-        <p class="mt-1 text-xl font-bold text-gray-900"><%= @drink_logs.map(&:cafe_id).compact.uniq.size %></p>
+        <p class="mt-1 text-xl font-bold text-gray-900"><%= @visited_cafes_count %></p>
       </div>
     </div>
   </div>
@@ -79,6 +79,8 @@
             </article>
           <% end %>
         </div>
+
+        <%= paginate @drink_logs %>
       <% else %>
         <div class="rounded-lg border border-gray-200 bg-white px-4 py-8 text-center">
           <p class="text-sm font-semibold text-gray-900"><%= t("views.users.show.no_logs_title") %></p>
