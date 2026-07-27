@@ -4,8 +4,16 @@ class DrinkLogsController < ApplicationController
   before_action :authorize_owner!, only: [ :edit, :update, :destroy ]
 
   def new
-    @cafe = Cafe.with_attached_image.find(params[:cafe_id]) if params[:cafe_id].present?
-    @cafes = Cafe.published.with_attached_image.order(:prefecture, :name) unless @cafe
+    if params[:cafe_id].present?
+      @cafe = Cafe.published
+                  .with_attached_image
+                  .find(params[:cafe_id])
+    else
+      @cafes = Cafe.published
+                   .with_attached_image
+                   .order(:prefecture, :name)
+    end
+
     @drink_log = DrinkLog.new(cafe: @cafe, idempotency_key: SecureRandom.uuid)
     @roast_level_tags = Tag.where(category: :roast_level, is_active: true).order(:display_order)
     @taste_tags = beginner_taste_tags
@@ -20,6 +28,7 @@ class DrinkLogsController < ApplicationController
     end
 
     @drink_log = current_user.drink_logs.build(drink_log_create_params)
+    assign_published_cafe(@drink_log)
     assign_taste_tags_with_positions(@drink_log)
 
     if @drink_log.save
@@ -100,6 +109,12 @@ class DrinkLogsController < ApplicationController
       .split(",")
       .filter_map { |id| Integer(id, exception: false) }
       .uniq
+  end
+
+  def assign_published_cafe(drink_log)
+    return if drink_log.brewed_at_home? || drink_log.cafe_id.blank?
+
+    drink_log.cafe = Cafe.published.find(drink_log.cafe_id)
   end
 
   def assign_taste_tags_with_positions(drink_log)

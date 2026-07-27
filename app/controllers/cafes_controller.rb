@@ -17,7 +17,10 @@ class CafesController < ApplicationController
   end
 
   def show
-    @cafe = Cafe.with_attached_image.includes(:tags).find(params[:id])
+    @cafe = Cafe.published
+                .with_attached_image
+                .includes(:tags)
+                .find(params[:id])
     drink_logs = @cafe.drink_logs
                        .published
                        .with_attached_image
