@@ -68,6 +68,16 @@ RSpec.describe "Drink logs", type: :request do
       expect(return_to_field["value"]).to eq(mypage_path)
     end
 
+    it "非公開カフェIDを直接指定しても投稿フォームを表示できないこと" do
+      user = create_user
+      cafe = create_cafe(status: :draft)
+
+      sign_in user
+      get new_drink_log_path(cafe_id: cafe.id)
+
+      expect(response).to have_http_status(:not_found)
+    end
+
     it "初心者向け味わいタグは大項目だけを選択対象にすること" do
       user = create_user
       parent_tag = Tag.create!(
@@ -142,6 +152,27 @@ RSpec.describe "Drink logs", type: :request do
 
       expect(response).to redirect_to(cafe_path(cafe, tab: "logs"))
       expect(user.drink_logs.last.idempotency_key).to eq(idempotency_key)
+    end
+
+    it "非公開カフェIDを直接送信しても飲んだログを作成できないこと" do
+      user = create_user
+      cafe = create_cafe(status: :draft)
+      roast_level_tag = create_roast_level_tag
+      taste_tag = create_taste_tag
+
+      sign_in user
+
+      expect {
+        post drink_logs_path, params: {
+          drink_log: drink_log_params(
+            cafe:,
+            roast_level_tag:,
+            taste_tags: [ taste_tag ]
+          )
+        }
+      }.not_to change(user.drink_logs, :count)
+
+      expect(response).to have_http_status(:not_found)
     end
 
     it "ログインユーザーは自宅記録を投稿でき、マイページへ遷移すること" do

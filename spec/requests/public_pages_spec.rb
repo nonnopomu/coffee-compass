@@ -38,6 +38,14 @@ RSpec.describe "Public pages", type: :request do
       expect(response).to have_http_status(:ok)
     end
 
+    it "非公開カフェの詳細URLへ直接アクセスしても表示できないこと" do
+      cafe = create_cafe(status: :draft)
+
+      get cafe_path(cafe)
+
+      expect(response).to have_http_status(:not_found)
+    end
+
     it "カフェ詳細でカフェ画像が表示されること" do
       cafe = create_cafe(name: "詳細画像カフェ", status: :published)
       attach_valid_image(cafe, :image, filename: "cafe.png")
