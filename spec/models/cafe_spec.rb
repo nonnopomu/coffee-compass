@@ -100,13 +100,15 @@ RSpec.describe Cafe, type: :model do
       expect(cafe.errors[:image]).to include(I18n.t("activerecord.errors.messages.invalid_image_type"))
     end
 
-    it "カフェ画像は5MB以下であること" do
+    it "カフェ画像は上限サイズ以下であること" do
       cafe = build_cafe
 
       attach_oversized_image(cafe, :image)
 
       expect(cafe).not_to be_valid
-      expect(cafe.errors[:image]).to include(I18n.t("activerecord.errors.messages.image_too_large", max_size: "5MB"))
+      expect(cafe.errors[:image]).to include(
+        I18n.t("activerecord.errors.messages.image_too_large", max_size: ImageAttachmentValidatable::MAX_IMAGE_SIZE_TEXT)
+      )
     end
   end
 
@@ -183,6 +185,26 @@ RSpec.describe Cafe, type: :model do
       expect(result).not_to include(address_matched)
       expect(result).not_to include(description_matched)
       expect(result).not_to include(unmatched)
+    end
+
+    it "%をワイルドカードとして扱わないこと" do
+      percent_cafe = create_cafe(name: "100%コーヒー")
+      normal_cafe = create_cafe(name: "通常カフェ")
+
+      result = described_class.by_keyword("%")
+
+      expect(result).to include(percent_cafe)
+      expect(result).not_to include(normal_cafe)
+    end
+
+    it "_をワイルドカードとして扱わないこと" do
+      underscore_cafe = create_cafe(name: "test_cafe")
+      normal_cafe = create_cafe(name: "testXcafe")
+
+      result = described_class.by_keyword("_")
+
+      expect(result).to include(underscore_cafe)
+      expect(result).not_to include(normal_cafe)
     end
   end
 end

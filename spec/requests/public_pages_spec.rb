@@ -71,6 +71,22 @@ RSpec.describe "Public pages", type: :request do
       expect(html.at_css('img[alt="画像付きログ"]')).to be_present
     end
 
+    it "カフェ詳細のみんなのログで投稿日時ではなく飲んだ日が表示されること" do
+      cafe = create_cafe(status: :published)
+      drank_on = Date.new(2026, 7, 20)
+      drink_log = create_drink_log(cafe:, drank_on:)
+      drink_log.update_columns(created_at: Time.zone.local(2026, 7, 21, 12))
+
+      get cafe_path(cafe), params: { tab: "logs" }
+
+      html = Nokogiri::HTML(response.body)
+      drank_on_element = html.at_css(%(time[datetime="#{drank_on.iso8601}"]))
+
+      expect(response).to have_http_status(:ok)
+      expect(drank_on_element).to be_present
+      expect(drank_on_element.text.strip).to eq(I18n.l(drank_on, format: :long))
+    end
+
     it "カフェ詳細のみんなのログは10件ずつ表示され、ページ移動後もみんなのログタブを維持すること" do
       user = create_user
       cafe = create_cafe(status: :published)

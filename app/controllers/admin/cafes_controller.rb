@@ -23,7 +23,7 @@ class Admin::CafesController < Admin::BaseController
       redirect_to admin_cafes_path, notice: t("flash.admin.cafes.create")
     else
       set_form_options
-      render :new, status: :unprocessable_entity
+      render :new, status: :unprocessable_content
     end
   end
 
@@ -32,7 +32,7 @@ class Admin::CafesController < Admin::BaseController
       redirect_to admin_cafes_path, notice: t("flash.admin.cafes.update")
     else
       set_form_options
-      render :edit, status: :unprocessable_entity
+      render :edit, status: :unprocessable_content
     end
   end
 

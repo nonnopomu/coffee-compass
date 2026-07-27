@@ -106,13 +106,15 @@ RSpec.describe DrinkLog, type: :model do
       expect(drink_log.errors[:image]).to include(I18n.t("activerecord.errors.messages.invalid_image_type"))
     end
 
-    it "飲んだログ画像は5MB以下であること" do
+    it "飲んだログ画像は上限サイズ以下であること" do
       drink_log = build_drink_log
 
       attach_oversized_image(drink_log, :image)
 
       expect(drink_log).not_to be_valid
-      expect(drink_log.errors[:image]).to include(I18n.t("activerecord.errors.messages.image_too_large", max_size: "5MB"))
+      expect(drink_log.errors[:image]).to include(
+        I18n.t("activerecord.errors.messages.image_too_large", max_size: ImageAttachmentValidatable::MAX_IMAGE_SIZE_TEXT)
+      )
     end
   end
 

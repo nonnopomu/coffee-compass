@@ -216,7 +216,7 @@ RSpec.describe "Authentication", type: :request do
         }
       }
 
-      expect(response).to have_http_status(:unprocessable_entity)
+      expect(response).to have_http_status(:unprocessable_content)
       expect(user.reload.email).to eq("no-password-before@example.com")
     end
 
@@ -231,7 +231,7 @@ RSpec.describe "Authentication", type: :request do
         }
       }
 
-      expect(response).to have_http_status(:unprocessable_entity)
+      expect(response).to have_http_status(:unprocessable_content)
       expect(user.reload.email).to eq("google-patch-before@example.com")
     end
   end

@@ -20,14 +20,16 @@ class DrinkLogsController < ApplicationController
   end
 
   def create
-    existing_drink_log = current_user.drink_logs.find_by(idempotency_key: drink_log_create_params[:idempotency_key])
+    create_params = drink_log_create_params
+    idempotency_key = create_params[:idempotency_key]
+    existing_drink_log = find_existing_drink_log(idempotency_key)
 
     if existing_drink_log.present?
       redirect_to drink_log_create_redirect_path(existing_drink_log), notice: t("flash.drink_logs.already_created")
       return
     end
 
-    @drink_log = current_user.drink_logs.build(drink_log_create_params)
+    @drink_log = current_user.drink_logs.build(create_params)
     assign_published_cafe(@drink_log)
     assign_taste_tags_with_positions(@drink_log)
 
@@ -35,8 +37,15 @@ class DrinkLogsController < ApplicationController
       redirect_to drink_log_create_redirect_path, notice: t("flash.drink_logs.create")
     else
       set_form_options
-      render :new, status: :unprocessable_entity
+      render :new, status: :unprocessable_content
     end
+
+  rescue ActiveRecord::RecordNotUnique
+    existing_drink_log = find_existing_drink_log(idempotency_key)
+
+    raise unless existing_drink_log
+
+    redirect_to drink_log_create_redirect_path(existing_drink_log), notice: t("flash.drink_logs.already_created")
   end
 
   def show
@@ -65,7 +74,7 @@ class DrinkLogsController < ApplicationController
       redirect_to drink_log_path(@drink_log), notice: t("flash.drink_logs.update")
     else
       set_form_options
-      render :edit, status: :unprocessable_entity
+      render :edit, status: :unprocessable_content
     end
   end
 
@@ -76,6 +85,10 @@ class DrinkLogsController < ApplicationController
   end
 
   private
+
+  def find_existing_drink_log(idempotency_key)
+    current_user.drink_logs.find_by(idempotency_key:)
+  end
 
   def drink_log_create_params
     params.require(:drink_log).permit(

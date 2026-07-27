@@ -22,7 +22,7 @@ class Admin::TagsController < Admin::BaseController
     if @tag.save
       redirect_to admin_tags_path, notice: t("flash.admin.tags.create")
     else
-      render :new, status: :unprocessable_entity
+      render :new, status: :unprocessable_content
     end
   end
 
@@ -36,7 +36,7 @@ class Admin::TagsController < Admin::BaseController
     if @tag.save
       redirect_to admin_tags_path, notice: t("flash.admin.tags.update")
     else
-      render :edit, status: :unprocessable_entity
+      render :edit, status: :unprocessable_content
     end
   end
 

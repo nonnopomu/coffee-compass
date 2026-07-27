@@ -25,8 +25,8 @@ class Cafe < ApplicationRecord
   }
 
   scope :by_keyword, ->(keyword) {
-    k = "%#{keyword}%"
-    where("cafes.name LIKE ?", k)
+    keyword_pattern = "%#{sanitize_sql_like(keyword)}%"
+    where("cafes.name LIKE ?", keyword_pattern)
   }
 
   def self.available_prefectures

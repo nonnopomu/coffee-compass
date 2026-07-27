@@ -83,13 +83,15 @@ RSpec.describe User, type: :model do
       expect(user.errors[:avatar]).to include(I18n.t("activerecord.errors.messages.invalid_image_type"))
     end
 
-    it "プロフィール画像は5MB以下であること" do
+    it "プロフィール画像は上限サイズ以下であること" do
       user = build_user
 
       attach_oversized_image(user, :avatar)
 
       expect(user).not_to be_valid
-      expect(user.errors[:avatar]).to include(I18n.t("activerecord.errors.messages.image_too_large", max_size: "5MB"))
+      expect(user.errors[:avatar]).to include(
+        I18n.t("activerecord.errors.messages.image_too_large", max_size: ImageAttachmentValidatable::MAX_IMAGE_SIZE_TEXT)
+      )
     end
   end
 
