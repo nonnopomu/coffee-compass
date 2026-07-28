@@ -579,17 +579,19 @@ RSpec.describe "Drink logs", type: :request do
       sign_in user
       get edit_drink_log_path(drink_log)
 
-      expect(response).to redirect_to(drink_log_path(drink_log))
+      expect(response).to redirect_to(root_path)
+      expect(flash[:alert]).to eq(I18n.t("flash.authorization.forbidden"))
     end
 
-    it "管理者でも他人の編集画面は閲覧できないこと" do
+    it "管理者は他人の編集画面を閲覧できないこと" do
       admin = create_user(role: :admin)
       drink_log = create_drink_log
 
       sign_in admin
       get edit_drink_log_path(drink_log)
 
-      expect(response).to redirect_to(drink_log_path(drink_log))
+      expect(response).to redirect_to(root_path)
+      expect(flash[:alert]).to eq(I18n.t("flash.authorization.forbidden"))
     end
   end
 
@@ -742,10 +744,11 @@ RSpec.describe "Drink logs", type: :request do
         }
       }.not_to change { drink_log.reload.menu_name }
 
-      expect(response).to redirect_to(drink_log_path(drink_log))
+      expect(response).to redirect_to(root_path)
+      expect(flash[:alert]).to eq(I18n.t("flash.authorization.forbidden"))
     end
 
-    it "管理者でも他人の飲んだログを更新できないこと" do
+    it "管理者は他人の飲んだログを更新できないこと" do
       admin = create_user(role: :admin)
       drink_log = create_drink_log(menu_name: "他人のログ")
       roast_level_tag = create_roast_level_tag
@@ -764,7 +767,8 @@ RSpec.describe "Drink logs", type: :request do
         }
       }.not_to change { drink_log.reload.menu_name }
 
-      expect(response).to redirect_to(drink_log_path(drink_log))
+      expect(response).to redirect_to(root_path)
+      expect(flash[:alert]).to eq(I18n.t("flash.authorization.forbidden"))
     end
 
     it "更新時にcafe_idを送っても紐づくカフェは変更されないこと" do
@@ -844,10 +848,11 @@ RSpec.describe "Drink logs", type: :request do
         delete drink_log_path(drink_log)
       }.not_to change(DrinkLog, :count)
 
-      expect(response).to redirect_to(drink_log_path(drink_log))
+      expect(response).to redirect_to(root_path)
+      expect(flash[:alert]).to eq(I18n.t("flash.authorization.forbidden"))
     end
 
-    it "管理者でも他人の飲んだログを削除できないこと" do
+    it "管理者は他人の飲んだログを削除できること" do
       admin = create_user(role: :admin)
       drink_log = create_drink_log
 
@@ -855,9 +860,9 @@ RSpec.describe "Drink logs", type: :request do
 
       expect {
         delete drink_log_path(drink_log)
-      }.not_to change(DrinkLog, :count)
+      }.to change(DrinkLog, :count).by(-1)
 
-      expect(response).to redirect_to(drink_log_path(drink_log))
+      expect(response).to redirect_to(cafe_path(drink_log.cafe, tab: "logs"))
     end
   end
 end
