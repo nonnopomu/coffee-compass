@@ -21,12 +21,16 @@ RSpec.describe DrinkLogPolicy, type: :policy do
       expect(described_class.new(owner, drink_log).update?).to be true
     end
 
-    it "管理者は更新できること" do
-      expect(described_class.new(admin, drink_log).update?).to be true
+    it "管理者は他人のログを更新できないこと" do
+      expect(described_class.new(admin, drink_log).update?).to be false
     end
 
     it "投稿者以外の一般ユーザーは更新できないこと" do
       expect(described_class.new(other_user, drink_log).update?).to be false
+    end
+
+    it "未ログインユーザーは更新できないこと" do
+      expect(described_class.new(nil, drink_log).update?).to be false
     end
   end
 
@@ -41,6 +45,10 @@ RSpec.describe DrinkLogPolicy, type: :policy do
 
     it "投稿者以外の一般ユーザーは削除できないこと" do
       expect(described_class.new(other_user, drink_log).destroy?).to be false
+    end
+
+    it "未ログインユーザーは削除できないこと" do
+      expect(described_class.new(nil, drink_log).destroy?).to be false
     end
   end
 end

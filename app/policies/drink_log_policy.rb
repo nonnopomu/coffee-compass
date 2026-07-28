@@ -4,11 +4,11 @@ class DrinkLogPolicy < ApplicationPolicy
   end
 
   def update?
-    record.user == user || user.admin?
+    user.present? && record.user == user
   end
 
   def destroy?
-    record.user == user || user.admin?
+    user.present? && (record.user == user || user.admin?)
   end
 
   class Scope < ApplicationPolicy::Scope
