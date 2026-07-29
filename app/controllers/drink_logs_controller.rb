@@ -1,7 +1,9 @@
 class DrinkLogsController < ApplicationController
   skip_before_action :authenticate_user!, only: [ :show ]
   before_action :set_drink_log, only: [ :show, :edit, :update, :destroy ]
-  before_action :authorize_owner!, only: [ :edit, :update, :destroy ]
+  before_action :authorize_drink_log_creation!, only: [ :new, :create ]
+  before_action :authorize_drink_log!, only: [ :edit, :update, :destroy ]
+  after_action :verify_authorized, except: :show
 
   def new
     if params[:cafe_id].present?
@@ -100,6 +102,14 @@ class DrinkLogsController < ApplicationController
     )
   end
 
+  def authorize_drink_log!
+    authorize @drink_log
+  end
+
+  def authorize_drink_log_creation!
+    authorize DrinkLog
+  end
+
   def ordered_taste_tag_ids
     raw_ids = params.dig(:drink_log, :ordered_taste_tag_ids).presence ||
               Array(params.dig(:drink_log, :taste_tag_ids)).join(",")
@@ -146,10 +156,6 @@ class DrinkLogsController < ApplicationController
 
   def set_drink_log
     @drink_log = DrinkLog.find(params[:id])
-  end
-
-  def authorize_owner!
-    redirect_to drink_log_path(@drink_log), alert: t("flash.drink_logs.owner_required") unless @drink_log.user == current_user
   end
 
   def drink_log_create_redirect_path(drink_log = @drink_log)

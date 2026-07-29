@@ -18,6 +18,7 @@ RSpec.describe "Admin::Dashboards", type: :request do
       get admin_root_path
 
       expect(response).to redirect_to(root_path)
+      expect(flash[:alert]).to eq(I18n.t("flash.authorization.forbidden"))
     end
 
     it "未ログインユーザーはログイン画面へリダイレクトされること" do
