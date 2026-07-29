@@ -2,7 +2,9 @@ module ImageAttachmentValidatable
   extend ActiveSupport::Concern
 
   VALID_IMAGE_CONTENT_TYPES = [ "image/jpeg", "image/png", "image/webp" ].freeze
-  MAX_IMAGE_SIZE = 5.megabytes
+  MAX_IMAGE_SIZE_MB = 5
+  MAX_IMAGE_SIZE = MAX_IMAGE_SIZE_MB.megabytes
+  MAX_IMAGE_SIZE_TEXT = "#{MAX_IMAGE_SIZE_MB}MB"
 
   class_methods do
     def validates_image_attachment(attachment_name)
@@ -15,7 +17,7 @@ module ImageAttachmentValidatable
           end
 
           if attachment.blob.byte_size > MAX_IMAGE_SIZE
-            errors.add(attachment_name, :image_too_large, max_size: "5MB")
+            errors.add(attachment_name, :image_too_large, max_size: MAX_IMAGE_SIZE_TEXT)
           end
         end
       end

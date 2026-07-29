@@ -9,7 +9,7 @@ class ProfilesController < ApplicationController
     if @user.update(profile_params)
       redirect_to mypage_path, notice: t("flash.profiles.update")
     else
-      render :edit, status: :unprocessable_entity
+      render :edit, status: :unprocessable_content
     end
   end
 

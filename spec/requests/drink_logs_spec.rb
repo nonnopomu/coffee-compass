@@ -127,6 +127,52 @@ RSpec.describe "Drink logs", type: :request do
       expect(detailed_child_input).to be_present
       expect(inactive_child_input).to be_nil
     end
+
+    it "タグ名と通常表示順を変更しても初心者向け画像との対応が変わらないこと" do
+      user = create_user
+      taste_tag = Tag.create!(
+        category: :taste,
+        name: "花",
+        display_order: 1,
+        beginner_display_order: 1,
+        color_hex: "#EFB8C8",
+        is_active: true
+      )
+      taste_tag.update!(name: "フローラル", display_order: 99)
+
+      sign_in user
+      get new_drink_log_path
+
+      html = Nokogiri::HTML(response.body)
+      checkbox = html.at_css(%(input[data-flavor-selector-target="checkbox"][value="#{taste_tag.id}"]))
+      image = checkbox.ancestors("label").first.at_css("img")
+
+      expect(response).to have_http_status(:ok)
+      expect(checkbox["value"]).to eq(taste_tag.id.to_s)
+      expect(image["src"]).to include("flavor_tags/flower")
+    end
+
+    it "初心者向け表示順が未設定の場合は汎用画像を表示すること" do
+      user = create_user
+      taste_tag = Tag.create!(
+        category: :taste,
+        name: "画像未設定の味わい",
+        display_order: 1,
+        beginner_display_order: nil,
+        color_hex: "#D99A2B",
+        is_active: true
+      )
+
+      sign_in user
+      get new_drink_log_path
+
+      html = Nokogiri::HTML(response.body)
+      checkbox = html.at_css(%(input[data-flavor-selector-target="checkbox"][value="#{taste_tag.id}"]))
+      image = checkbox.ancestors("label").first.at_css("img")
+
+      expect(response).to have_http_status(:ok)
+      expect(image["src"]).to include("flavor_tags/placeholder")
+    end
   end
 
   describe "POST /drink_logs" do
@@ -230,6 +276,51 @@ RSpec.describe "Drink logs", type: :request do
       }.not_to change(user.drink_logs, :count)
 
       expect(response).to redirect_to(cafe_path(created_drink_log.cafe, tab: "logs"))
+      expect(flash[:notice]).to eq(I18n.t("flash.drink_logs.already_created"))
+    end
+
+    it "同じidempotency_keyの保存が競合しても500エラーにしないこと" do
+      user = create_user
+      cafe = create_cafe(status: :published)
+      roast_level_tag = create_roast_level_tag
+      taste_tag = create_taste_tag
+      idempotency_key = SecureRandom.uuid
+      race_simulated = false
+
+      allow_any_instance_of(DrinkLog).to receive(:save).and_wrap_original do |original_method, *arguments|
+        drink_log = original_method.receiver
+
+        if !race_simulated && drink_log.idempotency_key == idempotency_key
+          race_simulated = true
+          create_drink_log(
+            user:,
+            cafe:,
+            roast_level_tag:,
+            taste_tag:,
+            idempotency_key:
+          )
+          raise ActiveRecord::RecordNotUnique
+        end
+
+        original_method.call(*arguments)
+      end
+
+      sign_in user
+
+      expect {
+        post drink_logs_path, params: {
+          drink_log: drink_log_params(
+            cafe:,
+            roast_level_tag:,
+            taste_tags: [ taste_tag ],
+            idempotency_key:
+          )
+        }
+      }.to change {
+        user.drink_logs.where(idempotency_key:).count
+      }.by(1)
+
+      expect(response).to redirect_to(cafe_path(cafe, tab: "logs"))
       expect(flash[:notice]).to eq(I18n.t("flash.drink_logs.already_created"))
     end
 

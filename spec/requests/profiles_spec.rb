@@ -58,7 +58,7 @@ RSpec.describe "Profiles", type: :request do
       sign_in user
       patch profile_path, params: { user: { name: "" } }
 
-      expect(response).to have_http_status(:unprocessable_entity)
+      expect(response).to have_http_status(:unprocessable_content)
       expect(user.reload.name).to eq("変更前")
     end
 
