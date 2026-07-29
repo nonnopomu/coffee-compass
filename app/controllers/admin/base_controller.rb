@@ -1,9 +1,10 @@
 class Admin::BaseController < ApplicationController
-  before_action :require_admin
+  before_action :authorize_admin!
+  after_action :verify_authorized
 
   private
 
-  def require_admin
-    redirect_to root_path unless current_user.admin?
+  def authorize_admin!
+    authorize :admin, :access?
   end
 end
