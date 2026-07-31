@@ -12,15 +12,19 @@
       <p>
         Coffee Compass（以下「本サービス」といいます。）は、ユーザーの個人情報を適切に取り扱うため、以下のとおりプライバシーポリシーを定めます。
       </p>
-      <p class="text-xs text-gray-500">制定日：2026年6月16日</p>
+      <p class="text-xs text-gray-500">
+        制定日：2026年6月16日<br>
+        改定日：2026年7月31日
+      </p>
     </header>
 
     <section class="space-y-3">
       <h2 class="border-l-4 border-amber-500 pl-3 text-base font-semibold text-gray-900">第1条（取得する情報）</h2>
       <p>本サービスでは、以下の情報を取得することがあります。</p>
       <ul class="list-disc space-y-2 pl-5">
-        <li>ユーザー登録時に入力された名前、メールアドレス、暗号化されたパスワード</li>
-        <li>ユーザーが投稿した飲んだログ、感想メモ、タグ選択、投稿日時</li>
+        <li>ユーザー登録時に入力された名前、メールアドレス、パスワードを変換した認証情報</li>
+        <li>Googleログインを利用した場合にGoogleから提供されるユーザー識別子、名前、メールアドレス</li>
+        <li>ユーザーが投稿した飲んだログ、感想メモ、タグ選択、投稿画像、プロフィール画像、投稿日時</li>
         <li>ユーザーが利用したカフェ情報、検索条件、閲覧に関する情報</li>
         <li>Cookie、IPアドレス、ブラウザ情報などの技術情報</li>
       </ul>
@@ -34,7 +38,6 @@
         <li>ユーザー登録、ログイン、本人確認のため</li>
         <li>飲んだログやマイページなど、ユーザーに紐づく機能を提供するため</li>
         <li>不正利用、迷惑行為、規約違反への対応のため</li>
-        <li>お問い合わせへの対応のため</li>
         <li>サービス改善のための利用状況分析のため</li>
       </ul>
     </section>
@@ -43,7 +46,8 @@
       <h2 class="border-l-4 border-amber-500 pl-3 text-base font-semibold text-gray-900">第3条（第三者提供）</h2>
       <p>
         本サービスは、法令に基づく場合を除き、ユーザーの同意なく個人情報を第三者に提供しません。
-        ただし、サービス運営に必要な範囲で、サーバー運用、認証、メール送信などの外部サービスを利用することがあります。
+        ただし、本サービスの提供に必要な範囲で、サーバー運用、データ保存、認証、メール送信などを外部サービスへ委託することがあります。
+        委託先では、各サービスの提供に必要な範囲でユーザー情報が取り扱われます。
       </p>
     </section>
 
@@ -57,18 +61,25 @@
 
     <section class="space-y-3">
       <h2 class="border-l-4 border-amber-500 pl-3 text-base font-semibold text-gray-900">第5条（外部サービス）</h2>
+      <p>本サービスでは、以下の外部サービスを利用しています。</p>
+      <ul class="list-disc space-y-2 pl-5">
+        <li>Render：アプリケーションおよびデータベースの運用</li>
+        <li>Cloudflare：DNS管理、通信の配信およびセキュリティ対策</li>
+        <li>Amazon Web Services（Amazon S3）：投稿画像およびプロフィール画像の保存</li>
+        <li>Google OAuth 2.0：Googleアカウントを利用した認証</li>
+        <li>Resend：パスワード再設定などのメール送信</li>
+      </ul>
       <p>
-        本サービスでは、アプリケーションの公開やDNS管理のためにRender、Cloudflareなどの外部サービスを利用しています。
-        また、カフェ詳細画面などからGoogle Mapsや公式サイト、Instagramなどの外部サイトへ移動する場合があります。
+        カフェ詳細画面などからGoogle Maps、カフェの公式サイト、Instagramなどの外部サイトへ移動する場合があります。
         外部サイトでの個人情報の取り扱いについては、各サービスの規約およびプライバシーポリシーをご確認ください。
       </p>
     </section>
 
     <section class="space-y-3">
-      <h2 class="border-l-4 border-amber-500 pl-3 text-base font-semibold text-gray-900">第6条（SNSログインを利用する場合）</h2>
+      <h2 class="border-l-4 border-amber-500 pl-3 text-base font-semibold text-gray-900">第6条（Googleログイン）</h2>
       <p>
-        今後、本サービスにSNSログイン機能を導入する場合、認証に必要な範囲で外部サービスから提供されるユーザー識別情報、メールアドレス、プロフィール情報などを取得することがあります。
-        取得する情報は、本サービスへのログインおよびアカウント管理のために利用します。
+        Googleログインを利用する場合、本サービスは認証に必要な範囲で、Googleからユーザー識別子、名前、メールアドレスを取得します。
+        取得した情報は、本サービスへのログイン、ユーザー登録およびアカウント管理のために利用します。
       </p>
     </section>
 
@@ -80,9 +91,10 @@
     </section>
 
     <section class="space-y-3">
-      <h2 class="border-l-4 border-amber-500 pl-3 text-base font-semibold text-gray-900">第8条（開示・訂正・削除）</h2>
+      <h2 class="border-l-4 border-amber-500 pl-3 text-base font-semibold text-gray-900">第8条（登録情報の確認・変更・削除）</h2>
       <p>
-        ユーザーから自身の個人情報の開示、訂正、削除等の申し出があった場合、運営者は本人確認のうえ、法令に従って適切に対応します。
+        ユーザーは、プロフィール画面またはアカウント設定画面から、自身の登録情報の確認・変更およびアカウントの削除を行うことができます。
+        アカウントを削除した場合、アプリケーション上のユーザー情報、飲んだログおよびアップロード画像など、当該アカウントに紐づく情報を削除します。
       </p>
     </section>
 
@@ -94,11 +106,5 @@
       </p>
     </section>
 
-    <section class="space-y-3">
-      <h2 class="border-l-4 border-amber-500 pl-3 text-base font-semibold text-gray-900">第10条（お問い合わせ）</h2>
-      <p>
-        本ポリシーに関するお問い合わせは、運営者が別途定める方法によりご連絡ください。
-      </p>
-    </section>
   </article>
 </main>
