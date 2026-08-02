@@ -35,6 +35,17 @@ RSpec.describe "Cafe search suggestions", type: :request do
       expect(suggestions.map { |suggestion| suggestion.fetch("label") }).not_to include(description_matched_cafe.name)
     end
 
+    it "カフェ名を大文字小文字を区別せず候補として返すこと" do
+      cafe = create_cafe(name: "GLITCH COFFEE", status: :published)
+
+      get search_suggestions_cafes_path, params: { keyword: "glitch" }
+
+      labels = JSON.parse(response.body).fetch("suggestions").map { |suggestion| suggestion.fetch("label") }
+
+      expect(response).to have_http_status(:ok)
+      expect(labels).to include(cafe.name)
+    end
+
     it "下書きや閉店のカフェは候補に返さないこと" do
       published_cafe = create_cafe(name: "札幌公開カフェ", status: :published)
       draft_cafe = create_cafe(name: "札幌下書きカフェ", status: :draft)

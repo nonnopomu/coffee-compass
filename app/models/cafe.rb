@@ -26,7 +26,7 @@ class Cafe < ApplicationRecord
 
   scope :by_keyword, ->(keyword) {
     keyword_pattern = "%#{sanitize_sql_like(keyword)}%"
-    where("cafes.name LIKE ?", keyword_pattern)
+    where("cafes.name ILIKE ?", keyword_pattern)
   }
 
   def self.available_prefectures
@@ -37,7 +37,7 @@ class Cafe < ApplicationRecord
     keyword_pattern = "%#{sanitize_sql_like(keyword)}%"
 
     published
-      .where("cafes.name LIKE ?", keyword_pattern)
+      .where("cafes.name ILIKE ?", keyword_pattern)
       .limit(limit)
       .map do |cafe|
         {

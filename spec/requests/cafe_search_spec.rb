@@ -62,6 +62,14 @@ RSpec.describe "Cafe search", type: :request do
       expect(response.body).not_to include(unmatched.name)
     end
 
+    it "カフェ名を大文字小文字を区別せず絞り込めること" do
+      cafe = create_cafe(name: "GLITCH COFFEE", status: :published)
+
+      get cafes_path, params: { keyword: "glitch" }
+
+      expect(response.body).to include(cafe.name)
+    end
+
     it "複数条件で絞り込み、選択中の条件と件数を表示できること" do
       quiet_tag = create_cafe_feature_tag(name: "静かな空間")
       wifi_tag = create_cafe_feature_tag(name: "Wi-Fiあり")
