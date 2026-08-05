@@ -91,7 +91,7 @@ Coffee Compass は、自家焙煎・スペシャルティコーヒーといっ�
 | OmniAuth (google-oauth2) | - | Google アカウントによるログイン |
 | Pundit | - | 認可（投稿者本人・管理者の権限分離） |
 | Kaminari | - | ページネーション |
-| Active Storage + image_processing | - | 画像アップロード・variant 生成 |
+| Active Storage | - | 画像アップロード・保存 |
 | Resend | - | 本番環境のメール送信 |
 
 ### フロントエンド
