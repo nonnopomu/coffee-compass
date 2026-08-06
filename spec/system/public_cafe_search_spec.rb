@@ -31,7 +31,7 @@ RSpec.describe "公開カフェ検索", type: :system do
     click_button "このエリアで検索"
 
     expect(page).to have_current_path(cafes_path, ignore_query: true)
-    expect(page).to have_selector("h1", text: "カフ一覧")
+    expect(page).to have_selector("h1", text: "カフェ一覧")
     expect(page).to have_text(tokyo_cafe.name)
     expect(page).not_to have_text(hokkaido_cafe.name)
 
