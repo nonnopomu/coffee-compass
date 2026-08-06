@@ -91,3 +91,11 @@ jobs:
 
       - name: Run RSpec
         run: bundle exec rspec
+
+      - name: Upload system spec screenshots
+        if: ${{ failure() }}
+        uses: actions/upload-artifact@v7
+        with:
+          name: system-spec-screenshots
+          path: tmp/capybara
+          if-no-files-found: ignore
