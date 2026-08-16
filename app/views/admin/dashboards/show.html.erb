@@ -10,6 +10,16 @@
   </section>
 
   <div class="px-4 py-4 space-y-3">
+    <div class="rounded-lg border border-gray-200 bg-white px-4 py-4 shadow-sm">
+      <p class="text-sm font-medium text-gray-600">
+        <%= t("views.admin.dashboards.show.total_users") %>
+      </p>
+
+      <p class="mt-1 text-2xl font-bold text-gray-900">
+        <%= t("views.admin.dashboards.show.total_users_count", count: @users_count) %>
+      </p>
+    </div>
+
     <%= link_to admin_cafes_path, class: "block rounded-lg border border-gray-200 bg-white px-4 py-4 shadow-sm" do %>
       <div class="flex items-center justify-between gap-3">
         <div class="min-w-0">
