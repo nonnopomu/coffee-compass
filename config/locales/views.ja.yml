@@ -222,6 +222,8 @@ ja:
           menu_label: 管理メニュー
           title: Coffee Compass 管理
           description: カフェ情報の登録や編集など、管理者向けの操作を行います。
+          total_users: 全ユーザー数
+          total_users_count: "%{count}人"
           cafes_title: カフェ管理
           cafes_description: 登録済みカフェの確認、新規登録、編集を行います。
           tags_title: タグ管理
